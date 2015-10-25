@@ -7,5 +7,7 @@ import java.io.IOException;
  */
 public interface SocketClient<I, O> {
 
+    String LOCALHOST = "localhost";
+
     O send(I input) throws IOException;
 }

@@ -14,7 +14,6 @@ public abstract class AbstractSocketClient<I, O> implements SocketClient<I, O> {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractSocketClient.class);
 
-    public static final String LOCALHOST = "localhost";
     private static final int TIMEOUT = 10*1000; // 10 seconds
 
     private final String host;
