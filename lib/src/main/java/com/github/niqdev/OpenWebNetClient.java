@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
-/**
- * Created by niqdev on 25/10/15.
- */
 public class OpenWebNetClient extends AbstractSocketClient<String, String> {
 
     public OpenWebNetClient(String host, int port) {

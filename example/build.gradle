@@ -1,0 +1,12 @@
+dependencies {
+    compile project(':lib')
+}
+
+/* TODO
+task runSimpleClient(type: JavaExec, dependsOn: classes) {
+    main = 'com.reactive.socket.SimpleClient'
+    args = "COMMAND".split().toList()
+    classpath sourceSets.main.output.classesDir
+    classpath configurations.runtime
+}
+ */
