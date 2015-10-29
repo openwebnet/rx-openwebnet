@@ -1,4 +1,4 @@
-package com.github.niqdev;
+package com.github.niqdev.openwebnet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

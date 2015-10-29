@@ -1,4 +1,4 @@
-package com.github.niqdev;
+package com.github.niqdev.openwebnet;
 
 import java.io.IOException;
 
