@@ -6,7 +6,7 @@ allprojects {
     apply plugin: 'idea'
 
     group = 'com.github.niqdev'
-    version = '0.1.2'
+    version = '0.2'
 
     idea {
         module {
@@ -73,7 +73,6 @@ subprojects {
             version {
                 name = project.version
                 released  = new Date()
-                //TODO vcsTag = '1.0'
             }
         }
     }

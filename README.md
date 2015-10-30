@@ -1,6 +1,14 @@
 # rx-openwebnet
 
+[OpenWebNet](http://www.myopen-legrandgroup.com/resources/own_protocol/default.aspx)
+client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
+
 > work in progress
+
+```
+./gradlew build
+
+```
 
 ```
 repositories {
@@ -9,15 +17,12 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.niqdev:rx-openwebnet:0.1.2'
+    compile 'com.github.niqdev:rx-openwebnet:0.2'
 }
 ```
 
 TODO
-* gradle: sources+javadoc, multiproject with example
-
-https://github.com/bintray/gradle-bintray-plugin
-
+* gradle
 * java 8
 * rxjava
 * TEST !!!
