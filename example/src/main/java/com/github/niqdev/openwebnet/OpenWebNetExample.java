@@ -19,7 +19,9 @@ public class OpenWebNetExample {
 
     public static void main(String[] args) {
 
-        OpenWebNetObservable.rawCommand(CONFIG, "*1*1*21##")
+        //"*1*1*21##"
+
+        OpenWebNetObservable.rawCommand(CONFIG, args[0])
             .subscribe(openFrame -> {
                 System.out.println(openFrame.val());
             });
