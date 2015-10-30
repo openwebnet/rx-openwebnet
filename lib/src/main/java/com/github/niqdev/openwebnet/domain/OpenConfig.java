@@ -3,9 +3,21 @@ package com.github.niqdev.openwebnet.domain;
 /**
  *
  */
-public interface OpenConfig {
+public class OpenConfig {
 
-    String host();
+    private final String host;
+    private final int port;
 
-    int port();
+    public OpenConfig(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
 }

@@ -3,8 +3,15 @@ package com.github.niqdev.openwebnet.domain;
 /**
  *
  */
-public interface OpenFrame {
+public class OpenFrame {
 
-    String value();
+    private final String value;
 
+    public OpenFrame(String value) {
+        this.value = value;
+    }
+
+    public String val() {
+        return value;
+    }
 }

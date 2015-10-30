@@ -4,7 +4,6 @@ import com.github.niqdev.openwebnet.domain.OpenConfig;
 import com.github.niqdev.openwebnet.rx.OpenWebNetObservable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rx.schedulers.Schedulers;
 
 /**
  *
@@ -16,34 +15,18 @@ public class OpenWebNetExample {
     private static final String LOCALHOST = "localhost";
     private static final String HOST = "192.168.1.41";
     private static final int PORT = 20000;
+    private static final OpenConfig CONFIG = new OpenConfig(LOCALHOST, PORT);
 
     public static void main(String[] args) {
 
-        OpenWebNetObservable
-                .send(config(), () -> {
-                    return "*1*1*21##";
-                })
-                //.observeOn(Schedulers.io())
-                .subscribe(openFrame -> {
-                    System.out.println(openFrame.value());
-                });
-        // TODO non-blocking
-        log.debug("after: " + Thread.currentThread().getName());
-    }
+        OpenWebNetObservable.rawCommand(CONFIG, "*1*1*21##")
+            .subscribe(openFrame -> {
+                System.out.println(openFrame.val());
+            });
 
-    // TODO refactor
-    private static OpenConfig config() {
-        return new OpenConfig() {
-            @Override
-            public String host() {
-                return LOCALHOST;
-            }
-
-            @Override
-            public int port() {
-                return PORT;
-            }
-        };
+        // TODO non-blocking (async)
+        log.debug("OpenWebNetExample: " + Thread.currentThread().getName());
+        //TimeUnit.SECONDS.sleep(1);
     }
 
 }
