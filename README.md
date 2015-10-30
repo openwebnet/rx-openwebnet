@@ -12,11 +12,11 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 
 ### Demo
 ```
-# run server (from bash)
+# run server (bash)
 while true; do ((echo "ACK";) | nc -l 20000) done
 
 # run client
-./gradlew runSimpleClient
+./gradlew runOpenWebNetExample
 ```
 
 ### Gradle dependency (unstable)
@@ -32,7 +32,7 @@ dependencies {
 ```
 
 TODO
-* gradle
+* gradle/repo with source and javadoc
 * java 8
 * rxjava
 * TEST !!!
