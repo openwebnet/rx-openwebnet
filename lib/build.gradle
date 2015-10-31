@@ -6,6 +6,7 @@ dependencies {
 }
 
 task hello(dependsOn: build) {
+    // TODO
     println ''
     println '         _              _          _            _            _     _          _ '
     println '        /\\ \\     _     /\\ \\       /\\ \\         /\\ \\         /\\ \\  /\\ \\    _ / /\\'
@@ -18,6 +19,6 @@ task hello(dependsOn: build) {
     println ' / / /    / / /___/ / /__  / / /__\\ \\ \\/ \\ \\ \\__/ / // / /______      \\ \\ \\/ /  '
     println '/ / /    / / //\\__\\/_/___\\/ / /____\\ \\ \\  \\ \\___\\/ // / /_______\\      \\ \\  /   '
     println '\\/_/     \\/_/ \\/_________/\\/________\\_\\/   \\/_____/ \\/__________/       \\_\\/    '
-    println ':see github.com/niqdev/rx-openwebnet\n'
+    println ':see github.com/openwebnet/rx-openwebnet.git\n'
     println '*--~> [' + project.group + ':' + rootProject.name + ':' + project.version + '] <~--*\n'
 }

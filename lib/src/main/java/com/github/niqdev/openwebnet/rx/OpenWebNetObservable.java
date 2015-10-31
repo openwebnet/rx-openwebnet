@@ -4,6 +4,7 @@ import com.github.niqdev.openwebnet.domain.OpenConfig;
 import com.github.niqdev.openwebnet.domain.OpenConstant;
 import com.github.niqdev.openwebnet.domain.OpenContext;
 import com.github.niqdev.openwebnet.domain.OpenFrame;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -28,6 +31,7 @@ public class OpenWebNetObservable {
     private static Observable<OpenContext> connect(OpenConfig config) {
         Observable.OnSubscribe<OpenContext> onSubscribe = subscriber -> {
             try {
+                log.debug("connect THREAD: " + Thread.currentThread().getName());
                 AsynchronousSocketChannel client = AsynchronousSocketChannel.open();
                 client.connect(new InetSocketAddress(config.getHost(), config.getPort())).get();
 
@@ -55,16 +59,17 @@ public class OpenWebNetObservable {
     }
 
     /**
-     *
+     * TODO List<OpenFrame>
      */
-    public static Observable<OpenFrame> rawCommand(OpenConfig config, String value) {
-        return OpenWebNetObservable.send(config, new OpenFrame(value), CHANNEL_COMMAND).observeOn(Schedulers.io());
+    public static Observable<OpenFrame> rawCommand(OpenConfig config, String command) {
+        return OpenWebNetObservable.send(config, new OpenFrame(command), CHANNEL_COMMAND);
     }
 
     // TODO expected ACK
     private static Observable<OpenContext> handshake(OpenContext context, OpenConstant channel) {
         return Observable.defer(() -> {
             try {
+                log.debug("handshake THREAD: " + Thread.currentThread().getName());
                 read(context);
                 write(context, channel.val());
                 read(context);
@@ -79,6 +84,7 @@ public class OpenWebNetObservable {
     private static Observable<String> send(OpenContext context, String value) {
         return Observable.defer(() -> {
             try {
+                log.debug("send THREAD: " + Thread.currentThread().getName());
                 write(context, value);
                 String response = read(context);
 
@@ -95,7 +101,7 @@ public class OpenWebNetObservable {
         // blocking
         Integer count = read.get();
         String message = new String(buffer.array()).trim();
-        log.debug("READ {0}|{1}", count, message);
+        log.debug("READ {}|{}", count, message);
         return message;
     }
 

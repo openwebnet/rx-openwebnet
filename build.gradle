@@ -5,7 +5,7 @@ plugins {
 allprojects {
     apply plugin: 'idea'
 
-    group = 'com.github.niqdev'
+    group = 'com.github.openwebnet'
     version = '0.2'
 
     idea {
@@ -66,8 +66,8 @@ subprojects {
         pkg {
             repo = 'maven'
             name = rootProject.name
-            websiteUrl = 'https://github.com/niqdev/rx-openwebnet'
-            vcsUrl = 'https://github.com/niqdev/rx-openwebnet.git'
+            websiteUrl = 'https://github.com/openwebnet/rx-openwebnet'
+            vcsUrl = 'https://github.com/openwebnet/rx-openwebnet.git'
             licenses = ['MIT']
 
             version {
