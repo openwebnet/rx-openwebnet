@@ -4,18 +4,14 @@ import com.github.niqdev.openwebnet.domain.OpenConfig;
 import com.github.niqdev.openwebnet.domain.OpenConstant;
 import com.github.niqdev.openwebnet.domain.OpenContext;
 import com.github.niqdev.openwebnet.domain.OpenFrame;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -58,7 +54,7 @@ public class OpenWebNetObservable {
             });
     }
 
-    /**
+    /*
      * TODO List<OpenFrame>
      */
     public static Observable<OpenFrame> rawCommand(OpenConfig config, String command) {

@@ -17,7 +17,7 @@ public class OpenWebNetExample {
     private static final String LOCALHOST = "localhost";
     private static final String HOST = "192.168.1.41";
     private static final int PORT = 20000;
-    private static final OpenConfig CONFIG = new OpenConfig(HOST, PORT);
+    private static final OpenConfig CONFIG = new OpenConfig(LOCALHOST, PORT);
 
     public static void main(String[] args) {
 
