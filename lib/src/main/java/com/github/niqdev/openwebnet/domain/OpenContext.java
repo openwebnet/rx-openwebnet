@@ -1,21 +1,21 @@
 package com.github.niqdev.openwebnet.domain;
 
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.SocketChannel;
 
 /**
  *
  */
 public class OpenContext {
 
-    private final AsynchronousSocketChannel client;
+    private final SocketChannel client;
     private final ByteBuffer buffer = ByteBuffer.allocate(1024);
 
-    public OpenContext(AsynchronousSocketChannel client) {
+    public OpenContext(SocketChannel client) {
         this.client = client;
     }
 
-    public AsynchronousSocketChannel getClient() {
+    public SocketChannel getClient() {
         return client;
     }
 

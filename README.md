@@ -33,28 +33,26 @@ dependencies {
 
 ### TODO example usage
 ```java
-OpenWebNetObservable.rawCommand(CONFIG, "*1*1*21##")
+OpenWebNetObservable.rawCommand(CONFIG, )
     .observeOn(Schedulers.io())
     .subscribe(openFrame -> {
         log.debug(openFrame.val());
     });
 
-final String value = ((EditText) findViewById(R.id.editText)).getText().toString();
 final Button button = (Button) findViewById(R.id.button_light);
 button.setOnClickListener(v -> {
-    rawCommand(new OpenConfig("10.0.2.2", 20000), value)
+    rawCommand(new OpenConfig("10.0.2.2", 20000), "*1*1*21##")
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(openFrame -> {
             ((TextView) findViewById(R.id.textView_result)).setText(openFrame.val());
         }, throwable -> {
-            ((TextView) findViewById(R.id.textView_result)).setText("ERROR");
             Log.d("ERROR", throwable.toString());
         });
 });
 ```
 
 TODO
-* AsynchronousSocketChannel vs SocketChannel (android)
+* unsubscribe and close socket
 * android helper
 * TEST !!!
