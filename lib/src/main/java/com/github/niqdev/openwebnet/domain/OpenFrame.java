@@ -14,4 +14,9 @@ public class OpenFrame {
     public String val() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return String.format("[%s]", val());
+    }
 }

@@ -8,7 +8,8 @@ public enum OpenConstant {
     ACK("*#*1##"),
     NACK("*#*0##"),
     CHANNEL_COMMAND("*99*0##"),
-    CHANNEL_EVENT("*99*1##");
+    CHANNEL_EVENT("*99*1##"),
+    FRAME_END("##");
 
     private final OpenFrame frame;
 
@@ -18,5 +19,10 @@ public enum OpenConstant {
 
     public String val() {
         return frame.val();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s|%s]", name(), val());
     }
 }

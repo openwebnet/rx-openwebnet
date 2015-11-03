@@ -2,10 +2,8 @@ package com.github.niqdev.openwebnet;
 
 import com.github.niqdev.openwebnet.domain.OpenConfig;
 import com.github.niqdev.openwebnet.rx.OpenWebNetObservable;
-import com.google.common.base.Splitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rx.schedulers.Schedulers;
 
 /**
  *
@@ -31,23 +29,11 @@ public class OpenWebNetExample {
         // response status
         // *1*0*21##*#*1##
 
-        /*
-        Iterable<String> frames = Splitter.on("##")
-                .trimResults()
-                .omitEmptyStrings()
-                .split("*1*0*21##*#*1##");
-        for (String frame: frames) {
-            System.out.println(frame);
-        }
-        */
-
         OpenWebNetObservable.rawCommand(CONFIG, "*1*1*21##")
-            .observeOn(Schedulers.io())
-            .subscribe(openFrame -> {
-                log.debug(openFrame.val());
+            .subscribe(openFrames -> {
+                openFrames.stream().forEach(frame -> { System.out.println(frame);});
             });
 
-        // TODO non-blocking (async)
         log.debug("OpenWebNetExample: " + Thread.currentThread().getName());
         //TimeUnit.SECONDS.sleep(1);
     }

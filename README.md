@@ -33,10 +33,9 @@ dependencies {
 
 ### TODO example usage
 ```java
-OpenWebNetObservable.rawCommand(CONFIG, )
-    .observeOn(Schedulers.io())
-    .subscribe(openFrame -> {
-        log.debug(openFrame.val());
+OpenWebNetObservable.rawCommand(CONFIG, "*1*1*21##")
+    .subscribe(openFrames -> {
+        openFrames.stream().forEach(frame -> { System.out.println(frame); });
     });
 
 final Button button = (Button) findViewById(R.id.button_light);
