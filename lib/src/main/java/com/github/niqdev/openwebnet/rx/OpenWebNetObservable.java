@@ -22,14 +22,19 @@ import java.util.List;
 import static com.github.niqdev.openwebnet.domain.OpenConstant.*;
 
 /**
- *
+ * @author niqdev
  */
 public class OpenWebNetObservable {
 
     private static final Logger log = LoggerFactory.getLogger(OpenWebNetObservable.class);
 
     /**
+     * Returns an Observable which execute an OpenWebNet frame.
      *
+     * @param config <i>HOST</i> and <i>PORT</i> of domotic system
+     * @param command a command to execute
+     *
+     * @return a list of {@link OpenFrame}
      */
     public static Observable<List<OpenFrame>> rawCommand(OpenConfig config, String command) {
         return OpenWebNetObservable.send(config, new OpenFrame(command), CHANNEL_COMMAND);

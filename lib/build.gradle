@@ -3,10 +3,11 @@ dependencies {
     compile 'io.reactivex:rxjava-async-util:0.21.0'
     compile 'io.reactivex:rxjava-computation-expressions:0.21.0'
     compile 'com.google.guava:guava:18.0'
+    compile 'org.projectlombok:lombok:1.16.6'
+    compile 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
 }
 
 task hello(dependsOn: build) {
-    // TODO
     println ''
     println '         _              _          _            _            _     _          _ '
     println '        /\\ \\     _     /\\ \\       /\\ \\         /\\ \\         /\\ \\  /\\ \\    _ / /\\'

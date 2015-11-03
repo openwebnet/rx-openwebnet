@@ -33,7 +33,7 @@ dependencies {
 
 ### TODO example usage
 ```java
-OpenWebNetObservable.rawCommand(CONFIG, "*1*1*21##")
+OpenWebNetObservable.rawCommand(new OpenConfig("localhost", 20000), "*1*1*21##")
     .subscribe(openFrames -> {
         openFrames.stream().forEach(frame -> { System.out.println(frame); });
     });
