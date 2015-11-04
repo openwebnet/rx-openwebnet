@@ -18,7 +18,7 @@ public enum OpenConstant {
     }
 
     public String val() {
-        return frame.val();
+        return frame.getValue();
     }
 
     @Override

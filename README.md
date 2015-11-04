@@ -34,9 +34,11 @@ dependencies {
 ### TODO example usage
 ```java
 OpenWebNetObservable.rawCommand(new OpenConfig("localhost", 20000), "*1*1*21##")
-    .subscribe(openFrames -> {
-        openFrames.stream().forEach(frame -> { System.out.println(frame); });
-    });
+    .subscribe(
+        openFrames -> { openFrames.stream().forEach(frame -> { log.debug("FRAME {}", frame); }); },
+        throwable -> { log.error("ERROR {}", throwable); },
+        () -> { log.debug("COMPLETE"); }
+    );
 
 final Button button = (Button) findViewById(R.id.button_light);
 button.setOnClickListener(v -> {

@@ -37,13 +37,14 @@ public class OpenWebNetObservable {
      * @return a list of {@link OpenFrame}
      */
     public static Observable<List<OpenFrame>> rawCommand(OpenConfig config, String command) {
+        // TODO command validation: only allowed characters
         return OpenWebNetObservable.send(config, new OpenFrame(command), CHANNEL_COMMAND);
     }
 
     private static Observable<List<OpenFrame>> send(OpenConfig config, OpenFrame frame, OpenConstant channel) {
         return connect(config)
             .flatMap(client -> { return handshake(client, channel); })
-            .flatMap(client -> { return send(client, frame.val()); })
+            .flatMap(client -> { return send(client, frame.getValue()); })
             .map(parseFrames());
     }
 
@@ -52,6 +53,7 @@ public class OpenWebNetObservable {
      * throws java.lang.ClassNotFoundException.
      * So use {@link java.nio.channels.SocketChannel}
      */
+    // TODO unsubscribe
     private static Observable<OpenContext> connect(OpenConfig config) {
         Observable.OnSubscribe<OpenContext> onSubscribe = subscriber -> {
             try {

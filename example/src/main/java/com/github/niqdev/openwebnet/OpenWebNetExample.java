@@ -4,6 +4,7 @@ import com.github.niqdev.openwebnet.domain.OpenConfig;
 import com.github.niqdev.openwebnet.rx.OpenWebNetObservable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.schedulers.Schedulers;
 
 /**
  *
@@ -30,9 +31,11 @@ public class OpenWebNetExample {
         // *1*0*21##*#*1##
 
         OpenWebNetObservable.rawCommand(CONFIG, "*1*1*21##")
-            .subscribe(openFrames -> {
-                openFrames.stream().forEach(frame -> { System.out.println(frame);});
-            });
+            .subscribe(
+                openFrames -> { openFrames.stream().forEach(frame -> { log.debug("FRAME {}", frame); }); },
+                throwable -> { log.error("ERROR {}", throwable); },
+                () -> { log.debug("COMPLETE"); }
+            );
 
         log.debug("OpenWebNetExample: " + Thread.currentThread().getName());
         //TimeUnit.SECONDS.sleep(1);
