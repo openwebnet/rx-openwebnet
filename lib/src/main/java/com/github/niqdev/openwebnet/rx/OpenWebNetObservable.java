@@ -38,12 +38,12 @@ public class OpenWebNetObservable {
      */
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
+    private static boolean DEBUG = true;
+
     /*
      * Notice that org.slf4j.Logger is blocking (sync)
      * Unable to use <code>Logger log = LoggerFactory.getLogger(OpenWebNetObservable.class)</code>
      */
-    private static boolean DEBUG = true;
-
     public static void logDebug(String value) {
         if (DEBUG) System.out.println(String.format("[%s] %s", Thread.currentThread().getName(), value));
     }
@@ -136,11 +136,10 @@ public class OpenWebNetObservable {
         };
     }
 
-    // TODO debug val()
     private static Func1<String, Observable<OpenContext>> expectedAck(OpenContext context) {
         return s -> {
             return Statement.ifThen(
-                () -> { return s.equals(ACK.name()); },
+                () -> { return s.equals(ACK.val()); },
                 Observable.just(context),
                 Observable.error(new Exception("expected ACK"))
             );
@@ -164,12 +163,12 @@ public class OpenWebNetObservable {
 
     static Func1<String, Observable<List<OpenFrame>>> parseFrames() {
         return frames -> {
-            ImmutableList<OpenFrame> openFrames =
+            ImmutableList<OpenFrame> frameList =
                 FluentIterable
                     .from(Splitter.on(FRAME_END.val())
-                            .trimResults()
-                            .omitEmptyStrings()
-                            .split(frames))
+                        .trimResults()
+                        .omitEmptyStrings()
+                        .split(frames))
                     .transform(value -> {
                         return value.concat(FRAME_END.val());
                     })
@@ -177,7 +176,8 @@ public class OpenWebNetObservable {
                         return new OpenFrame(frame);
                     }).toList();
 
-            return Observable.just(Lists.newArrayList(openFrames));
+            logDebug("PARSE " + frameList);
+            return Observable.just(Lists.newArrayList(frameList));
         };
     }
 

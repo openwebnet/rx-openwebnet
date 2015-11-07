@@ -22,23 +22,29 @@ public class OpenWebNetExample {
 
     /*
         request command
-        *1*1*21##
+        turn-on *1*1*21##
+        turn-off *1*0*21##
         response command
         *#*1##
 
         request status
-        *#1*21##
+        is-on *#1*21##
         response status
-        *1*0*21##*#*1##
+        (off) *1*0*21##*#*1##
     */
+
+    //sudo route -n add -host 192.168.1.41 192.168.1.89
+    //netstat -rn
+    //echo *1*1*21## | nc 192.168.1.41 20000
+    //while true; do ((echo "ACK";) | nc -l 20000) done
     private static void runDemo() {
         logDebug("BEFORE-demo");
 
         OpenWebNetObservable
-            .rawCommand(LOCALHOST, PORT, "*1*1*21##")
+                .rawCommand(HOST, PORT, "*#1*21##")
             .subscribe(openFrames -> {
                 openFrames.stream().forEach(frame -> {
-                    logDebug("FRAME | " + frame);
+                    logDebug("FRAME: " + frame.getValue());
                 });
             }, throwable -> {
                 logDebug("ERROR-subscribe " + throwable);
