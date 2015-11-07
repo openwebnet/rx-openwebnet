@@ -3,7 +3,7 @@
 [OpenWebNet](http://www.myopen-legrandgroup.com/resources/own_protocol/default.aspx)
 client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 
-> work in progress
+> work in progress: complete refactoring in Async with Scheduler
 
 ### Build library
 ```
