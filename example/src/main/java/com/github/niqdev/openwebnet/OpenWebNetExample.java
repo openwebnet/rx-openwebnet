@@ -5,15 +5,15 @@ import com.github.niqdev.openwebnet.rx.OpenWebNetObservable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  */
 public class OpenWebNetExample {
 
-    /**
-     * ISSUE: org.slf4j.Logger is blocking (sync)!
-     */
-    //private static final Logger log = LoggerFactory.getLogger(OpenWebNetExample.class);
+
 
     private static final String LOCALHOST = "localhost";
     private static final String LOCALHOST_ANDROID = "10.0.2.2";
@@ -23,13 +23,16 @@ public class OpenWebNetExample {
     public static void main(String[] args) {
         System.out.println("MAIN-before: " + Thread.currentThread().getName());
         //exampleFlowAsync();
+        /*
         OpenWebNetObservable.exampleFlowAsyncClass()
                 .subscribe(s -> {
+
                     System.out.println("RESULT " + Thread.currentThread().getName() + "|" + s);
                 }, throwable -> {
                     System.out.println("ERROR " + Thread.currentThread().getName() + "|" + throwable);
                 });
-        //runDemo();
+                */
+        runDemo();
         System.out.println("MAIN-after: " + Thread.currentThread().getName());
     }
 
@@ -93,7 +96,7 @@ public class OpenWebNetExample {
         System.out.println("BEFORE: " + Thread.currentThread().getName());
         OpenWebNetObservable
             .rawCommand(LOCALHOST, PORT, "*1*1*21##")
-            .subscribeOn(Schedulers.newThread())
+            .subscribeOn(OpenWebNetObservable.scheduler())
             .doOnError(throwable -> {
                 System.out.println("ERROR " + Thread.currentThread().getName() + "|" + throwable);
             })

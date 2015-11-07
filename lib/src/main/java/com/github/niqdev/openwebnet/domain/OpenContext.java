@@ -22,4 +22,11 @@ public class OpenContext {
         buffer.clear();
         return buffer;
     }
+
+    public boolean isClientConnected() {
+        if (client != null) {
+            return client.isConnected();
+        }
+        return false;
+    }
 }

@@ -8,16 +8,20 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
 import rx.Observable;
-import rx.functions.Func1;
+import rx.Scheduler;
+import rx.Statement;
+import rx.functions.*;
 import rx.schedulers.Schedulers;
 import rx.util.async.Async;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 import static com.github.niqdev.openwebnet.domain.OpenConstant.CHANNEL_COMMAND;
@@ -28,14 +32,33 @@ import static com.github.niqdev.openwebnet.domain.OpenConstant.FRAME_END;
  */
 public class OpenWebNetObservable {
 
-    /*
-     * ISSUE: using Schedulers.io() RxNewThreadScheduler/RxCachedThreadScheduler
-     * often does not complete the work i.e. interrupt the chain use own ThreadPool.
-     * Moreover debugging works!
-     */
+    // no instance
+    private OpenWebNetObservable(){}
+
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
+    /**
+     * Return a {@link Scheduler}.
+     *
+     * Using Schedulers.io() RxNewThreadScheduler/RxCachedThreadScheduler
+     * often the job is interrupted and thread is killed, moreover debugging doesn't work.
+     *
+     * @return Scheduler
+     */
+    public static Scheduler scheduler() {
+        return Schedulers.from(executor);
+    }
+
+    /*
+     * Notice that org.slf4j.Logger is blocking (sync)!
+     * Unable to use <code>Logger log = LoggerFactory.getLogger(OpenWebNetObservable.class)</code>
+     */
+    private static void logThreadInfo(String info) {
+        System.out.println(info + " " + Thread.currentThread().getName());
+    }
+
     private static Observable<String> connect1(String a) {
+        /* OK works async
         Observable.OnSubscribe<String> onSubscribe = subscriber -> {
             System.out.println("CREATE " + Thread.currentThread().getName());
 
@@ -51,37 +74,49 @@ public class OpenWebNetObservable {
             //subscriber.unsubscribe();
         };
         return Observable.create(onSubscribe);
+        */
 
-        /*
-        FutureTask<SocketChannel> asynchronousSocketChannel = new FutureTask<>(() -> {
-            SocketChannel client = SocketChannel.open();
-            client.connect(new InetSocketAddress("localhost", 20000));
-            return client;
+        return Observable.defer(Async.toAsync(() -> {
+            try {
+                logThreadInfo("CONNECT-before");
+
+                SocketChannel client = SocketChannel.open();
+                client.connect(new InetSocketAddress("", 2));
+
+                logThreadInfo("CONNECT-after");
+                return client;
+            } catch (IOException e) {
+                return Observable.error(e);
+            }
+        })).map(client -> {
+            return "#connected";
         });
-        new Thread(asynchronousSocketChannel).start();
-
-        return Observable.from(asynchronousSocketChannel)
-                .map(client -> {
-                    return "#connected";
-                });
-                */
     }
 
     public static Observable<String> exampleFlowAsyncClass() {
         System.out.println("sub-before: " + Thread.currentThread().getName());
 
-
         Observable<String> observable = connect1("#1")
-                .subscribeOn(Schedulers.from(executor))
-                .flatMap(s -> {
-                    System.out.println("HANDSHAKE " + Thread.currentThread().getName() + "|" + s);
-                    return Observable.just("#2");
-                })
-                .flatMap(s -> {
-                    System.out.println("SEND " + Thread.currentThread().getName() + "|" + s);
-                    return Observable.just("#3");
-                });
+            .subscribeOn(Schedulers.from(executor))
+            //.subscribeOn(Schedulers.io())
+            .flatMap(s -> {
+                System.out.println("HANDSHAKE " + Thread.currentThread().getName() + "|" + s);
+                return Observable.just("#2");
+            })
+            .flatMap(s -> {
+                System.out.println("SEND " + Thread.currentThread().getName() + "|" + s);
 
+                // TODO
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                executor.shutdown();
+                return Observable.just("#3");
+            });
+
+        System.out.println("sub-after: " + Thread.currentThread().getName());
         return observable;
     }
 
@@ -100,7 +135,7 @@ public class OpenWebNetObservable {
      * @return list of {@link OpenFrame}
      */
     public static Observable<List<OpenFrame>> rawCommand(String host, int port, String command) {
-        return OpenWebNetObservable.send(new OpenConfig(host, port), new OpenFrame(command), CHANNEL_COMMAND);
+        return send(new OpenConfig(host, port), new OpenFrame(command), CHANNEL_COMMAND);
     }
 
     // TODO
@@ -121,26 +156,36 @@ public class OpenWebNetObservable {
             .map(s -> {
                 System.out.println("PARSE-0 " + Thread.currentThread().getName());
                 return Arrays.asList(new OpenFrame("aaa"), new OpenFrame("bbb"));
+            })
+            .finallyDo(() -> {
+                executor.shutdown();
             });
     }
 
     /*
-     * ISSUE: on Android {@link java.nio.channels.AsynchronousSocketChannel}
+     * On Android {@link java.nio.channels.AsynchronousSocketChannel}
      * throws java.lang.ClassNotFoundException.
      * So use {@link java.nio.channels.SocketChannel}
      */
     // TODO handle unsubscribe
+    // TODO handle error
     private static Observable<OpenContext> connect(OpenConfig config) {
-        FutureTask<SocketChannel> asynchronousSocketChannel = new FutureTask<>(() -> {
-            SocketChannel client = SocketChannel.open();
-            client.connect(new InetSocketAddress(config.getHost(), config.getPort()));
-            return client;
-        });
+        return Observable.defer(Async.toAsync(() -> {
+            try {
+                logThreadInfo("CONNECT-before");
 
-        return Observable.from(asynchronousSocketChannel)
-            .map(client -> {
+                SocketChannel client = SocketChannel.open();
+                client.connect(new InetSocketAddress(config.getHost(), config.getPort()));
+
+                logThreadInfo("CONNECT-after");
                 return new OpenContext(client);
-            });
+            } catch (IOException e) {
+                System.out.println("CONNECTION ERROR");
+                // TODO
+                throw new RuntimeException(e);
+                //return Observable.error(e);
+            }
+        }));
     }
 
     private static Observable<OpenContext> handshake(OpenContext context, OpenConstant channel) {
