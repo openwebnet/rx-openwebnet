@@ -41,7 +41,7 @@ public class OpenWebNetExample {
         logDebug("BEFORE-demo");
 
         OpenWebNetObservable
-                .rawCommand(HOST, PORT, "*#1*21##")
+            .rawCommand(LOCALHOST, PORT, "*#1*21##")
             .subscribe(openFrames -> {
                 openFrames.stream().forEach(frame -> {
                     logDebug("FRAME: " + frame.getValue());
