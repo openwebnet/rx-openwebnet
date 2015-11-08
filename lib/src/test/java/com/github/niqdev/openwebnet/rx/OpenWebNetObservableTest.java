@@ -1,64 +1,83 @@
 package com.github.niqdev.openwebnet.rx;
 
 import com.github.niqdev.openwebnet.domain.OpenFrame;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import org.junit.Ignore;
 import org.junit.Test;
 import rx.Observable;
-import rx.Subscriber;
 import rx.observers.TestSubscriber;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 /**
- * RUN gradle :lib:test --debug
+ * RUN
+ * gradle :lib:test --debug
  */
+//@RunWith(PowerMockRunner.class)
+//@PrepareForTest(OpenWebNetObservable.class)
 public class OpenWebNetObservableTest {
 
-    private static class PrintSubscriber extends Subscriber<Object> {
-        private final String name;
+    @Test @Ignore
+    public void testLogDebug() {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
 
-        public PrintSubscriber(String name) {
-            this.name = name;
-        }
+    @Test @Ignore
+    public void testRawCommand() {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
 
-        @Override
-        public void onCompleted() {
-            System.out.println(name + ": Completed");
-        }
+    @Test @Ignore
+    public void testSendFrame() {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
 
-        @Override
-        public void onError(Throwable e) {
-            System.out.println(name + ": Error: " + e);
-        }
+    @Test @Ignore
+    public void testConnectAsync() {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
 
-        @Override
-        public void onNext(Object v) {
-            System.out.println(name + ": " + v);
-        }
+    @Test @Ignore
+    public void testHandshake() {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    @Test @Ignore
+    public void testSend() {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    @Test @Ignore
+    public void testRead() {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    @Test @Ignore
+    public void testExpectedAck() {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    @Test @Ignore
+    public void testWrite() {
+        throw new UnsupportedOperationException("not implemented yet");
     }
 
     @Test
     public void testParseFrames() {
-        /*
         TestSubscriber<List<OpenFrame>> tester = new TestSubscriber<>();
 
         Observable.just("*1*0*21##*#*1##")
-                .map(OpenWebNetObservable.parseFrames())
-                //.subscribe(new PrintSubscriber("parseFrames"))
-                .subscribe(tester);
+            .flatMap(OpenWebNetObservable.parseFrames())
+            .subscribe(tester);
 
-        // TODO newArrayList
-        List<OpenFrame> openFrames = Lists.newArrayList(new OpenFrame("*1*0*21##"), new OpenFrame("*#*1##"));
+        List<OpenFrame> expectedOpenFrames =
+            Lists.newArrayList(new OpenFrame("*1*0*21##"), new OpenFrame("*#*1##"));
 
-        // guava RegularImmutableList
-        tester.assertValue(FluentIterable.from(openFrames).toList());
-        */
+        tester.assertCompleted();
 
-        //[[[*1*0*21##], [*#*1##]]]
-        //[[[*1*0*21##], [*#*1##]]]
+        assertEquals("invalid frame", expectedOpenFrames.get(0).getValue(), "*1*0*21##");
+        assertEquals("invalid frame", expectedOpenFrames.get(1).getValue(), "*#*1##");
     }
 }

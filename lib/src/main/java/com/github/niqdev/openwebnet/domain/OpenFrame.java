@@ -15,6 +15,6 @@ public class OpenFrame {
 
     @Override
     public String toString() {
-        return String.format("[%s]", this.getValue());
+        return String.format("%s", this.getValue());
     }
 }

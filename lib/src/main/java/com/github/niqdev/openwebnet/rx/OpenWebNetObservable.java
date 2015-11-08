@@ -121,7 +121,7 @@ public class OpenWebNetObservable {
         };
     }
 
-    private static Func1<OpenContext, Observable<String>> read() {
+    static Func1<OpenContext, Observable<String>> read() {
         return context -> {
             try {
                 ByteBuffer buffer = context.getEmptyBuffer();
@@ -136,7 +136,7 @@ public class OpenWebNetObservable {
         };
     }
 
-    private static Func1<String, Observable<OpenContext>> expectedAck(OpenContext context) {
+    static Func1<String, Observable<OpenContext>> expectedAck(OpenContext context) {
         return s -> {
             return Statement.ifThen(
                 () -> { return s.equals(ACK.val()); },
@@ -146,7 +146,7 @@ public class OpenWebNetObservable {
         };
     }
 
-    private static Func1<OpenContext, Observable<OpenContext>> write(String value) {
+    static Func1<OpenContext, Observable<OpenContext>> write(String value) {
         return context -> {
             try {
                 byte[] message = new String(value).getBytes();
