@@ -5,8 +5,8 @@ dependencies {
 task runOpenWebNetExample(type: JavaExec, dependsOn: classes) {
     main = 'com.github.niqdev.openwebnet.OpenWebNetExample'
 
-    // command example
-    args = "*1*1*21##".toList()
+    // TODO command example
+    //args = "*1*1*21##".toList()
 
     classpath sourceSets.main.output.classesDir
     classpath configurations.runtime
