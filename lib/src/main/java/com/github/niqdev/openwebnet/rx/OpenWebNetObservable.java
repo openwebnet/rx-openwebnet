@@ -96,6 +96,7 @@ public class OpenWebNetObservable {
             logDebug("ERROR-doOnError " + throwable);
         })
         .finallyDo(() -> {
+            // TODO handle 2nd invocation on Android RejectedExecutionException
             executor.shutdown();
             // TODO unsubscribe
         });

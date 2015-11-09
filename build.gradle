@@ -13,7 +13,7 @@ allprojects {
     apply plugin: 'idea'
 
     group = 'com.github.openwebnet'
-    version = '0.2'
+    version = '0.2.1'
 
     idea {
         module {
@@ -24,10 +24,13 @@ allprojects {
 }
 
 subprojects {
+
     apply plugin: 'java'
     apply plugin: 'me.tatarka.retrolambda'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
+    // support provided (providedCompile)
+    apply plugin: 'war'
 
     repositories {
         jcenter()
@@ -92,7 +95,7 @@ subprojects {
 
             version {
                 name = project.version
-                released  = new Date()
+                released = new Date()
             }
         }
     }
