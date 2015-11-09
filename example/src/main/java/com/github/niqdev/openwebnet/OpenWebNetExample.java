@@ -1,6 +1,7 @@
 package com.github.niqdev.openwebnet;
 
 import com.github.niqdev.openwebnet.rx.OpenWebNetObservable;
+import com.github.niqdev.openwebnet.rx.OpenWebNetUtils;
 
 import static com.github.niqdev.openwebnet.rx.OpenWebNetObservable.logDebug;
 
@@ -16,32 +17,31 @@ public class OpenWebNetExample {
 
     public static void main(String[] args) {
         logDebug("BEFORE-main");
-        runDemo();
+        runExample();
+        runExampleAsync();
         logDebug("BEFORE-after");
     }
 
-    /*
-        request command
-        turn-on *1*1*21##
-        turn-off *1*0*21##
-        response command
-        *#*1##
-
-        request status
-        is-on *#1*21##
-        response status
-        (off) *1*0*21##*#*1##
-    */
-
-    //sudo route -n add -host 192.168.1.41 192.168.1.89
-    //netstat -rn
-    //echo *1*1*21## | nc 192.168.1.41 20000
-    //while true; do ((echo "ACK";) | nc -l 20000) done
-    private static void runDemo() {
+    private static void runExample() {
         logDebug("BEFORE-demo");
 
         OpenWebNetObservable
             .rawCommand(LOCALHOST, PORT, "*#1*21##")
+            .subscribe(openFrames -> {
+                openFrames.stream().forEach(frame -> {
+                    logDebug("FRAME: " + frame.getValue());
+                });
+            }, throwable -> {
+                logDebug("ERROR-subscribe " + throwable);
+            });
+
+        logDebug("AFTER-demo");
+    }
+
+    private static void runExampleAsync() {
+        logDebug("BEFORE-demo");
+
+        OpenWebNetUtils.rawCommandAsync(LOCALHOST, PORT, "*#1*21##")
             .subscribe(openFrames -> {
                 openFrames.stream().forEach(frame -> {
                     logDebug("FRAME: " + frame.getValue());

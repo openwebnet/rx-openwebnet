@@ -9,17 +9,15 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Statement;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static com.github.niqdev.openwebnet.domain.OpenConstant.*;
@@ -31,12 +29,6 @@ public class OpenWebNetObservable {
 
     // no instance
     private OpenWebNetObservable(){}
-
-    /*
-     * Using Schedulers.io() RxNewThreadScheduler/RxCachedThreadScheduler
-     * often the job is interrupted and thread is killed, moreover debugging doesn't work.
-     */
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private static boolean DEBUG = true;
 
@@ -53,7 +45,7 @@ public class OpenWebNetObservable {
      *
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
-     *  <dd>{@code rawCommand} by default operate on a new thread</dd>
+     *  <dd>{@code rawCommand} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
      * @param host of the domotic system
@@ -67,7 +59,7 @@ public class OpenWebNetObservable {
     }
 
     private static Observable<List<OpenFrame>> sendFrame(OpenConfig config, OpenConstant channel, OpenFrame frame) {
-        return connectAsync(config).flatMap(handshake(channel)).flatMap(send(frame));
+        return connect(config).flatMap(handshake(channel)).flatMap(send(frame));
     }
 
     /*
@@ -76,7 +68,7 @@ public class OpenWebNetObservable {
      * So use {@link java.nio.channels.SocketChannel}
      */
     // TODO handle unsubscribe
-    private static Observable<OpenContext> connectAsync(OpenConfig config) {
+    private static Observable<OpenContext> connect(OpenConfig config) {
         return Observable.defer(() -> {
             try {
                 logDebug("CONNECT-before");
@@ -90,15 +82,9 @@ public class OpenWebNetObservable {
                 return Observable.error(e);
             }
         })
-        .subscribeOn(Schedulers.from(executor))
         .timeout(5, TimeUnit.SECONDS)
         .doOnError(throwable -> {
             logDebug("ERROR-doOnError " + throwable);
-        })
-        .finallyDo(() -> {
-            // TODO handle 2nd invocation on Android RejectedExecutionException
-            executor.shutdown();
-            // TODO unsubscribe
         });
     }
 

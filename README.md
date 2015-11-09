@@ -19,27 +19,14 @@ OpenWebNetObservable
             logDebug("FRAME: " + frame.getValue());
         });
     }, throwable -> {
-        logDebug("ERROR-subscribe " + throwable);
+        logDebug("ERROR " + throwable);
     });
-
-// TODO
-final Button button = (Button) findViewById(R.id.button_light);
-button.setOnClickListener(v -> {
-    rawCommand(new OpenConfig("10.0.2.2", 20000), "*1*1*21##")
-        .subscribeOn(Schedulers.newThread())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(openFrame -> {
-            ((TextView) findViewById(R.id.textView_result)).setText(openFrame.val());
-        }, throwable -> {
-            Log.d("ERROR", throwable.toString());
-        });
-});
 ```
 
 ### Demo
 ```
-# run server (bash)
-while true; do ((echo "ACK";) | nc -l 20000) done
+# run server (from bash)
+while true; do ((echo "*#*1##";) | nc -l 20000) done
 
 # run client
 ./gradlew runOpenWebNetExample
@@ -53,12 +40,11 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.2'
+    compile 'com.github.openwebnet:rx-openwebnet:0.2.2'
 }
 ```
 
 TODO
 * TEST !!!
 * unsubscribe and close socket
-* android helper
 * utils

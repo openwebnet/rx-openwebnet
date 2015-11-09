@@ -35,7 +35,7 @@ public class OpenWebNetObservableTest {
     }
 
     @Test @Ignore
-    public void testConnectAsync() {
+    public void testConnect() {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
