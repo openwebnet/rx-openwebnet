@@ -17,7 +17,7 @@ public class OpenWebNetExample {
 
     public static void main(String[] args) {
         logDebug("BEFORE-main");
-        runExample();
+        //runExample();
         runExampleAsync();
         logDebug("BEFORE-after");
     }

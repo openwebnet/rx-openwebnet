@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Statement;
+import rx.functions.Action0;
 import rx.functions.Func1;
 
 import java.io.IOException;
@@ -104,7 +105,15 @@ public class OpenWebNetObservable {
             return Observable.just(context)
                 .flatMap(write(frame.getValue()))
                 .flatMap(read())
-                .flatMap(parseFrames());
+                .flatMap(parseFrames())
+                .finallyDo(() -> {
+                    try {
+                        logDebug("FINALLY-close");
+                        context.getClient().close();
+                    } catch (IOException e) {
+                        throw new IllegalStateException("error while closing connection");
+                    }
+                });
         };
     }
 
