@@ -10,7 +10,7 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 ./gradlew build
 ```
 
-### TODO example usage
+### TODO example
 ```java
 OpenWebNetObservable
     .rawCommand("localhost", 20000, "*#1*21##")
@@ -23,15 +23,6 @@ OpenWebNetObservable
     });
 ```
 
-### Demo
-```
-# run server (from bash)
-while true; do ((echo "*#*1##";) | nc -l 20000) done
-
-# run client
-./gradlew runOpenWebNetExample
-```
-
 ### Gradle dependency (unstable)
 ```
 repositories {
@@ -40,11 +31,11 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.2.2'
+    compile 'com.github.openwebnet:rx-openwebnet:0.3'
 }
 ```
 
 TODO
-* TEST !!!
+* missing tests
 * unsubscribe and close socket
 * utils
