@@ -68,8 +68,8 @@ public class OpenWebNetObservable {
      * throws java.lang.ClassNotFoundException.
      * So use {@link java.nio.channels.SocketChannel}
      */
-    // TODO handle unsubscribe
-    private static Observable<OpenContext> connect(OpenConfig config) {
+    // TODO handle unsubscribe/close socket
+    static Observable<OpenContext> connect(OpenConfig config) {
         return Observable.defer(() -> {
             try {
                 logDebug("CONNECT-before");
@@ -89,7 +89,7 @@ public class OpenWebNetObservable {
         });
     }
 
-    private static Func1<OpenContext, Observable<OpenContext>> handshake(OpenConstant channel) {
+    static Func1<OpenContext, Observable<OpenContext>> handshake(OpenConstant channel) {
         return context -> {
             return Observable.just(context)
                 .flatMap(read())
@@ -100,14 +100,16 @@ public class OpenWebNetObservable {
         };
     }
 
-    private static Func1<OpenContext, Observable<List<OpenFrame>>> send(OpenFrame frame) {
+    static Func1<OpenContext, Observable<List<OpenFrame>>> send(OpenFrame frame) {
         return context -> {
             return Observable.just(context)
                 .flatMap(write(frame.getValue()))
                 .flatMap(read())
                 .flatMap(parseFrames())
+                // TODO
                 .finallyDo(() -> {
                     try {
+                        // move in unsubscribe + clear buffer
                         logDebug("FINALLY-close");
                         context.getClient().close();
                     } catch (IOException e) {

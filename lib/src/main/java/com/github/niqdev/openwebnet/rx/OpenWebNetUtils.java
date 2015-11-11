@@ -7,17 +7,22 @@ import rx.schedulers.Schedulers;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import static com.github.niqdev.openwebnet.rx.OpenWebNetObservable.*;
+
+import static com.github.niqdev.openwebnet.rx.OpenWebNetObservable.logDebug;
+import static com.github.niqdev.openwebnet.rx.OpenWebNetObservable.rawCommand;
 
 /**
  * @author niqdev
  */
 public class OpenWebNetUtils {
 
-    // no instance
-    private OpenWebNetUtils() {
+    public static final String LOCALHOST = "localhost";
+    public static final String LOCALHOST_ANDROID = "10.0.2.2";
+    public static final String HOST = "192.168.1.41";
+    public static final int PORT = 20000;
 
-    }
+    // no instance
+    private OpenWebNetUtils() {}
 
     /*
      * Using Schedulers.io() RxNewThreadScheduler/RxCachedThreadScheduler
@@ -33,7 +38,6 @@ public class OpenWebNetUtils {
             })
             .finallyDo(() -> {
                 executor.shutdown();
-                // TODO unsubscribe
             });
     }
 }

@@ -4,20 +4,17 @@ import com.github.niqdev.openwebnet.rx.OpenWebNetObservable;
 import com.github.niqdev.openwebnet.rx.OpenWebNetUtils;
 
 import static com.github.niqdev.openwebnet.rx.OpenWebNetObservable.logDebug;
+import static com.github.niqdev.openwebnet.rx.OpenWebNetUtils.LOCALHOST;
+import static com.github.niqdev.openwebnet.rx.OpenWebNetUtils.PORT;
 
 /**
  *
  */
 public class OpenWebNetExample {
 
-    private static final String LOCALHOST = "localhost";
-    private static final String LOCALHOST_ANDROID = "10.0.2.2";
-    private static final String HOST = "192.168.1.41";
-    private static final int PORT = 20000;
-
     public static void main(String[] args) {
         logDebug("BEFORE-main");
-        runExample();
+        //runExample();
         runExampleAsync();
         logDebug("BEFORE-after");
     }
