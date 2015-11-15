@@ -36,6 +36,8 @@ dependencies {
 ```
 
 TODO
+* [bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
+* link repo to jcenter
 * missing tests
 * unsubscribe and close socket
 * utils
