@@ -1,9 +1,6 @@
 package com.github.niqdev.openwebnet.rx;
 
-import com.github.niqdev.openwebnet.domain.OpenConfig;
-import com.github.niqdev.openwebnet.domain.OpenConstant;
-import com.github.niqdev.openwebnet.domain.OpenContext;
-import com.github.niqdev.openwebnet.domain.OpenFrame;
+import com.github.niqdev.openwebnet.domain.*;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -11,7 +8,6 @@ import com.google.common.collect.Lists;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Statement;
-import rx.functions.Action0;
 import rx.functions.Func1;
 
 import java.io.IOException;
@@ -21,7 +17,8 @@ import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.niqdev.openwebnet.domain.OpenConstant.*;
+import static com.github.niqdev.openwebnet.domain.OpenConstant.ACK;
+import static com.github.niqdev.openwebnet.domain.OpenConstant.FRAME_END;
 
 /**
  * @author niqdev
@@ -42,25 +39,26 @@ public class OpenWebNetObservable {
     }
 
     /**
-     * Sends an OpenWebNet command frame.
+     * Start a new command session and execute an action.
      *
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
-     *  <dd>{@code rawCommand} does not operate by default on a particular {@link Scheduler}.</dd>
+     *  <dd>{@code rawAction} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
      * @param host of the domotic system
      * @param port of the domotic system
-     * @param command frame to execute
+     * @param action frame to execute
      *
-     * @return list of {@link OpenFrame}
+     * @return {@link OpenSession}
      */
-    public static Observable<List<OpenFrame>> rawCommand(String host, int port, String command) {
-        return sendFrame(new OpenConfig(host, port), CHANNEL_COMMAND, new OpenFrame(command));
+    public static Observable<OpenSession> rawAction(String host, int port, String action) {
+        //return sendFrame(new OpenConfig(host, port), CHANNEL_COMMAND, new OpenFrame(action));
+        throw new UnsupportedOperationException("refactoring");
     }
 
-    private static Observable<List<OpenFrame>> sendFrame(OpenConfig config, OpenConstant channel, OpenFrame frame) {
-        return connect(config).flatMap(handshake(channel)).flatMap(send(frame));
+    private static Observable<List<OpenFrame>> sendFrame(OpenConfig config, OpenConstant channel, OpenFrame request) {
+        return connect(config).flatMap(handshake(channel)).flatMap(send(request));
     }
 
     /*
@@ -100,10 +98,10 @@ public class OpenWebNetObservable {
         };
     }
 
-    static Func1<OpenContext, Observable<List<OpenFrame>>> send(OpenFrame frame) {
+    static Func1<OpenContext, Observable<List<OpenFrame>>> send(OpenFrame request) {
         return context -> {
             return Observable.just(context)
-                .flatMap(write(frame.getValue()))
+                .flatMap(write(request.getValue()))
                 .flatMap(read())
                 .flatMap(parseFrames())
                 // TODO
@@ -164,9 +162,9 @@ public class OpenWebNetObservable {
             ImmutableList<OpenFrame> frameList =
                 FluentIterable
                     .from(Splitter.on(FRAME_END.val())
-                        .trimResults()
-                        .omitEmptyStrings()
-                        .split(frames))
+                            .trimResults()
+                            .omitEmptyStrings()
+                            .split(frames))
                     .transform(value -> {
                         return value.concat(FRAME_END.val());
                     })
