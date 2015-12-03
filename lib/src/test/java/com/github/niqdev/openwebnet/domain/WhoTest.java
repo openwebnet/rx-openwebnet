@@ -2,7 +2,9 @@ package com.github.niqdev.openwebnet.domain;
 
 import org.junit.Test;
 
+import static com.github.niqdev.openwebnet.ThrowableCaptor.captureThrowable;
 import static com.github.niqdev.openwebnet.domain.Who.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class WhoTest {
@@ -25,31 +27,27 @@ public class WhoTest {
     @Test
     public void testFromName() {
         assertEquals("should retrieve element by name", LIGHTING, fromName("LIGHTING"));
-    }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testInvalidFromName() {
-        fromName("lighting");
-    }
+        assertThat(captureThrowable(() -> fromName("lighting")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid name");
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullFromName() {
-        fromName(null);
+        assertThat(captureThrowable(() -> fromName(null)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid name");
     }
 
     @Test
     public void testFromValue() {
         assertEquals("should retrieve element by value", LIGHTING, fromValue(1));
-    }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testInvalidFromValue() {
-        fromValue(-1);
-    }
+        assertThat(captureThrowable(() -> fromValue(-1)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid value");
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullFromValue() {
-        fromValue(null);
+        assertThat(captureThrowable(() -> fromValue(null)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid value");
     }
 
 }
