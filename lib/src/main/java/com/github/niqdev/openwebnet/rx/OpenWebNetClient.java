@@ -34,12 +34,12 @@ public class OpenWebNetClient implements OpenWebNet {
     }
 
     @Override
-    public Observable<OpenSession> requestStatus(Integer who, Integer where) {
+    public Observable<OpenSession> readStatus(Integer who, Integer where) {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
     @Override
-    public Observable<OpenSession> requestDimension(Integer who, Integer where, Integer dimension) {
+    public Observable<OpenSession> readDimension(Integer who, Integer where, Integer dimension) {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
@@ -47,4 +47,5 @@ public class OpenWebNetClient implements OpenWebNet {
     public Observable<OpenSession> writeDimension(Integer who, Integer where, Integer dimension, Integer... value) {
         throw new UnsupportedOperationException("not implemented yet");
     }
+
 }

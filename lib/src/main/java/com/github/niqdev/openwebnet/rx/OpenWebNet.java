@@ -4,9 +4,11 @@ import com.github.niqdev.openwebnet.domain.OpenSession;
 import rx.Observable;
 
 /**
- * @author niqdev
- *
  * TODO javadocs
+ *
+ * https://en.wikipedia.org/wiki/OpenWebNet
+ *
+ * @author niqdev
  */
 public interface OpenWebNet {
 
@@ -27,7 +29,7 @@ public interface OpenWebNet {
      * @param where
      * @return OpenSession
      */
-    Observable<OpenSession> requestStatus(Integer who, Integer where);
+    Observable<OpenSession> readStatus(Integer who, Integer where);
 
     /**
      * Syntax *#WHO*WHERE*DIMENSION##
@@ -37,7 +39,7 @@ public interface OpenWebNet {
      * @param dimension
      * @return OpenSession
      */
-    Observable<OpenSession> requestDimension(Integer who, Integer where, Integer dimension);
+    Observable<OpenSession> readDimension(Integer who, Integer where, Integer dimension);
 
     /**
      * Syntax *#WHO*WHERE*#DIMENSION*VAL1*VAL2*...*VALn##

@@ -4,6 +4,9 @@ import java.util.List;
 
 public class OpenSession {
 
+    // TODO gateway - remove config
+    // TODO constant
+
     private final OpenFrame request;
     private List<OpenFrame> response;
 
