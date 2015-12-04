@@ -1,17 +1,21 @@
 package com.github.niqdev.openwebnet;
 
-import com.github.niqdev.openwebnet.rx.OpenWebNetObservable;
-import com.github.niqdev.openwebnet.rx.OpenWebNetUtils;
-
-import static com.github.niqdev.openwebnet.rx.OpenWebNetObservable.logDebug;
-import static com.github.niqdev.openwebnet.rx.OpenWebNetUtils.LOCALHOST;
-import static com.github.niqdev.openwebnet.rx.OpenWebNetUtils.PORT;
+import static com.github.niqdev.openwebnet.OpenWebNet.defaultGateway;
 
 /**
  *
  */
 public class OpenWebNetExample {
 
+    public static void main(String[] args) {
+        OpenWebNet
+            .newClient(defaultGateway("192.168.0.1"))
+            .send(() -> "")
+            .subscribe(openSession -> openSession
+                .getResponse().stream().forEach(System.out::println));
+    }
+
+    /*
     public static void main(String[] args) {
         logDebug("BEFORE-main");
         //runExample();
@@ -48,5 +52,6 @@ public class OpenWebNetExample {
 
         logDebug("AFTER-demo");
     }
+    */
 
 }

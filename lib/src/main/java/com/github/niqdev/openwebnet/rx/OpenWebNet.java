@@ -1,6 +1,6 @@
 package com.github.niqdev.openwebnet.rx;
 
-import com.github.niqdev.openwebnet.domain.OpenSession;
+import com.github.niqdev.openwebnet.protocol.OpenSession;
 import rx.Observable;
 
 /**
