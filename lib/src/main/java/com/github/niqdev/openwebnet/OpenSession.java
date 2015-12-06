@@ -42,7 +42,7 @@ public class OpenSession {
     /**
      *
      */
-    enum Channel {
+    public enum Channel {
 
         COMMAND("*99*0##"),
         EVENT("*99*1##");

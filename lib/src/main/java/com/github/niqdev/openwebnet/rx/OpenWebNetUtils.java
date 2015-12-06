@@ -8,8 +8,8 @@
 //import java.util.concurrent.ExecutorService;
 //import java.util.concurrent.Executors;
 //
-//import static com.github.niqdev.openwebnet.rx.OpenWebNetObservable.logDebug;
-//import static com.github.niqdev.openwebnet.rx.OpenWebNetObservable.rawCommand;
+//import static com.github.niqdev.openwebnet.OpenWebNetObservable.logDebug;
+//import static com.github.niqdev.openwebnet.OpenWebNetObservable.rawCommand;
 //
 ///**
 // * @author niqdev
