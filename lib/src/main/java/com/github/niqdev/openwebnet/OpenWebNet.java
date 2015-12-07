@@ -1,14 +1,12 @@
 package com.github.niqdev.openwebnet;
 
-import com.github.niqdev.openwebnet.domain.OpenContext;
 import com.github.niqdev.openwebnet.message.OpenMessage;
-import static com.github.niqdev.openwebnet.OpenWebNetObservable.*;
 import rx.Observable;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.channels.SocketChannel;
 import java.util.concurrent.TimeUnit;
+
+import static com.github.niqdev.openwebnet.OpenWebNetObservable.*;
 
 /*
  *  frame = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, *, #}
@@ -33,6 +31,11 @@ public class OpenWebNet {
     }
 
     public Observable<OpenSession> send(OpenMessage request) {
+
+        connect(OpenSession.newCommand(request))
+            .flatMap(doHandshake())
+            .flatMap(doRequest());
+
         OpenSession session = OpenSession.newCommand(request);
         //connect(gateway).flatMap(handshake(session.getChannel())).flatMap(send(request))
 //        OpenWebNetObservable.raw(session);
@@ -55,21 +58,18 @@ public class OpenWebNet {
     }
     */
 
-    /*
-     * On Android {@link java.nio.channels.AsynchronousSocketChannel}
-     * throws java.lang.ClassNotFoundException.
-     * So use {@link java.nio.channels.SocketChannel}
-     */
-    // TODO handle unsubscribe/close socket
-    private Observable<OpenContext> connect(OpenGateway gateway) {
+    private Observable<OpenSession> connect(OpenSession session) {
         return Observable.defer(() -> {
             try {
-                SocketChannel client = SocketChannel.open();
-                client.connect(new InetSocketAddress(gateway.getHost(), gateway.getPort()));
-                return Observable.just(new OpenContext(client));
+                session.connect(gateway);
+                return Observable.just(session);
             } catch (IOException e) {
                 return Observable.error(e);
             }
+        })
+        .finallyDo(() -> {
+            // TODO handle unsubscribe/close socket
+            //session.disconnect();
         })
         .timeout(5, TimeUnit.SECONDS)
         .doOnError(throwable -> {
