@@ -9,6 +9,8 @@ import static com.github.niqdev.openwebnet.OpenWebNetObservable.*;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * Reactive OpenWebNet client.
+ *
  * @author niqdev
  */
 public class OpenWebNet {
@@ -43,7 +45,7 @@ public class OpenWebNet {
     }
 
     /**
-     * TODO documentation
+     *
      */
     public interface OpenGateway {
 

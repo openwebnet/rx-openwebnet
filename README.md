@@ -12,17 +12,26 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 ./gradlew build
 ```
 
-### TODO example
+### Example
 ```java
-OpenWebNetObservable
-    .rawCommand("localhost", 20000, "*#1*21##")
-    .subscribe(openFrames -> {
-        openFrames.stream().forEach(frame -> {
-            logDebug("FRAME: " + frame.getValue());
-        });
-    }, throwable -> {
-        logDebug("ERROR " + throwable);
-    });
+OpenWebNet
+    .newClient(OpenWebNet.defaultGateway("192.168.1.41"))
+    .send(() -> "*#1*21##")
+    .subscribe(session -> session
+        .getResponse().stream().forEach(System.out::println));
+
+```
+```java
+ExecutorService executor = Executors.newSingleThreadExecutor();
+
+OpenWebNet
+    .newClient(OpenWebNet.gateway("192.168.1.41", 20000))
+    .send(Arrays.asList(() -> "*#1*21##", () -> "*#1*22##"))
+    .subscribeOn(Schedulers.from(executor))
+    .doOnError(throwable -> System.out.println("ERROR " + throwable))
+    .finallyDo(() -> executor.shutdown())
+    .subscribe(sessions -> sessions.forEach(session ->
+        session.getResponse().stream().forEach(System.out::println)));
 ```
 
 ### Gradle dependency (unstable)
@@ -33,13 +42,12 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.3'
+    compile 'com.github.openwebnet:rx-openwebnet:0.4'
 }
 ```
 
 TODO
 * [bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
 * link repo to jcenter
-* missing tests
+* tests
 * unsubscribe and close socket
-* utils
