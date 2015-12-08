@@ -50,4 +50,5 @@ TODO
 * [bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
 * link repo to jcenter
 * tests
+* test coverage
 * unsubscribe and close socket

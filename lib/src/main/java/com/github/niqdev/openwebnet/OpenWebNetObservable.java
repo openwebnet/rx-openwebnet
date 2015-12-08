@@ -26,8 +26,7 @@ import static com.github.niqdev.openwebnet.message.OpenMessage.FRAME_END;
 public class OpenWebNetObservable {
 
     // no instance
-    private OpenWebNetObservable() {
-    }
+    private OpenWebNetObservable() {}
 
     static Observable<OpenContext> connect(OpenGateway gateway) {
         return Observable.defer(() -> {

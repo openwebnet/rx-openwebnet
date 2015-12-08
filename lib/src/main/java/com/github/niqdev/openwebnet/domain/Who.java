@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+// TODO
 public enum Who {
 
     SCENARIO(0),
