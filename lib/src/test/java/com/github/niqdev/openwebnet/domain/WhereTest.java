@@ -55,8 +55,8 @@ public class WhereTest {
 
     @Test
     public void tesLightPoint() {
-        assertEquals("should be a valid value", "8", lightPoint(8).value());
-        assertNotEquals("should not be a valid value", 8, lightPoint(8).value());
+        assertEquals("should be a valid value", "21", lightPoint(21).value());
+        assertNotEquals("should not be a valid value", 21, lightPoint(21).value());
 
         assertThat(captureThrowable(() -> lightPoint(null)))
             .isInstanceOf(NullPointerException.class)
@@ -64,11 +64,11 @@ public class WhereTest {
 
         assertThat(captureThrowable(() -> lightPoint(10)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("value must be between 0 and 10");
+            .hasMessage("value must be between 10 and 100");
 
         assertThat(captureThrowable(() -> lightPoint(100)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("value must be between 0 and 10");
+            .hasMessage("value must be between 10 and 100");
     }
 
 }
