@@ -1,11 +1,10 @@
 buildscript {
     repositories {
         jcenter()
-        mavenCentral()
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
-        //classpath 'me.tatarka:gradle-retrolambda:3.2.3'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.4'
     }
 }
 
@@ -24,29 +23,24 @@ allprojects {
 }
 
 subprojects {
-
     apply plugin: 'java'
-    //apply plugin: 'me.tatarka.retrolambda'
+    apply plugin: 'me.tatarka.retrolambda'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
 
     repositories {
         jcenter()
-        mavenCentral()
     }
 
     dependencies {
         testCompile 'junit:junit:4.12'
     }
 
-    /*
     retrolambda {
         jdk System.getenv("JAVA8_HOME")
         oldJdk System.getenv("JAVA7_HOME")
         javaVersion JavaVersion.VERSION_1_7
-        exclude 'Test'
     }
-    */
 
     // creates source/javadoc jars
     task sourcesJar(type: Jar, dependsOn: classes) {
