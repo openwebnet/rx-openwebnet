@@ -17,8 +17,7 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 OpenWebNet
     .newClient(OpenWebNet.defaultGateway("192.168.1.41"))
     .send(() -> "*#1*21##")
-    .subscribe(session -> session
-        .getResponse().stream().forEach(System.out::println));
+    .subscribe(System.out::println);
 
 ```
 ```java
@@ -30,8 +29,7 @@ OpenWebNet
     .subscribeOn(Schedulers.from(executor))
     .doOnError(throwable -> System.out.println("ERROR " + throwable))
     .finallyDo(() -> executor.shutdown())
-    .subscribe(sessions -> sessions.forEach(session ->
-        session.getResponse().stream().forEach(System.out::println)));
+    .subscribe(System.out::println);
 ```
 
 ### Gradle dependency (unstable)

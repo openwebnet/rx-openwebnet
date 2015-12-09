@@ -1,6 +1,7 @@
 package com.github.niqdev.openwebnet;
 
 import com.github.niqdev.openwebnet.message.OpenMessage;
+import com.google.common.base.MoreObjects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,4 +45,11 @@ public class OpenSession {
         return response;
     }
 
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+            .add("request", request.getValue())
+            .add("response", response)
+            .toString();
+    }
 }

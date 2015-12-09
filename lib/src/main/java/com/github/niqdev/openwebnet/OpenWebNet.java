@@ -49,7 +49,7 @@ public class OpenWebNet {
      */
     public interface OpenGateway {
 
-        int DEFAULT_PORT = 2000;
+        int DEFAULT_PORT = 20000;
 
         String getHost();
 

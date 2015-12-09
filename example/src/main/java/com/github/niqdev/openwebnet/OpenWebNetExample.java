@@ -22,21 +22,25 @@ public class OpenWebNetExample {
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public static void main(String[] args) {
+        //example1();
+        example2();
+    }
 
+    private static void example1() {
         OpenWebNet
             .newClient(defaultGateway(LOCALHOST))
             .send(() -> "*#1*21##")
-            .subscribe(session -> session
-                .getResponse().stream().forEach(System.out::println));
+            .subscribe(System.out::println);
+    }
 
+    private static void example2() {
         OpenWebNet
-            .newClient(gateway(HOST, PORT))
+            .newClient(gateway(LOCALHOST, PORT))
             .send(asList(() -> "*#1*21##", () -> "*#1*22##"))
             .subscribeOn(Schedulers.from(executor))
             .doOnError(throwable -> System.out.println("ERROR " + throwable))
             .finallyDo(() -> executor.shutdown())
-            .subscribe(sessions -> sessions.forEach(session ->
-                session.getResponse().stream().forEach(System.out::println)));
+            .subscribe(System.out::println);
     }
 
 }

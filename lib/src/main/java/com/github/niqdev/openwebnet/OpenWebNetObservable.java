@@ -1,6 +1,7 @@
 package com.github.niqdev.openwebnet;
 
 import com.github.niqdev.openwebnet.message.OpenMessage;
+import com.github.niqdev.openwebnet.message.ResponseOpenMessage;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -117,7 +118,7 @@ public class OpenWebNetObservable {
                         .omitEmptyStrings()
                         .split(messages))
                     .transform(value -> value.concat(FRAME_END))
-                    .transform(message -> (OpenMessage) () -> message)
+                    .transform(message -> (OpenMessage) new ResponseOpenMessage(message))
                     .toList();
             return Observable.just(response);
         };
