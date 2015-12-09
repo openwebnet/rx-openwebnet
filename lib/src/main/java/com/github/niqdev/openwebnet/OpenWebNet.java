@@ -51,14 +51,8 @@ public class OpenWebNet {
 
         int DEFAULT_PORT = 2000;
 
-        /**
-         *
-         */
         String getHost();
 
-        /**
-         *
-         */
         int getPort();
     }
 
