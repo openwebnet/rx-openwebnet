@@ -34,13 +34,15 @@ public class OpenWebNetExample {
     }
 
     private static void example2() {
+        System.out.println("before " + Thread.currentThread().getName());
         OpenWebNet
             .newClient(gateway(LOCALHOST, PORT))
             .send(asList(() -> "*#1*21##", () -> "*#1*22##"))
             .subscribeOn(Schedulers.from(executor))
             .doOnError(throwable -> System.out.println("ERROR " + throwable))
             .finallyDo(() -> executor.shutdown())
-            .subscribe(System.out::println);
+            .subscribe(System.out::println, throwable -> {});
+        System.out.println("after " + Thread.currentThread().getName());
     }
 
 }

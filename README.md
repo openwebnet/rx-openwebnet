@@ -29,7 +29,7 @@ OpenWebNet
     .subscribeOn(Schedulers.from(executor))
     .doOnError(throwable -> System.out.println("ERROR " + throwable))
     .finallyDo(() -> executor.shutdown())
-    .subscribe(System.out::println);
+    .subscribe(System.out::println, throwable -> {});
 ```
 
 ### Gradle dependency (unstable)

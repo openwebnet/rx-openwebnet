@@ -26,6 +26,10 @@ import static com.github.niqdev.openwebnet.message.OpenMessage.FRAME_END;
  */
 public class OpenWebNetObservable {
 
+    private static void log(String message) {
+        System.out.println(String.format("[%s] - %s", Thread.currentThread().getName(), message));
+    }
+
     // no instance
     private OpenWebNetObservable() {}
 
@@ -34,6 +38,7 @@ public class OpenWebNetObservable {
             try {
                 OpenContext context = OpenContext.setup(gateway);
                 context.connect();
+                log("connected!");
                 return Observable.just(context);
             } catch (IOException e) {
                 return Observable.error(e);
@@ -82,6 +87,7 @@ public class OpenWebNetObservable {
                 ByteBuffer buffer = context.getEmptyBuffer();
                 Integer count = context.getClient().read(buffer);
                 String message = new String(buffer.array()).trim();
+                log(String.format("read: %d|%s", count, message));
                 return Observable.just(message);
             } catch (IOException e) {
                 return Observable.error(e);
@@ -102,6 +108,7 @@ public class OpenWebNetObservable {
                 byte[] message = new String(value).getBytes();
                 ByteBuffer buffer = ByteBuffer.wrap(message);
                 Integer count = context.getClient().write(buffer);
+                log(String.format("write: %d|%s", count, value));
                 return Observable.just(context);
             } catch (IOException e) {
                 return Observable.error(e);
