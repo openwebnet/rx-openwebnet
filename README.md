@@ -40,7 +40,7 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.4'
+    compile 'com.github.openwebnet:rx-openwebnet:0.4.1'
 }
 ```
 
