@@ -1,9 +1,6 @@
 package com.github.niqdev.openwebnet.message;
 
-import com.github.niqdev.openwebnet.domain.Who;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.github.niqdev.openwebnet.domain.Who.LIGHTING;
 import static java.lang.String.format;
 
 /**
@@ -11,12 +8,11 @@ import static java.lang.String.format;
  */
 public class Lighting extends BaseOpenMessage {
 
-    private static final String FORMAT_PREFIX_STATUS = "*1*%d*";
     private static final int ON = 1;
     private static final int OFF = 0;
 
     private Lighting(String value) {
-        super(Who.LIGHTING, value);
+        super(value);
     }
 
     /**
@@ -25,9 +21,9 @@ public class Lighting extends BaseOpenMessage {
      * @param where
      * @return value
      */
-    public Lighting requestTurnOn(Integer where) {
+    public static Lighting requestTurnOn(Integer where) {
         checkRange(0, 9999, where);
-        return new Lighting(format(FORMAT_REQUEST, getWho(), ON, where));
+        return new Lighting(format(FORMAT_REQUEST, LIGHTING, ON, where));
     }
 
     /**
@@ -36,9 +32,9 @@ public class Lighting extends BaseOpenMessage {
      * @param where
      * @return value
      */
-    public Lighting requestTurnOff(Integer where) {
+    public static Lighting requestTurnOff(Integer where) {
         checkRange(0, 9999, where);
-        return new Lighting(format(FORMAT_REQUEST, getWho(), OFF, where));
+        return new Lighting(format(FORMAT_REQUEST, LIGHTING, OFF, where));
     }
 
     /**
@@ -47,15 +43,9 @@ public class Lighting extends BaseOpenMessage {
      * @param where
      * @return value
      */
-    public Lighting requestStatus(Integer where) {
+    public static Lighting requestStatus(Integer where) {
         checkRange(0, 9999, where);
-        return new Lighting(format(FORMAT_STATUS, getWho(), where));
-    }
-
-    private static void checkRange(Integer from, Integer to, Integer value) {
-        checkNotNull(value, "invalid null value");
-        checkArgument(value > from && value < to,
-            format("value must be between %d and %d", from, to));
+        return new Lighting(format(FORMAT_STATUS, LIGHTING, where));
     }
 
     /**
@@ -65,8 +55,7 @@ public class Lighting extends BaseOpenMessage {
      * @return true if light is on
      */
     public static boolean isOn(String value) {
-        return value != null && value.startsWith(format(FORMAT_PREFIX_STATUS, ON))
-            && value.length() <= 10 && value.endsWith(FRAME_END);
+        return verifyResponseStatus(value, ON);
     }
 
     /**
@@ -76,7 +65,11 @@ public class Lighting extends BaseOpenMessage {
      * @return true if light is off
      */
     public static boolean isOff(String value) {
-        return value != null && value.startsWith(format(FORMAT_PREFIX_STATUS, ON))
+        return verifyResponseStatus(value, OFF);
+    }
+
+    private static boolean verifyResponseStatus(String value, int status) {
+        return value != null && value.startsWith(format(FORMAT_PREFIX_STATUS, status))
             && value.length() <= 10 && value.endsWith(FRAME_END);
     }
 }

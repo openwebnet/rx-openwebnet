@@ -1,5 +1,6 @@
 package com.github.niqdev.openwebnet;
 
+import com.github.niqdev.openwebnet.message.Lighting;
 import rx.schedulers.Schedulers;
 
 import java.util.concurrent.ExecutorService;
@@ -23,7 +24,8 @@ public class OpenWebNetExample {
 
     public static void main(String[] args) {
         //example1();
-        example2();
+        //example2();
+        example3();
     }
 
     private static void example1() {
@@ -48,7 +50,7 @@ public class OpenWebNetExample {
     private static void example3() {
         OpenWebNet
             .newClient(gateway(LOCALHOST, PORT))
-            .send(() -> "*#1*21##")
+            .send(Lighting.requestTurnOn(21))
             .subscribe(System.out::println);
     }
 
