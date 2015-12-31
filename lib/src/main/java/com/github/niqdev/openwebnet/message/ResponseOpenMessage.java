@@ -1,8 +1,5 @@
 package com.github.niqdev.openwebnet.message;
 
-/**
- * Created by niqdev on 09/12/15.
- */
 public class ResponseOpenMessage implements OpenMessage {
 
     private final String value;

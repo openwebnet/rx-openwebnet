@@ -45,4 +45,11 @@ public class OpenWebNetExample {
         System.out.println("after " + Thread.currentThread().getName());
     }
 
+    private static void example3() {
+        OpenWebNet
+            .newClient(gateway(LOCALHOST, PORT))
+            .send(() -> "*#1*21##")
+            .subscribe(System.out::println);
+    }
+
 }
