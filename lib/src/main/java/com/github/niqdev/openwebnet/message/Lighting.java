@@ -8,8 +8,11 @@ import static java.lang.String.format;
  */
 public class Lighting extends BaseOpenMessage {
 
+    private static final int WHO = LIGHTING.value();
     private static final int ON = 1;
     private static final int OFF = 0;
+    private static final int WHERE_MIN_VALUE = 0;
+    private static final int WHERE_MAX_VALUE = 10000;
 
     private Lighting(String value) {
         super(value);
@@ -22,8 +25,8 @@ public class Lighting extends BaseOpenMessage {
      * @return value
      */
     public static Lighting requestTurnOn(Integer where) {
-        checkRange(0, 9999, where);
-        return new Lighting(format(FORMAT_REQUEST, LIGHTING, ON, where));
+        checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, where);
+        return new Lighting(format(FORMAT_REQUEST, WHO, ON, where));
     }
 
     /**
@@ -33,8 +36,8 @@ public class Lighting extends BaseOpenMessage {
      * @return value
      */
     public static Lighting requestTurnOff(Integer where) {
-        checkRange(0, 9999, where);
-        return new Lighting(format(FORMAT_REQUEST, LIGHTING, OFF, where));
+        checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, where);
+        return new Lighting(format(FORMAT_REQUEST, WHO, OFF, where));
     }
 
     /**
@@ -44,8 +47,8 @@ public class Lighting extends BaseOpenMessage {
      * @return value
      */
     public static Lighting requestStatus(Integer where) {
-        checkRange(0, 9999, where);
-        return new Lighting(format(FORMAT_STATUS, LIGHTING, where));
+        checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, where);
+        return new Lighting(format(FORMAT_STATUS, WHO, where));
     }
 
     /**
