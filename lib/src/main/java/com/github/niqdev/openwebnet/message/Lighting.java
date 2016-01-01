@@ -1,6 +1,14 @@
 package com.github.niqdev.openwebnet.message;
 
+import com.github.niqdev.openwebnet.OpenSession;
+import rx.functions.Action0;
+import rx.functions.Func1;
+
+import java.util.List;
+
 import static com.github.niqdev.openwebnet.message.Who.LIGHTING;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
 /**
@@ -49,6 +57,27 @@ public class Lighting extends BaseOpenMessage {
     public static Lighting requestStatus(Integer where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, where);
         return new Lighting(format(FORMAT_STATUS, WHO, where));
+    }
+
+    public static Func1<OpenSession, OpenSession> handleStatus(Action0 onStatus, Action0 offStatus) {
+        return openSession -> {
+            List<OpenMessage> response = openSession.getResponse();
+            checkNotNull(response, "response is null");
+            checkArgument(response.size() == 2, "invalid response");
+            checkNotNull(response.get(0).getValue(), "response value is null");
+            checkNotNull(response.get(1).getValue(), "response value is null");
+            checkArgument(response.get(1).getValue().equals(ACK), "bad response");
+
+            if (isOn(response.get(0).getValue())) {
+                onStatus.call();
+                return openSession;
+            }
+            if (isOff(response.get(0).getValue())) {
+                offStatus.call();
+                return openSession;
+            }
+            throw new IllegalStateException("unhandled lighting status");
+        };
     }
 
     /**

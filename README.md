@@ -12,13 +12,18 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 ./gradlew build
 ```
 
-### Example
+### Examples
 ```java
-OpenWebNet
-    .newClient(OpenWebNet.defaultGateway("192.168.1.41"))
+OpenWebNet client = OpenWebNet.newClient(OpenWebNet.defaultGateway("192.168.1.41"));
+
+client
     .send(Lighting.requestTurnOn(21))
     .subscribe(System.out::println);
 
+client
+    .send(Lighting.requestStatus(21))
+    .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
+    .subscribe(System.out::println);
 ```
 ```java
 ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -32,7 +37,7 @@ OpenWebNet
     .subscribe(System.out::println, throwable -> {});
 ```
 
-### Gradle dependency (unstable)
+### Gradle dependency
 ```
 repositories {
     maven {
@@ -40,7 +45,7 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.5'
+    compile 'com.github.openwebnet:rx-openwebnet:0.5.1'
 }
 ```
 

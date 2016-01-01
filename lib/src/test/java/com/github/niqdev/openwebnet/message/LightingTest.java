@@ -1,6 +1,11 @@
 package com.github.niqdev.openwebnet.message;
 
+import com.github.niqdev.openwebnet.OpenSession;
+import com.google.common.collect.Lists;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
+import rx.Observable;
+import rx.functions.Action0;
 
 import static com.github.niqdev.openwebnet.ThrowableCaptor.captureThrowable;
 import static com.github.niqdev.openwebnet.message.Lighting.*;
@@ -108,6 +113,36 @@ public class LightingTest {
         assertFalse(isOff("*1*0*21"));
         assertFalse(isOff("*1*0*##"));
         assertFalse(isOff("*1*0*XXXXX##"));
+    }
+
+    @Test
+    public void testHandleStatusOn() {
+        Action0 onStatusMock = mock(Action0.class);
+        Action0 offStatusMock = mock(Action0.class);
+
+        OpenSession openSession = OpenSession.newSession(() -> "REQUEST");
+        openSession.addAllResponse(Lists.newArrayList(() -> "*1*1*21##", () -> "*#*1##"));
+        Observable.just(openSession)
+            .map(Lighting.handleStatus(onStatusMock, offStatusMock))
+            .subscribe();
+
+        verify(onStatusMock).call();
+        verify(offStatusMock, never()).call();
+    }
+
+    @Test
+    public void testHandleStatusOff() {
+        Action0 onStatusMock = mock(Action0.class);
+        Action0 offStatusMock = mock(Action0.class);
+
+        OpenSession openSession = OpenSession.newSession(() -> "REQUEST");
+        openSession.addAllResponse(Lists.newArrayList(() -> "*1*0*21##", () -> "*#*1##"));
+        Observable.just(openSession)
+                .map(Lighting.handleStatus(onStatusMock, offStatusMock))
+                .subscribe();
+
+        verify(offStatusMock).call();
+        verify(onStatusMock, never()).call();
     }
 
 }
