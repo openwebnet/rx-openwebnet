@@ -16,7 +16,7 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 ```java
 OpenWebNet
     .newClient(OpenWebNet.defaultGateway("192.168.1.41"))
-    .send(() -> Lighting.requestTurnOn(21))
+    .send(Lighting.requestTurnOn(21))
     .subscribe(System.out::println);
 
 ```
