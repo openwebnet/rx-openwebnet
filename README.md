@@ -16,7 +16,7 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 ```java
 OpenWebNet
     .newClient(OpenWebNet.defaultGateway("192.168.1.41"))
-    .send(() -> "*#1*21##")
+    .send(() -> Lighting.requestTurnOn(21))
     .subscribe(System.out::println);
 
 ```
@@ -40,12 +40,12 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.4.1'
+    compile 'com.github.openwebnet:rx-openwebnet:0.5'
 }
 ```
 
 TODO
-* [bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
+* [publish bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
 * link repo to jcenter
 * tests
 * test coverage

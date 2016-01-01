@@ -1,6 +1,6 @@
 package com.github.niqdev.openwebnet.message;
 
-import static com.github.niqdev.openwebnet.domain.Who.LIGHTING;
+import static com.github.niqdev.openwebnet.message.Who.LIGHTING;
 import static java.lang.String.format;
 
 /**
@@ -8,9 +8,9 @@ import static java.lang.String.format;
  */
 public class Lighting extends BaseOpenMessage {
 
-    private static final int WHO = LIGHTING.value();
     private static final int ON = 1;
     private static final int OFF = 0;
+    private static final int WHO = LIGHTING.value();
     private static final int WHERE_MIN_VALUE = 0;
     private static final int WHERE_MAX_VALUE = 10000;
 
@@ -72,7 +72,7 @@ public class Lighting extends BaseOpenMessage {
     }
 
     private static boolean verifyResponseStatus(String value, int status) {
-        return value != null && value.startsWith(format(FORMAT_PREFIX_STATUS, status))
-            && value.length() <= 10 && value.endsWith(FRAME_END);
+        return value != null && value.startsWith(format(FORMAT_PREFIX_STATUS, WHO, status))
+            && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
     }
 }

@@ -1,4 +1,4 @@
-package com.github.niqdev.openwebnet.domain;
+package com.github.niqdev.openwebnet.message;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-// TODO refactor
 public enum Who {
 
     SCENARIO(0),
