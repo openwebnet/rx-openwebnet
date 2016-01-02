@@ -6,9 +6,11 @@ import static java.lang.String.format;
 
 public abstract class BaseOpenMessage implements OpenMessage {
 
+    protected static final String FORMAT_PREFIX_REQUEST_WHO = "*%d*";
+    protected static final String FORMAT_PREFIX_STATUS_WHO = "*#%d*";
     protected static final String FORMAT_REQUEST = "*%d*%d*%d##";
     protected static final String FORMAT_STATUS = "*#%d*%d##";
-    protected static final String FORMAT_PREFIX_STATUS = "*%d*%d*";
+    protected static final String FORMAT_PREFIX_REQUEST = "*%d*%d*";
 
     private final String value;
 

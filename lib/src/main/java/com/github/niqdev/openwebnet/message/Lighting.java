@@ -49,6 +49,31 @@ public class Lighting extends BaseOpenMessage {
     }
 
     /**
+     * Handle response from {@link Lighting#requestTurnOn(Integer)} and {@link Lighting#requestTurnOff(Integer)}.
+     *
+     * @param onSuccess invoked if request have been successfully received
+     * @param onFail invoked otherwise
+     * @return {@code Observable<OpenSession>}
+     */
+    public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
+        return openSession -> {
+            isValidLightingRequest(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO);
+            List<OpenMessage> response = openSession.getResponse();
+            checkNotNull(response, "response is null");
+            checkArgument(response.size() == 1, "invalid response");
+            checkNotNull(response.get(0).getValue(), "response value is null");
+
+            if (response.get(0).getValue().equals(ACK)) {
+                onSuccess.call();
+                return openSession;
+            } else {
+                onFail.call();
+                return openSession;
+            }
+        };
+    }
+
+    /**
      * OpenWebNet message request light status.
      *
      * @param where
@@ -59,8 +84,16 @@ public class Lighting extends BaseOpenMessage {
         return new Lighting(format(FORMAT_STATUS, WHO, where));
     }
 
+    /**
+     * Handle response from {@link Lighting#requestStatus(Integer)}.
+     *
+     * @param onStatus invoked if light is on
+     * @param offStatus invoked if light is off
+     * @return {@code Observable<OpenSession>}
+     */
     public static Func1<OpenSession, OpenSession> handleStatus(Action0 onStatus, Action0 offStatus) {
         return openSession -> {
+            isValidLightingRequest(openSession.getRequest(), FORMAT_PREFIX_STATUS_WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
             checkArgument(response.size() == 2, "invalid response");
@@ -87,7 +120,7 @@ public class Lighting extends BaseOpenMessage {
      * @return true if light is on
      */
     public static boolean isOn(String value) {
-        return verifyResponseStatus(value, ON);
+        return verifyMessage(value, ON);
     }
 
     /**
@@ -97,11 +130,18 @@ public class Lighting extends BaseOpenMessage {
      * @return true if light is off
      */
     public static boolean isOff(String value) {
-        return verifyResponseStatus(value, OFF);
+        return verifyMessage(value, OFF);
     }
 
-    private static boolean verifyResponseStatus(String value, int status) {
-        return value != null && value.startsWith(format(FORMAT_PREFIX_STATUS, WHO, status))
+    private static boolean verifyMessage(String value, int status) {
+        return value != null && value.startsWith(format(FORMAT_PREFIX_REQUEST, WHO, status))
             && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
+    }
+
+    private static void isValidLightingRequest(OpenMessage request, String format) {
+        checkNotNull(request, "request is null");
+        checkNotNull(request.getValue(), "request value is null");
+        boolean isValidWho = request.getValue().startsWith(format(format, WHO));
+        checkArgument(isValidWho, "invalid lighting request");
     }
 }

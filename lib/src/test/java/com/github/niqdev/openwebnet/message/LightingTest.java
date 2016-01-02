@@ -60,6 +60,22 @@ public class LightingTest {
     }
 
     @Test
+    public void testHandleResponse() {
+        // TODO
+        Action0 onSuccessMock = mock(Action0.class);
+        Action0 onFailMock = mock(Action0.class);
+
+        OpenSession openSession = OpenSession.newSession(() -> "*1*REQUEST");
+        openSession.addAllResponse(Lists.newArrayList(() -> "*#*1##"));
+        Observable.just(openSession)
+            .map(Lighting.handleResponse(onSuccessMock, onFailMock))
+            .subscribe();
+
+        verify(onSuccessMock).call();
+        verify(onFailMock, never()).call();
+    }
+
+    @Test
     public void testRequestStatus() {
         assertEquals("should be a valid value", "*#1*21##", requestStatus(21).getValue());
         assertEquals("should be a valid value", "*#1*1##", requestStatus(1).getValue());
@@ -120,7 +136,7 @@ public class LightingTest {
         Action0 onStatusMock = mock(Action0.class);
         Action0 offStatusMock = mock(Action0.class);
 
-        OpenSession openSession = OpenSession.newSession(() -> "REQUEST");
+        OpenSession openSession = OpenSession.newSession(() -> "*#1*REQUEST");
         openSession.addAllResponse(Lists.newArrayList(() -> "*1*1*21##", () -> "*#*1##"));
         Observable.just(openSession)
             .map(Lighting.handleStatus(onStatusMock, offStatusMock))
@@ -135,11 +151,11 @@ public class LightingTest {
         Action0 onStatusMock = mock(Action0.class);
         Action0 offStatusMock = mock(Action0.class);
 
-        OpenSession openSession = OpenSession.newSession(() -> "REQUEST");
+        OpenSession openSession = OpenSession.newSession(() -> "*#1*REQUEST");
         openSession.addAllResponse(Lists.newArrayList(() -> "*1*0*21##", () -> "*#*1##"));
         Observable.just(openSession)
-                .map(Lighting.handleStatus(onStatusMock, offStatusMock))
-                .subscribe();
+            .map(Lighting.handleStatus(onStatusMock, offStatusMock))
+            .subscribe();
 
         verify(offStatusMock).call();
         verify(onStatusMock, never()).call();

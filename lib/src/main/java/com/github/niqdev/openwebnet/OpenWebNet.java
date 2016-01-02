@@ -56,7 +56,7 @@ public class OpenWebNet {
         int getPort();
     }
 
-    public static OpenGateway gateway(String host, int port) {
+    public static OpenGateway gateway(final String host, final int port) {
         // TODO validate ip
         // TODO validate port
         return new OpenGateway() {

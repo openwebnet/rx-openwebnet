@@ -17,12 +17,13 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 OpenWebNet client = OpenWebNet.newClient(OpenWebNet.defaultGateway("192.168.1.41"));
 
 client
-    .send(Lighting.requestTurnOn(21))
-    .subscribe(System.out::println);
-
-client
     .send(Lighting.requestStatus(21))
     .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
+    .subscribe(System.out::println);
+    
+client
+    .send(Lighting.requestTurnOn(21))
+    .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
     .subscribe(System.out::println);
 ```
 ```java
@@ -35,6 +36,15 @@ OpenWebNet
     .doOnError(throwable -> System.out.println("ERROR " + throwable))
     .finallyDo(() -> executor.shutdown())
     .subscribe(System.out::println, throwable -> {});
+
+// Android
+OpenWebNet
+    .newClient(OpenWebNet.gateway("10.0.2.2", 20000))
+    .send(Lighting.requestTurnOff(21))
+    .subscribeOn(Schedulers.io())
+    .observeOn(AndroidSchedulers.mainThread())
+    .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+    .subscribe(System.out::println, throwable -> {});
 ```
 
 ### Gradle dependency
@@ -45,7 +55,7 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.5.1'
+    compile 'com.github.openwebnet:rx-openwebnet:0.5.2'
 }
 ```
 

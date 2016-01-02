@@ -25,7 +25,8 @@ public class OpenWebNetExample {
     public static void main(String[] args) {
         //example1();
         //example2();
-        example3();
+        exampleStatus();
+        //exampleTurnOn();
     }
 
     private static void example1() {
@@ -47,11 +48,19 @@ public class OpenWebNetExample {
         System.out.println("after " + Thread.currentThread().getName());
     }
 
-    private static void example3() {
+    private static void exampleStatus() {
         OpenWebNet
             .newClient(gateway(HOST, PORT))
             .send(Lighting.requestStatus(21))
             .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleTurnOn() {
+        OpenWebNet
+            .newClient(gateway(HOST, PORT))
+            .send(Lighting.requestTurnOn(21))
+            .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }
 
