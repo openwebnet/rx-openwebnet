@@ -10,6 +10,7 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 ### Build library
 ```
 ./gradlew build
+./gradlew runOpenWebNetExample
 ```
 
 ### Examples
