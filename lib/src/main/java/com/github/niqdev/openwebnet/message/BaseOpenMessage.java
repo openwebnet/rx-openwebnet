@@ -25,7 +25,7 @@ public abstract class BaseOpenMessage implements OpenMessage {
 
     protected static void checkRange(Integer from, Integer to, Integer value) {
         checkNotNull(value, "invalid null value");
-        checkArgument(value > from && value < to,
+        checkArgument(value >= from && value <= to,
             format("value must be between %d and %d", from, to));
     }
 }

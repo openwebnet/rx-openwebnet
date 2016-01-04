@@ -20,7 +20,7 @@ public class Lighting extends BaseOpenMessage {
     private static final int OFF = 0;
     private static final int WHO = LIGHTING.value();
     private static final int WHERE_MIN_VALUE = 0;
-    private static final int WHERE_MAX_VALUE = 10000;
+    private static final int WHERE_MAX_VALUE = 9999;
 
     private Lighting(String value) {
         super(value);

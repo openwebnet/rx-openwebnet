@@ -56,7 +56,7 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.5.2'
+    compile 'com.github.openwebnet:rx-openwebnet:0.5.3'
 }
 ```
 

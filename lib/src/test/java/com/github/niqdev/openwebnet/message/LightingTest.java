@@ -18,7 +18,7 @@ public class LightingTest {
     @Test
     public void testRequestTurnOn() {
         assertEquals("should be a valid value", "*1*1*21##", requestTurnOn(21).getValue());
-        assertEquals("should be a valid value", "*1*1*1##", requestTurnOn(1).getValue());
+        assertEquals("should be a valid value", "*1*1*0##", requestTurnOn(0).getValue());
         assertEquals("should be a valid value", "*1*1*9999##", requestTurnOn(9999).getValue());
     }
 
@@ -28,19 +28,19 @@ public class LightingTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("invalid null value");
 
-        assertThat(captureThrowable(() -> requestTurnOn(0)))
+        assertThat(captureThrowable(() -> requestTurnOn(-1)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("value must be between 0 and 10000");
+            .hasMessage("value must be between 0 and 9999");
 
         assertThat(captureThrowable(() -> requestTurnOn(10000)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("value must be between 0 and 10000");
+            .hasMessage("value must be between 0 and 9999");
     }
 
     @Test
     public void testRequestTurnOff() {
         assertEquals("should be a valid value", "*1*0*21##", requestTurnOff(21).getValue());
-        assertEquals("should be a valid value", "*1*0*1##", requestTurnOff(1).getValue());
+        assertEquals("should be a valid value", "*1*0*0##", requestTurnOff(0).getValue());
         assertEquals("should be a valid value", "*1*0*9999##", requestTurnOff(9999).getValue());
     }
 
@@ -50,18 +50,17 @@ public class LightingTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("invalid null value");
 
-        assertThat(captureThrowable(() -> requestTurnOff(0)))
+        assertThat(captureThrowable(() -> requestTurnOff(-1)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("value must be between 0 and 10000");
+            .hasMessage("value must be between 0 and 9999");
 
         assertThat(captureThrowable(() -> requestTurnOff(10000)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("value must be between 0 and 10000");
+            .hasMessage("value must be between 0 and 9999");
     }
 
     @Test
     public void testHandleResponse() {
-        // TODO
         Action0 onSuccessMock = mock(Action0.class);
         Action0 onFailMock = mock(Action0.class);
 
@@ -78,7 +77,7 @@ public class LightingTest {
     @Test
     public void testRequestStatus() {
         assertEquals("should be a valid value", "*#1*21##", requestStatus(21).getValue());
-        assertEquals("should be a valid value", "*#1*1##", requestStatus(1).getValue());
+        assertEquals("should be a valid value", "*#1*0##", requestStatus(0).getValue());
         assertEquals("should be a valid value", "*#1*9999##", requestStatus(9999).getValue());
     }
 
@@ -88,13 +87,13 @@ public class LightingTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("invalid null value");
 
-        assertThat(captureThrowable(() -> requestStatus(0)))
+        assertThat(captureThrowable(() -> requestStatus(-1)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("value must be between 0 and 10000");
+            .hasMessage("value must be between 0 and 9999");
 
         assertThat(captureThrowable(() -> requestStatus(10000)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("value must be between 0 and 10000");
+            .hasMessage("value must be between 0 and 9999");
     }
 
     @Test
