@@ -85,9 +85,6 @@ public class Lighting extends BaseOpenMessage {
     }
 
     /**
-     * @deprecated after real experiments, response is not guaranteed to be
-     * always in the same format, you should always request also the status
-     *
      * Handle response from {@link Lighting#requestStatus(Integer)}.
      *
      * @param onStatus invoked if light is on
