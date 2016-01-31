@@ -96,10 +96,12 @@ public class Lighting extends BaseOpenMessage {
             isValidLightingRequest(openSession.getRequest(), FORMAT_PREFIX_STATUS_WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
-            checkArgument(response.size() == 2, "invalid response");
+            checkArgument(response.size() == 1 || response.size() == 2, "invalid response");
             checkNotNull(response.get(0).getValue(), "response value is null");
-            checkNotNull(response.get(1).getValue(), "response value is null");
-            checkArgument(response.get(1).getValue().equals(ACK), "bad response");
+            if (response.size() == 2) {
+                checkNotNull(response.get(1).getValue(), "response value is null");
+                checkArgument(response.get(1).getValue().equals(ACK), "bad response");
+            }
 
             if (isOn(response.get(0).getValue())) {
                 onStatus.call();
