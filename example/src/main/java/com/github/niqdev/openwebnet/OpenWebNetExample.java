@@ -51,7 +51,7 @@ public class OpenWebNetExample {
     private static void exampleStatus() {
         OpenWebNet
             .newClient(gateway(HOST, PORT))
-            .send(Lighting.requestStatus(21))
+            .send(Lighting.requestStatus("21"))
             .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
             .subscribe(System.out::println);
     }
@@ -59,7 +59,7 @@ public class OpenWebNetExample {
     private static void exampleTurnOn() {
         OpenWebNet
             .newClient(gateway(HOST, PORT))
-            .send(Lighting.requestTurnOn(21))
+            .send(Lighting.requestTurnOn("21"))
             .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }

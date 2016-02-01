@@ -8,7 +8,6 @@ import static com.github.niqdev.openwebnet.message.Who.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
-// TODO refactor compatible java 7
 public class WhoTest {
 
     @Test

@@ -32,8 +32,8 @@ public class Lighting extends BaseOpenMessage {
      * @param where
      * @return value
      */
-    public static Lighting requestTurnOn(Integer where) {
-        checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, where);
+    public static Lighting requestTurnOn(String where) {
+        checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
         return new Lighting(format(FORMAT_REQUEST, WHO, ON, where));
     }
 
@@ -43,13 +43,13 @@ public class Lighting extends BaseOpenMessage {
      * @param where
      * @return value
      */
-    public static Lighting requestTurnOff(Integer where) {
-        checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, where);
+    public static Lighting requestTurnOff(String where) {
+        checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
         return new Lighting(format(FORMAT_REQUEST, WHO, OFF, where));
     }
 
     /**
-     * Handle response from {@link Lighting#requestTurnOn(Integer)} and {@link Lighting#requestTurnOff(Integer)}.
+     * Handle response from {@link Lighting#requestTurnOn(String)} and {@link Lighting#requestTurnOff(String)}.
      *
      * @param onSuccess invoked if request have been successfully received
      * @param onFail invoked otherwise
@@ -79,13 +79,13 @@ public class Lighting extends BaseOpenMessage {
      * @param where
      * @return value
      */
-    public static Lighting requestStatus(Integer where) {
-        checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, where);
+    public static Lighting requestStatus(String where) {
+        checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
         return new Lighting(format(FORMAT_STATUS, WHO, where));
     }
 
     /**
-     * Handle response from {@link Lighting#requestStatus(Integer)}.
+     * Handle response from {@link Lighting#requestStatus(String)}.
      *
      * @param onStatus invoked if light is on
      * @param offStatus invoked if light is off
@@ -143,5 +143,16 @@ public class Lighting extends BaseOpenMessage {
         checkNotNull(request.getValue(), "request value is null");
         boolean isValidWho = request.getValue().startsWith(format(format, WHO));
         checkArgument(isValidWho, "invalid lighting request");
+    }
+
+    /*
+     * See also org.apache.commons.lang.StringUtils.isNumeric
+     */
+    private static int checkIsInteger(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("invalid integer format");
+        }
     }
 }

@@ -3,13 +3,14 @@
 [![Build Status](https://travis-ci.org/openwebnet/rx-openwebnet.svg?branch=master)](https://travis-ci.org/openwebnet/rx-openwebnet)
 
 [OpenWebNet](http://www.myopen-legrandgroup.com/resources/own_protocol/default.aspx)
-client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
+client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava)
 
 > work in progress
 
-### Build library
+### Tasks
 ```
 ./gradlew build
+./gradlew :lib:test --debug
 ./gradlew runOpenWebNetExample
 ```
 
@@ -18,12 +19,12 @@ client written in Java 8 and [RxJava](https://github.com/ReactiveX/RxJava)
 OpenWebNet client = OpenWebNet.newClient(OpenWebNet.defaultGateway("192.168.1.41"));
 
 client
-    .send(Lighting.requestStatus(21))
+    .send(Lighting.requestStatus("21"))
     .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
     .subscribe(System.out::println);
     
 client
-    .send(Lighting.requestTurnOn(21))
+    .send(Lighting.requestTurnOn("21"))
     .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
     .subscribe(System.out::println);
 ```
@@ -41,7 +42,7 @@ OpenWebNet
 // Android
 OpenWebNet
     .newClient(OpenWebNet.gateway("10.0.2.2", 20000))
-    .send(Lighting.requestTurnOff(21))
+    .send(Lighting.requestTurnOff("21"))
     .subscribeOn(Schedulers.io())
     .observeOn(AndroidSchedulers.mainThread())
     .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
@@ -56,13 +57,13 @@ repositories {
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.5.6'
+    compile 'com.github.openwebnet:rx-openwebnet:0.6.0'
 }
 ```
 
 TODO
 * [publish bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
 * link repo to jcenter
-* tests
+* missing tests
 * test coverage
 * unsubscribe and close socket

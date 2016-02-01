@@ -17,44 +17,60 @@ public class LightingTest {
 
     @Test
     public void testRequestTurnOn() {
-        assertEquals("should be a valid value", "*1*1*21##", requestTurnOn(21).getValue());
-        assertEquals("should be a valid value", "*1*1*0##", requestTurnOn(0).getValue());
-        assertEquals("should be a valid value", "*1*1*9999##", requestTurnOn(9999).getValue());
+        assertEquals("should be a valid value", "*1*1*21##", requestTurnOn("21").getValue());
+        assertEquals("should be a valid value", "*1*1*0##", requestTurnOn("0").getValue());
+        assertEquals("should be a valid value", "*1*1*9999##", requestTurnOn("9999").getValue());
+        assertEquals("should be a valid value", "*1*1*01##", requestTurnOn("01").getValue());
+        assertEquals("should be a valid value", "*1*1*1##", requestTurnOn("1").getValue());
+        assertEquals("should be a valid value", "*1*1*09##", requestTurnOn("09").getValue());
+        assertEquals("should be a valid value", "*1*1*9##", requestTurnOn("9").getValue());
     }
 
     @Test
     public void testRequestTurnOnInvalid() {
-        assertThat(captureThrowable(() -> requestTurnOn(null)))
-            .isInstanceOf(NullPointerException.class)
-            .hasMessage("invalid null value");
+        assertThat(captureThrowable(() -> requestTurnOn("")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
 
-        assertThat(captureThrowable(() -> requestTurnOn(-1)))
+        assertThat(captureThrowable(() -> requestTurnOn("a1")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
+        assertThat(captureThrowable(() -> requestTurnOn("-1")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 9999");
 
-        assertThat(captureThrowable(() -> requestTurnOn(10000)))
+        assertThat(captureThrowable(() -> requestTurnOn("10000")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 9999");
     }
 
     @Test
     public void testRequestTurnOff() {
-        assertEquals("should be a valid value", "*1*0*21##", requestTurnOff(21).getValue());
-        assertEquals("should be a valid value", "*1*0*0##", requestTurnOff(0).getValue());
-        assertEquals("should be a valid value", "*1*0*9999##", requestTurnOff(9999).getValue());
+        assertEquals("should be a valid value", "*1*0*21##", requestTurnOff("21").getValue());
+        assertEquals("should be a valid value", "*1*0*0##", requestTurnOff("0").getValue());
+        assertEquals("should be a valid value", "*1*0*9999##", requestTurnOff("9999").getValue());
+        assertEquals("should be a valid value", "*1*0*01##", requestTurnOff("01").getValue());
+        assertEquals("should be a valid value", "*1*0*1##", requestTurnOff("1").getValue());
+        assertEquals("should be a valid value", "*1*0*09##", requestTurnOff("09").getValue());
+        assertEquals("should be a valid value", "*1*0*9##", requestTurnOff("9").getValue());
     }
 
     @Test
     public void testRequestTurnOffInvalid() {
-        assertThat(captureThrowable(() -> requestTurnOff(null)))
-            .isInstanceOf(NullPointerException.class)
-            .hasMessage("invalid null value");
+        assertThat(captureThrowable(() -> requestTurnOff("")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
 
-        assertThat(captureThrowable(() -> requestTurnOff(-1)))
+        assertThat(captureThrowable(() -> requestTurnOff("a1")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
+        assertThat(captureThrowable(() -> requestTurnOff("-1")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 9999");
 
-        assertThat(captureThrowable(() -> requestTurnOff(10000)))
+        assertThat(captureThrowable(() -> requestTurnOff("10000")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 9999");
     }
@@ -76,22 +92,30 @@ public class LightingTest {
 
     @Test
     public void testRequestStatus() {
-        assertEquals("should be a valid value", "*#1*21##", requestStatus(21).getValue());
-        assertEquals("should be a valid value", "*#1*0##", requestStatus(0).getValue());
-        assertEquals("should be a valid value", "*#1*9999##", requestStatus(9999).getValue());
+        assertEquals("should be a valid value", "*#1*21##", requestStatus("21").getValue());
+        assertEquals("should be a valid value", "*#1*0##", requestStatus("0").getValue());
+        assertEquals("should be a valid value", "*#1*9999##", requestStatus("9999").getValue());
+        assertEquals("should be a valid value", "*#1*01##", requestStatus("01").getValue());
+        assertEquals("should be a valid value", "*#1*1##", requestStatus("1").getValue());
+        assertEquals("should be a valid value", "*#1*09##", requestStatus("09").getValue());
+        assertEquals("should be a valid value", "*#1*9##", requestStatus("9").getValue());
     }
 
     @Test
     public void testRequestStatusInvalid() {
-        assertThat(captureThrowable(() -> requestStatus(null)))
-            .isInstanceOf(NullPointerException.class)
-            .hasMessage("invalid null value");
+        assertThat(captureThrowable(() -> requestStatus("")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
 
-        assertThat(captureThrowable(() -> requestStatus(-1)))
+        assertThat(captureThrowable(() -> requestStatus("a1")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
+        assertThat(captureThrowable(() -> requestStatus("-1")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 9999");
 
-        assertThat(captureThrowable(() -> requestStatus(10000)))
+        assertThat(captureThrowable(() -> requestStatus("10000")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 9999");
     }
