@@ -20,8 +20,6 @@ public class Automation extends BaseOpenMessage {
     private static final int UP = 1;
     private static final int DOWN = 2;
     private static final int WHO = AUTOMATION.value();
-    private static final int WHERE_MIN_VALUE = 0;
-    private static final int WHERE_MAX_VALUE = 9999;
 
     private Automation(String value) {
         super(value);
@@ -170,16 +168,5 @@ public class Automation extends BaseOpenMessage {
         checkNotNull(request.getValue(), "request value is null");
         boolean isValidWho = request.getValue().startsWith(format(format, WHO));
         checkArgument(isValidWho, "invalid automation request");
-    }
-
-    /*
-     * See also org.apache.commons.lang.StringUtils.isNumeric
-     */
-    private static int checkIsInteger(String value) {
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("invalid integer format");
-        }
     }
 }
