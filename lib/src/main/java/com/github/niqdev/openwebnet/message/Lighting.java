@@ -19,8 +19,6 @@ public class Lighting extends BaseOpenMessage {
     private static final int ON = 1;
     private static final int OFF = 0;
     private static final int WHO = LIGHTING.value();
-    private static final int WHERE_MIN_VALUE = 0;
-    private static final int WHERE_MAX_VALUE = 9999;
 
     private Lighting(String value) {
         super(value);
@@ -141,16 +139,5 @@ public class Lighting extends BaseOpenMessage {
         checkNotNull(request.getValue(), "request value is null");
         boolean isValidWho = request.getValue().startsWith(format(format, WHO));
         checkArgument(isValidWho, "invalid lighting request");
-    }
-
-    /*
-     * See also org.apache.commons.lang.StringUtils.isNumeric
-     */
-    private static int checkIsInteger(String value) {
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("invalid integer format");
-        }
     }
 }
