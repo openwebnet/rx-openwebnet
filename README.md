@@ -52,18 +52,18 @@ OpenWebNet
 ### Gradle dependency
 ```
 repositories {
-    maven {
-        url  "http://dl.bintray.com/niqdev/maven"
+    repositories {
+        jcenter()
     }
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.6.1'
+    compile 'com.github.openwebnet:rx-openwebnet:0.7.0'
 }
 ```
 
 TODO
 * [publish bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
-* link repo to jcenter
 * missing tests
 * test coverage
 * unsubscribe and close socket
+* wiki: example of OpenMessage
