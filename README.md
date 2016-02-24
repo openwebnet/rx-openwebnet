@@ -52,9 +52,7 @@ OpenWebNet
 ### Gradle dependency
 ```
 repositories {
-    repositories {
-        jcenter()
-    }
+    jcenter()
 }
 dependencies {
     compile 'com.github.openwebnet:rx-openwebnet:0.7.0'
