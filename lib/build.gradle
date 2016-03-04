@@ -1,7 +1,7 @@
 dependencies {
     compile 'io.reactivex:rxjava:1.0.16'
     compile 'io.reactivex:rxjava-computation-expressions:0.21.0'
-    compile 'com.google.guava:guava:18.0'
+    compile 'com.google.guava:guava:19.0'
 
     testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile 'org.powermock:powermock-core:1.6.3'
