@@ -6,7 +6,7 @@ import com.google.common.base.MoreObjects;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Objects.requireNonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  *
@@ -17,7 +17,7 @@ public class OpenSession {
     private final List<OpenMessage> response = new ArrayList<>();
 
     private OpenSession(OpenMessage request) {
-        requireNonNull(request, "request can't be null");
+        checkNotNull(request, "request can't be null");
         this.request = request;
     }
 
@@ -26,13 +26,13 @@ public class OpenSession {
     }
 
     public OpenSession addAllResponse(List<OpenMessage> response) {
-        requireNonNull(response, "response can't be null");
+        checkNotNull(response, "response can't be null");
         this.response.addAll(response);
         return this;
     }
 
     public OpenSession addResponse(OpenMessage response) {
-        requireNonNull(response, "response can't be null");
+        checkNotNull(response, "response can't be null");
         this.response.add(response);
         return this;
     }

@@ -6,7 +6,7 @@ import rx.Observable;
 import java.util.List;
 
 import static com.github.niqdev.openwebnet.OpenWebNetObservable.*;
-import static java.util.Objects.requireNonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Reactive OpenWebNet client.
@@ -26,14 +26,14 @@ public class OpenWebNet {
     }
 
     public Observable<OpenSession> send(OpenMessage request) {
-        requireNonNull(request, "request can't be null");
+        checkNotNull(request, "request can't be null");
         return connect(gateway)
             .flatMap(doHandshake(Channel.COMMAND))
             .flatMap(doRequest(request));
     }
 
     public Observable<List<OpenSession>> send(List<OpenMessage> requests) {
-        requireNonNull(requests, "requests can't be null");
+        checkNotNull(requests, "requests can't be null");
         return connect(gateway)
             .flatMap(doHandshake(Channel.COMMAND))
             .flatMap(doRequests(requests));
