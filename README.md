@@ -55,7 +55,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.7.1'
+    compile 'com.github.openwebnet:rx-openwebnet:0.7.2'
 }
 ```
 
@@ -64,4 +64,3 @@ TODO
 * missing tests
 * test coverage
 * unsubscribe and close socket
-* wiki: example of OpenMessage
