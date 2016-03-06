@@ -7,7 +7,7 @@ import java.nio.channels.SocketChannel;
 
 import static com.github.niqdev.openwebnet.OpenWebNet.OpenGateway;
 import static com.google.common.base.Preconditions.checkArgument;
-import static java.util.Objects.requireNonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class OpenContext {
 
@@ -16,7 +16,7 @@ public class OpenContext {
     private final ByteBuffer buffer = ByteBuffer.allocate(1024);
 
     private OpenContext(OpenGateway gateway) {
-        requireNonNull(gateway, "gateway can't be null");
+        checkNotNull(gateway, "gateway can't be null");
         this.gateway = gateway;
     }
 
@@ -41,7 +41,7 @@ public class OpenContext {
     }
 
     public SocketChannel getClient() {
-        requireNonNull(client, "client can't be null");
+        checkNotNull(client, "client can't be null");
         checkArgument(client.isConnected(), "client is not connected");
         return client;
     }
