@@ -7,6 +7,12 @@ client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX
 
 > work in progress
 
+### Currently supports
+* `WHO=1` Lighting
+* `WHO=2` Automation
+* a single generic frame/message
+* a list of generic frames/messages
+
 ### Tasks
 ```
 ./gradlew build
@@ -16,21 +22,27 @@ client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX
 
 ### Examples
 ```java
+
+// connect to the gateway
 OpenWebNet client = OpenWebNet.newClient(OpenWebNet.defaultGateway("192.168.1.41"));
 
+// requests status light 21
 client
     .send(Lighting.requestStatus("21"))
     .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
     .subscribe(System.out::println);
-    
+
+// turns light 21 on    
 client
     .send(Lighting.requestTurnOn("21"))
     .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
     .subscribe(System.out::println);
+    
 ```
 ```java
-ExecutorService executor = Executors.newSingleThreadExecutor();
 
+// sends a list of generic frames/messages with a custom thread pool
+ExecutorService executor = Executors.newSingleThreadExecutor();
 OpenWebNet
     .newClient(OpenWebNet.gateway("192.168.1.41", 20000))
     .send(Arrays.asList(() -> "*#1*21##", () -> "*#1*22##"))
@@ -39,7 +51,7 @@ OpenWebNet
     .finallyDo(() -> executor.shutdown())
     .subscribe(System.out::println, throwable -> {});
 
-// Android
+// turns light 21 on with a custom scheduler on Android
 OpenWebNet
     .newClient(OpenWebNet.gateway("10.0.2.2", 20000))
     .send(Lighting.requestTurnOff("21"))
@@ -47,6 +59,7 @@ OpenWebNet
     .observeOn(AndroidSchedulers.mainThread())
     .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
     .subscribe(System.out::println, throwable -> {});
+    
 ```
 
 ### Gradle dependency
@@ -59,8 +72,10 @@ dependencies {
 }
 ```
 
+<!--
 TODO
 * [publish bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
 * missing tests
 * test coverage
 * unsubscribe and close socket
+-->
