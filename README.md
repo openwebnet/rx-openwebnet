@@ -13,17 +13,20 @@ client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX
 * a single generic frame/message
 * a list of generic frames/messages
 
-### Tasks
+### Gradle dependency
 ```
-./gradlew build
-./gradlew :lib:test --debug
-./gradlew runOpenWebNetExample
+repositories {
+    jcenter()
+}
+dependencies {
+    compile 'com.github.openwebnet:rx-openwebnet:0.7.2'
+}
 ```
 
 ### Examples
 ```java
 
-// connect to the gateway
+// connects to the gateway
 OpenWebNet client = OpenWebNet.newClient(OpenWebNet.defaultGateway("192.168.1.41"));
 
 // requests status light 21
@@ -62,18 +65,16 @@ OpenWebNet
     
 ```
 
-### Gradle dependency
+### Development tasks
 ```
-repositories {
-    jcenter()
-}
-dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.7.2'
-}
+./gradlew build
+./gradlew :lib:test --debug
 ```
 
 <!--
 TODO
+./gradlew runOpenWebNetExample
+
 * [publish bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
 * missing tests
 * test coverage
