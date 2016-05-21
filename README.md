@@ -8,8 +8,8 @@ client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX
 > work in progress
 
 ### Currently supports
-* `WHO=1` Lighting
-* `WHO=2` Automation
+* `WHO=1` [Lighting](http://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Lighting.html)
+* `WHO=2` [Automation](http://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Automation.html)
 * a single generic frame/message
 * a list of generic frames/messages
 
