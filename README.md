@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/openwebnet/rx-openwebnet.svg?branch=master)](https://travis-ci.org/openwebnet/rx-openwebnet)
 
 [OpenWebNet](http://www.myopen-legrandgroup.com/resources/own_protocol/default.aspx)
-client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava)
+client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava). See also [Javadoc](http://openwebnet.github.io/rx-openwebnet).
 
 > work in progress
 
