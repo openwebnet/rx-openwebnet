@@ -69,6 +69,7 @@ OpenWebNet
 ```
 ./gradlew build
 ./gradlew :lib:test --debug
+./gradlew copyJavaDoc
 ```
 
 <!--

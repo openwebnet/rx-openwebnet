@@ -51,6 +51,10 @@ subprojects {
         classifier = 'javadoc'
         from javadoc.destinationDir
     }
+    task copyJavaDoc(type: Copy, dependsOn: javadoc) {
+        from javadoc.destinationDir
+        into("$rootProject.projectDir/javadoc")
+    }
 
     // adds javadoc/source jar tasks as artifacts
     artifacts {
