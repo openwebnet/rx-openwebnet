@@ -151,8 +151,8 @@ public class Lighting extends BaseOpenMessage {
     }
 
     private static boolean verifyMessage(String value, int status) {
-        return value != null && value.startsWith(format(FORMAT_PREFIX_REQUEST, WHO, status))
-                && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
+        return value != null && value.startsWith(format(FORMAT_PREFIX_RESPONSE, WHO, status))
+            && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
     }
 
     private static void isValidLightingRequest(OpenMessage request, String format) {
