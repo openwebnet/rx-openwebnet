@@ -42,8 +42,8 @@ public class Automation extends BaseOpenMessage {
     /**
      * OpenWebNet message request to send the "STOP" automation command.
      *
-     * @param where
-     * @return value
+     * @param where Value between 0 and 9999
+     * @return message
      */
     public static Automation requestStop(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -53,8 +53,8 @@ public class Automation extends BaseOpenMessage {
     /**
      * OpenWebNet message request to send the "UP" automation command.
      *
-     * @param where
-     * @return value
+     * @param where Value between 0 and 9999
+     * @return message
      */
     public static Automation requestMoveUp(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -64,8 +64,8 @@ public class Automation extends BaseOpenMessage {
     /**
      * OpenWebNet message request to send the "DOWN" automation command.
      *
-     * @param where
-     * @return value
+     * @param where Value between 0 and 9999
+     * @return message
      */
     public static Automation requestMoveDown(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -76,7 +76,7 @@ public class Automation extends BaseOpenMessage {
      * Handle response from {@link Automation#requestMoveUp(String)}, {@link Automation#requestMoveDown(String)} and {@link Automation#requestStop(String)}.
      *
      * @param onSuccess invoked if request has been successfully received
-     * @param onFail invoked otherwise
+     * @param onFail    invoked otherwise
      * @return {@code Observable<OpenSession>}
      */
     public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
@@ -100,8 +100,8 @@ public class Automation extends BaseOpenMessage {
     /**
      * OpenWebNet message request automation status.
      *
-     * @param where
-     * @return value
+     * @param where Value between 0 and 9999
+     * @return message
      */
     public static Automation requestStatus(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -112,7 +112,7 @@ public class Automation extends BaseOpenMessage {
      * Handle response from {@link Automation#requestStatus(String)}.
      *
      * @param stopAction invoked if automation is stopped
-     * @param upAction invoked if automation is processing the "UP" command
+     * @param upAction   invoked if automation is processing the "UP" command
      * @param downAction invoked if automation is processing the "DOWN" command
      * @return {@code Observable<OpenSession>}
      */
@@ -141,33 +141,33 @@ public class Automation extends BaseOpenMessage {
         };
     }
 
-    /**
+    /*
      * Verify OpenWebNet message response if automation is stopped.
      *
      * @param value
      * @return true if automation is processing the "STOP" command
      */
-    public static boolean isStop(String value) {
+    static boolean isStop(String value) {
         return verifyMessage(value, STOP);
     }
 
-    /**
+    /*
      * Verify OpenWebNet message response if automation is up.
      *
      * @param value
      * @return true if automation is processing the "UP" command
      */
-    public static boolean isUp(String value) {
+    static boolean isUp(String value) {
         return verifyMessage(value, UP);
     }
 
-    /**
+    /*
      * Verify OpenWebNet message response if automation is down.
      *
      * @param value
      * @return true if automation is processing the "DOWN" command
      */
-    public static boolean isDown(String value) {
+    static boolean isDown(String value) {
         return verifyMessage(value, DOWN);
     }
 

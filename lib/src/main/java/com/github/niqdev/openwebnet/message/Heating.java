@@ -49,8 +49,7 @@ public class Heating extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request to read temperature.
-     * Default {@link TemperatureScale} is {@link TemperatureScale#CELSIUS}.
+     * OpenWebNet message request to read temperature in {@link TemperatureScale#CELSIUS}.
      *
      * @param where Value between 0 and 899
      * @return message
@@ -59,6 +58,13 @@ public class Heating extends BaseOpenMessage {
         return requestTemperature(where, TemperatureScale.CELSIUS);
     }
 
+    /**
+     * Handle response from {@link Heating#requestTemperature(String, TemperatureScale)}.
+     *
+     * @param onSuccess invoked if the temperature has been read correctly
+     * @param onError   invoked otherwise
+     * @return {@code Observable<OpenSession>}
+     */
     public static Func1<OpenSession, OpenSession> handleTemperature(Action1 onSuccess, Action0 onError) {
         return openSession -> {
             isValidHeatingRequest(openSession.getRequest(), FORMAT_PREFIX_STATUS_WHO);
@@ -71,15 +77,9 @@ public class Heating extends BaseOpenMessage {
 
             if (isValidTemperature(responseValue)) {
                 switch (getTemperatureScale(openSession.getRequest())) {
-                    case CELSIUS:
-                        onSuccess.call(toCelsius(responseValue));
-                        break;
-                    case FAHRENHEIT:
-                        onSuccess.call(toFahrenheit(responseValue));
-                        break;
-                    case KELVIN:
-                        onSuccess.call(toKelvin(responseValue));
-                        break;
+                    case CELSIUS: onSuccess.call(toCelsius(responseValue)); break;
+                    case FAHRENHEIT: onSuccess.call(toFahrenheit(responseValue)); break;
+                    case KELVIN: onSuccess.call(toKelvin(responseValue)); break;
                 }
             } else {
                 onError.call();

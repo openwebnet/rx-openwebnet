@@ -48,8 +48,8 @@ public class Lighting extends BaseOpenMessage {
     /**
      * OpenWebNet message request to turn on light.
      *
-     * @param where
-     * @return value
+     * @param where Value between 0 and 9999
+     * @return message
      */
     public static Lighting requestTurnOn(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -59,8 +59,8 @@ public class Lighting extends BaseOpenMessage {
     /**
      * OpenWebNet message request to turn off light.
      *
-     * @param where
-     * @return value
+     * @param where Value between 0 and 9999
+     * @return message
      */
     public static Lighting requestTurnOff(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -70,7 +70,7 @@ public class Lighting extends BaseOpenMessage {
     /**
      * Handle response from {@link Lighting#requestTurnOn(String)} and {@link Lighting#requestTurnOff(String)}.
      *
-     * @param onSuccess invoked if request have been successfully received
+     * @param onSuccess invoked if the request has been successfully received
      * @param onFail    invoked otherwise
      * @return {@code Observable<OpenSession>}
      */
@@ -95,8 +95,8 @@ public class Lighting extends BaseOpenMessage {
     /**
      * OpenWebNet message request light status.
      *
-     * @param where
-     * @return value
+     * @param where Value between 0 and 9999
+     * @return message
      */
     public static Lighting requestStatus(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -130,23 +130,23 @@ public class Lighting extends BaseOpenMessage {
         };
     }
 
-    /**
+    /*
      * Verify OpenWebNet message response if light is on.
      *
      * @param value
      * @return true if light is on
      */
-    public static boolean isOn(String value) {
+    static boolean isOn(String value) {
         return verifyMessage(value, ON);
     }
 
-    /**
+    /*
      * Verify OpenWebNet message response if light is off.
      *
      * @param value
      * @return true if light is off
      */
-    public static boolean isOff(String value) {
+    static boolean isOff(String value) {
         return verifyMessage(value, OFF);
     }
 
