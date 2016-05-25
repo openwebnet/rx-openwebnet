@@ -40,7 +40,7 @@ public class Automation extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request to send the "STOP" automation command.
+     * OpenWebNet message request to send the <i>STOP</i> automation command with value <b>*2*0*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
@@ -51,7 +51,7 @@ public class Automation extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request to send the "UP" automation command.
+     * OpenWebNet message request to send the <i>UP</i> automation command with value <b>*2*1*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
@@ -62,7 +62,7 @@ public class Automation extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request to send the "DOWN" automation command.
+     * OpenWebNet message request to send the <i>DOWN</i> automation command with value <b>*2*2*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
@@ -98,7 +98,7 @@ public class Automation extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request automation status.
+     * OpenWebNet message request automation status with value <b>*#2*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
@@ -112,8 +112,8 @@ public class Automation extends BaseOpenMessage {
      * Handle response from {@link Automation#requestStatus(String)}.
      *
      * @param stopAction invoked if automation is stopped
-     * @param upAction   invoked if automation is processing the "UP" command
-     * @param downAction invoked if automation is processing the "DOWN" command
+     * @param upAction   invoked if automation is processing the <i>UP</i> command
+     * @param downAction invoked if automation is processing the <i>DOWN</i> command
      * @return {@code Observable<OpenSession>}
      */
     public static Func1<OpenSession, OpenSession> handleStatus(Action0 stopAction, Action0 upAction, Action0 downAction) {

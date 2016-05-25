@@ -36,7 +36,7 @@ public class Heating extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request to read temperature with a specific {@link TemperatureScale}.
+     * OpenWebNet message request to read temperature with a specific {@link TemperatureScale} and value <b>*4*WHERE*0##</b>.
      *
      * @param where Value between 0 and 899
      * @param scale Temperature scale
@@ -49,7 +49,7 @@ public class Heating extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request to read temperature in {@link TemperatureScale#CELSIUS}.
+     * OpenWebNet message request to read temperature in {@link TemperatureScale#CELSIUS} and value <b>*4*WHERE*0##</b>.
      *
      * @param where Value between 0 and 899
      * @return message

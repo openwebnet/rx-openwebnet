@@ -46,7 +46,7 @@ public class Lighting extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request to turn on light.
+     * OpenWebNet message request to turn light <i>ON</i> with value <b>*1*1*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
@@ -57,7 +57,7 @@ public class Lighting extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request to turn off light.
+     * OpenWebNet message request to turn light <i>OFF</i> with value <b>*1*0*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
@@ -93,7 +93,7 @@ public class Lighting extends BaseOpenMessage {
     }
 
     /**
-     * OpenWebNet message request light status.
+     * OpenWebNet message request light status with value <b>*#1*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
