@@ -13,6 +13,20 @@ import static java.lang.String.format;
 
 /**
  * OpenWebNet Automation.
+ *
+ * <pre>
+ * {@code
+ *
+ * import static com.github.niqdev.openwebnet.OpenWebNet.defaultGateway;
+ *
+ * // move shutter up
+ * OpenWebNet
+ *    .newClient(defaultGateway("IP_ADDRESS"))
+ *    .send(Automation.requestMoveUp("WHERE"))
+ *    .map(Automation.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+ *    .subscribe(System.out::println);
+ * }
+ * </pre>
  */
 public class Automation extends BaseOpenMessage {
 

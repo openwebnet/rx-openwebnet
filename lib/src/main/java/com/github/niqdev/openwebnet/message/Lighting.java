@@ -13,6 +13,27 @@ import static java.lang.String.format;
 
 /**
  * OpenWebNet Lighting.
+ *
+ * <pre>
+ * {@code
+ *
+ * import static com.github.niqdev.openwebnet.OpenWebNet.defaultGateway;
+ *
+ * OpenWebNet client = OpenWebNet.newClient(defaultGateway("IP_ADDRESS"));
+ *
+ * // requests status light 21
+ * client
+ *    .send(Lighting.requestStatus("21"))
+ *    .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
+ *    .subscribe(System.out::println);
+ *
+ * // turns light 21 on
+ * client
+ *    .send(Lighting.requestTurnOn("21"))
+ *    .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+ *    .subscribe(System.out::println);
+ * }
+ * </pre>
  */
 public class Lighting extends BaseOpenMessage {
 
@@ -50,7 +71,7 @@ public class Lighting extends BaseOpenMessage {
      * Handle response from {@link Lighting#requestTurnOn(String)} and {@link Lighting#requestTurnOff(String)}.
      *
      * @param onSuccess invoked if request have been successfully received
-     * @param onFail invoked otherwise
+     * @param onFail    invoked otherwise
      * @return {@code Observable<OpenSession>}
      */
     public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
@@ -85,7 +106,7 @@ public class Lighting extends BaseOpenMessage {
     /**
      * Handle response from {@link Lighting#requestStatus(String)}.
      *
-     * @param onStatus invoked if light is on
+     * @param onStatus  invoked if light is on
      * @param offStatus invoked if light is off
      * @return {@code Observable<OpenSession>}
      */
@@ -131,7 +152,7 @@ public class Lighting extends BaseOpenMessage {
 
     private static boolean verifyMessage(String value, int status) {
         return value != null && value.startsWith(format(FORMAT_PREFIX_REQUEST, WHO, status))
-            && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
+                && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
     }
 
     private static void isValidLightingRequest(OpenMessage request, String format) {

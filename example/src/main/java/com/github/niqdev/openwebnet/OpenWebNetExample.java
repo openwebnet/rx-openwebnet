@@ -1,5 +1,6 @@
 package com.github.niqdev.openwebnet;
 
+import com.github.niqdev.openwebnet.message.Automation;
 import com.github.niqdev.openwebnet.message.Lighting;
 import rx.schedulers.Schedulers;
 
@@ -61,6 +62,14 @@ public class OpenWebNetExample {
             .newClient(gateway(HOST, PORT))
             .send(Lighting.requestTurnOn("21"))
             .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleAutomation() {
+        OpenWebNet
+            .newClient(defaultGateway(LOCALHOST))
+            .send(Automation.requestMoveUp("WHERE"))
+            .map(Automation.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }
 
