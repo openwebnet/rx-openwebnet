@@ -76,7 +76,7 @@ public class Lighting extends BaseOpenMessage {
      */
     public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
         return openSession -> {
-            isValidLightingRequest(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO);
+            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
             checkArgument(response.size() == 1, "invalid response");
@@ -112,7 +112,7 @@ public class Lighting extends BaseOpenMessage {
      */
     public static Func1<OpenSession, OpenSession> handleStatus(Action0 onStatus, Action0 offStatus) {
         return openSession -> {
-            isValidLightingRequest(openSession.getRequest(), FORMAT_PREFIX_STATUS_WHO);
+            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_STATUS_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
             checkArgument(response.size() == 1 || response.size() == 2, "invalid response");
@@ -155,10 +155,4 @@ public class Lighting extends BaseOpenMessage {
             && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
     }
 
-    private static void isValidLightingRequest(OpenMessage request, String format) {
-        checkNotNull(request, "request is null");
-        checkNotNull(request.getValue(), "request value is null");
-        boolean isValidWho = request.getValue().startsWith(format(format, WHO));
-        checkArgument(isValidWho, "invalid lighting request");
-    }
 }

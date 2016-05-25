@@ -67,7 +67,7 @@ public class Heating extends BaseOpenMessage {
      */
     public static Func1<OpenSession, OpenSession> handleTemperature(Action1 onSuccess, Action0 onError) {
         return openSession -> {
-            isValidHeatingRequest(openSession.getRequest(), FORMAT_PREFIX_STATUS_WHO);
+            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
             checkArgument(response.size() == 1 || response.size() == 2, "invalid response");
@@ -111,10 +111,4 @@ public class Heating extends BaseOpenMessage {
         return null;
     }
 
-    private static void isValidHeatingRequest(OpenMessage request, String format) {
-        checkNotNull(request, "request is null");
-        checkNotNull(request.getValue(), "request value is null");
-        boolean isValidWho = request.getValue().startsWith(format(format, WHO));
-        checkArgument(isValidWho, "invalid heating request");
-    }
 }

@@ -81,7 +81,7 @@ public class Automation extends BaseOpenMessage {
      */
     public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
         return openSession -> {
-            isValidAutomationRequest(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO);
+            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
             checkArgument(response.size() == 1, "invalid response");
@@ -118,7 +118,7 @@ public class Automation extends BaseOpenMessage {
      */
     public static Func1<OpenSession, OpenSession> handleStatus(Action0 stopAction, Action0 upAction, Action0 downAction) {
         return openSession -> {
-            isValidAutomationRequest(openSession.getRequest(), FORMAT_PREFIX_STATUS_WHO);
+            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_STATUS_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
             checkArgument(response.size() == 1 || response.size() == 2, "invalid response");
@@ -175,12 +175,5 @@ public class Automation extends BaseOpenMessage {
     private static boolean verifyMessage(String value, int status) {
         return value != null && value.startsWith(format(FORMAT_PREFIX_RESPONSE, WHO, status))
             && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
-    }
-
-    private static void isValidAutomationRequest(OpenMessage request, String format) {
-        checkNotNull(request, "request is null");
-        checkNotNull(request.getValue(), "request value is null");
-        boolean isValidWho = request.getValue().startsWith(format(format, WHO));
-        checkArgument(isValidWho, "invalid automation request");
     }
 }
