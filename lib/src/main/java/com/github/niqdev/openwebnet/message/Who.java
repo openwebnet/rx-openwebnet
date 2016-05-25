@@ -6,7 +6,9 @@ import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-// TODO refactor compatible java 7
+/**
+ * OpenWebNet WHO types.
+ */
 public enum Who {
 
     SCENARIO(0),

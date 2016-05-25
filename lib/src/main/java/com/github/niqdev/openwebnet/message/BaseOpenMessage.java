@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
-public abstract class BaseOpenMessage implements OpenMessage {
+abstract class BaseOpenMessage implements OpenMessage {
 
     protected static final String FORMAT_PREFIX_REQUEST_WHO = "*%d*";
     protected static final String FORMAT_PREFIX_STATUS_WHO = "*#%d*";

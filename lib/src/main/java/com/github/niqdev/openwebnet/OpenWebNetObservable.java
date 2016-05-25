@@ -22,9 +22,11 @@ import static com.github.niqdev.openwebnet.message.OpenMessage.ACK;
 import static com.github.niqdev.openwebnet.message.OpenMessage.FRAME_END;
 
 /**
+ * OpenWebNet observable helper class.
+ *
  * @author niqdev
  */
-public class OpenWebNetObservable {
+class OpenWebNetObservable {
 
     private static void log(String message) {
         System.out.println(String.format("[%s] - %s", Thread.currentThread().getName(), message));

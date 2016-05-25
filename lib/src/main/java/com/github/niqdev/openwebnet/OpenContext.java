@@ -9,7 +9,10 @@ import static com.github.niqdev.openwebnet.OpenWebNet.OpenGateway;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class OpenContext {
+/**
+ * OpenWebNet context helper class.
+ */
+class OpenContext {
 
     private final OpenGateway gateway;
     private SocketChannel client;

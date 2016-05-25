@@ -10,7 +10,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * OpenWebNet session has both request and response messages.
- *
  */
 public class OpenSession {
 
@@ -25,7 +24,7 @@ public class OpenSession {
     /**
      * Helper method to create a new session.
      *
-     * @param request
+     * @param request message
      * @return session
      */
     public static OpenSession newSession(OpenMessage request) {
@@ -35,7 +34,7 @@ public class OpenSession {
     /**
      * Update the response messages.
      *
-     * @param response
+     * @param response messages
      * @return session
      */
     public OpenSession addAllResponse(List<OpenMessage> response) {
@@ -47,7 +46,7 @@ public class OpenSession {
     /**
      * Update the response messages.
      *
-     * @param response
+     * @param response messages
      * @return session
      */
     public OpenSession addResponse(OpenMessage response) {
