@@ -46,8 +46,8 @@ class OpenWebNetObservable {
                 return Observable.error(e);
             }
         })
-        .finallyDo(() -> {
-            // TODO handle unsubscribe/close socket
+        .doAfterTerminate(() -> {
+            // TODO how retrieve context to handle unsubscribe/close socket?
             //context.disconnect();
         })
         .timeout(5, TimeUnit.SECONDS)
