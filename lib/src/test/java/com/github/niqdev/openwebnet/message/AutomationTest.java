@@ -27,21 +27,25 @@ public class AutomationTest {
 
     @Test
     public void testRequestStopInvalid() {
+        assertThat(captureThrowable(() -> requestStop(null)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
         assertThat(captureThrowable(() -> requestStop("")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("invalid integer format");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
 
         assertThat(captureThrowable(() -> requestStop("a1")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("invalid integer format");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
 
         assertThat(captureThrowable(() -> requestStop("-1")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("value must be between 0 and 9999");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 0 and 9999");
 
         assertThat(captureThrowable(() -> requestStop("10000")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("value must be between 0 and 9999");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 0 and 9999");
     }
 
     @Test
@@ -57,6 +61,10 @@ public class AutomationTest {
 
     @Test
     public void testRequestMoveUpInvalid() {
+        assertThat(captureThrowable(() -> requestMoveUp(null)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
         assertThat(captureThrowable(() -> requestMoveUp("")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid integer format");
@@ -87,6 +95,10 @@ public class AutomationTest {
 
     @Test
     public void testRequestDownInvalid() {
+        assertThat(captureThrowable(() -> requestMoveDown(null)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
         assertThat(captureThrowable(() -> requestMoveDown("")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid integer format");
@@ -132,11 +144,15 @@ public class AutomationTest {
 
     @Test
     public void testRequestStatusInvalid() {
+        assertThat(captureThrowable(() -> requestStatus(null)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
         assertThat(captureThrowable(() -> requestStatus("")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid integer format");
 
-        assertThat(captureThrowable(() -> requestStatus("a1")))
+        assertThat(captureThrowable(() -> requestStatus("AAA")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid integer format");
 
@@ -209,8 +225,8 @@ public class AutomationTest {
         OpenSession openSession = OpenSession.newSession(() -> "*#2*REQUEST");
         openSession.addAllResponse(Lists.newArrayList(() -> "*2*0*21##", () -> "*#*1##"));
         Observable.just(openSession)
-                .map(Automation.handleStatus(stopAction, upAction, downAction))
-                .subscribe();
+            .map(Automation.handleStatus(stopAction, upAction, downAction))
+            .subscribe();
 
         verify(stopAction).call();
         verify(upAction, never()).call();

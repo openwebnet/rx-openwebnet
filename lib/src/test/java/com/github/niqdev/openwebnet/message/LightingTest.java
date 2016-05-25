@@ -28,6 +28,10 @@ public class LightingTest {
 
     @Test
     public void testRequestTurnOnInvalid() {
+        assertThat(captureThrowable(() -> requestTurnOn(null)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
         assertThat(captureThrowable(() -> requestTurnOn("")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid integer format");
@@ -58,6 +62,10 @@ public class LightingTest {
 
     @Test
     public void testRequestTurnOffInvalid() {
+        assertThat(captureThrowable(() -> requestTurnOff(null)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
         assertThat(captureThrowable(() -> requestTurnOff("")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid integer format");
@@ -103,6 +111,10 @@ public class LightingTest {
 
     @Test
     public void testRequestStatusInvalid() {
+        assertThat(captureThrowable(() -> requestStatus(null)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
         assertThat(captureThrowable(() -> requestStatus("")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid integer format");
