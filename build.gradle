@@ -85,7 +85,7 @@ subprojects {
             name = rootProject.name
             websiteUrl = 'https://github.com/openwebnet/rx-openwebnet'
             vcsUrl = 'https://github.com/openwebnet/rx-openwebnet.git'
-            licenses = ['MIT']
+            licenses = ['CC-BY-SA-4.0']
 
             version {
                 name = project.version

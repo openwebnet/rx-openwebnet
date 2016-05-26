@@ -1,6 +1,7 @@
 # rx-openwebnet
 
 [![Build Status](https://travis-ci.org/openwebnet/rx-openwebnet.svg?branch=master)](https://travis-ci.org/openwebnet/rx-openwebnet)
+[![Download](https://api.bintray.com/packages/niqdev/maven/rx-openwebnet/images/download.svg)](https://bintray.com/niqdev/maven/rx-openwebnet/_latestVersion)
 
 [OpenWebNet](http://www.myopen-legrandgroup.com/resources/own_protocol/default.aspx)
 client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava). See also the [documentation](http://openwebnet.github.io/rx-openwebnet).
@@ -71,6 +72,10 @@ OpenWebNet
 ./gradlew :lib:test --debug
 ./gradlew copyJavaDoc
 ```
+
+### Licence
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">rx-openwebnet</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/openwebnet/rx-openwebnet" property="cc:attributionName" rel="cc:attributionURL">niqdev</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/openwebnet/rx-openwebnet" rel="dct:source">https://github.com/openwebnet/rx-openwebnet</a>.
 
 <!--
 TODO
