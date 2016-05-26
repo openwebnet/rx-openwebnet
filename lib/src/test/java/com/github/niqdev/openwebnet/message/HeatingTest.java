@@ -3,12 +3,10 @@ package com.github.niqdev.openwebnet.message;
 import org.junit.Test;
 
 import static com.github.niqdev.openwebnet.ThrowableCaptor.captureThrowable;
-import static com.github.niqdev.openwebnet.message.Heating.*;
 import static com.github.niqdev.openwebnet.message.Heating.TemperatureScale.*;
+import static com.github.niqdev.openwebnet.message.Heating.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class HeatingTest {
 
@@ -75,8 +73,46 @@ public class HeatingTest {
     }
 
     @Test
-    public void testGetTemperature() {
+    public void testGetTemperatureCelsius() {
+        Heating request = Heating.requestTemperature("012");
 
+        assertEquals("invalid temperature", new Double(22.5), getTemperature(request, "*#4*012*0*0225##"));
+        assertEquals("invalid temperature", new Double(22.0), getTemperature(request, "*#4*012*0*0220##"));
+
+        Heating requestCelsius = Heating.requestTemperature("012", CELSIUS);
+        assertEquals("invalid temperature", new Double(22.5), getTemperature(requestCelsius, "*#4*012*0*0225##"));
+        assertEquals("invalid temperature", new Double(22.0), getTemperature(requestCelsius, "*#4*012*0*0220##"));
+    }
+
+    @Test
+    public void testGetTemperatureFahrenheit() {
+        Heating request = Heating.requestTemperature("0", FAHRENHEIT);
+
+        assertEquals("invalid temperature", new Double(32.0), getTemperature(request, "*#4*0*0*0000##"));
+        assertEquals("invalid temperature", new Double(122.18), getTemperature(request, "*#4*0*0*0501##"));
+    }
+
+    @Test
+    public void testGetTemperatureKelvin() {
+        Heating request = Heating.requestTemperature("899", KELVIN);
+
+        assertEquals("invalid temperature", new Double(273.15), getTemperature(request, "*#4*899*0*0000##"));
+        assertEquals("invalid temperature", new Double(311.35), getTemperature(request, "*#4*899*0*0382##"));
+    }
+
+    @Test
+    public void testGetTemperatureInvalid() {
+        assertThat(captureThrowable(() -> getTemperature(requestTemperature("012"), "*#4*0*0*0225##")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid temperature length");
+
+        assertThat(captureThrowable(() -> getTemperature(Lighting.requestTurnOn("21"), "*#4*0*0*0225##")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid request type");
+
+        assertThat(captureThrowable(() -> getTemperature(Automation.requestStatus("10"), "*#4*0*0*0225##")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid request type");
     }
 
     @Test
