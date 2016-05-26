@@ -46,7 +46,7 @@ public class Heating extends BaseOpenMessage {
     public static Heating requestTemperature(String where, TemperatureScale scale) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE_TEMPERATURE, checkIsInteger(where));
         checkNotNull(scale, "invalid null scale");
-        return new Heating(format(FORMAT_REQUEST_DIMENSION, WHO, where, READ_TEMPERATURE), scale);
+        return new Heating(format(FORMAT_DIMENSION, WHO, where, READ_TEMPERATURE), scale);
     }
 
     /**
@@ -68,7 +68,7 @@ public class Heating extends BaseOpenMessage {
      */
     public static Func1<OpenSession, OpenSession> handleTemperature(Action1<Double> onSuccess, Action0 onError) {
         return openSession -> {
-            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, WHO);
+            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_DIMENSION_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
             checkArgument(response.size() == 1 || response.size() == 2, "invalid response");
@@ -86,7 +86,7 @@ public class Heating extends BaseOpenMessage {
     }
 
     static boolean isValidTemperature(String value) {
-        return value != null && value.startsWith(format(FORMAT_PREFIX_RESPONSE_DIMENSION, WHO))
+        return value != null && value.startsWith(format(FORMAT_PREFIX_DIMENSION, WHO))
             && value.length() > 13 && value.length() < 17 && value.endsWith(FRAME_END);
     }
 
