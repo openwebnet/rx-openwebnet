@@ -1,12 +1,18 @@
 package com.github.niqdev.openwebnet.message;
 
+import com.github.niqdev.openwebnet.OpenSession;
+import com.google.common.collect.Lists;
 import org.junit.Test;
+import rx.Observable;
+import rx.functions.Action0;
+import rx.functions.Action1;
 
 import static com.github.niqdev.openwebnet.ThrowableCaptor.captureThrowable;
 import static com.github.niqdev.openwebnet.message.Heating.TemperatureScale.*;
 import static com.github.niqdev.openwebnet.message.Heating.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class HeatingTest {
 
@@ -53,7 +59,32 @@ public class HeatingTest {
 
     @Test
     public void testHandleTemperature() {
+        Action1 onSuccessMock = mock(Action1.class);
+        Action0 onErrorMock = mock(Action0.class);
 
+        OpenSession openSession = OpenSession.newSession(requestTemperature("0"));
+        openSession.addAllResponse(Lists.newArrayList(() -> "*#4*0*0*0225##", () -> OpenMessage.ACK));
+        Observable.just(openSession)
+            .map(Heating.handleTemperature(onSuccessMock, onErrorMock))
+            .subscribe();
+
+        verify(onSuccessMock).call(new Double(22.5));
+        verify(onErrorMock, never()).call();
+    }
+
+    @Test
+    public void testHandleTemperatureInvalid() {
+        Action1 onSuccessMock = mock(Action1.class);
+        Action0 onErrorMock = mock(Action0.class);
+
+        OpenSession openSession = OpenSession.newSession(requestTemperature("0"));
+        openSession.addAllResponse(Lists.newArrayList(() -> OpenMessage.ACK));
+        Observable.just(openSession)
+            .map(Heating.handleTemperature(onSuccessMock, onErrorMock))
+            .subscribe();
+
+        verify(onSuccessMock, never()).call(new Double(22.5));
+        verify(onErrorMock).call();
     }
 
     @Test
