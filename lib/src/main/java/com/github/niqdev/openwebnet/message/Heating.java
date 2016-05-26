@@ -5,6 +5,7 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static com.github.niqdev.openwebnet.message.Who.TEMPERATURE_CONTROL;
@@ -65,7 +66,7 @@ public class Heating extends BaseOpenMessage {
      * @param onError   invoked otherwise
      * @return {@code Observable<OpenSession>}
      */
-    public static Func1<OpenSession, OpenSession> handleTemperature(Action1 onSuccess, Action0 onError) {
+    public static Func1<OpenSession, OpenSession> handleTemperature(Action1<Double> onSuccess, Action0 onError) {
         return openSession -> {
             isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
@@ -76,11 +77,7 @@ public class Heating extends BaseOpenMessage {
             checkNotNull(responseValue, "response value is null");
 
             if (isValidTemperature(responseValue)) {
-                switch (getTemperatureScale(openSession.getRequest())) {
-                    case CELSIUS: onSuccess.call(toCelsius(responseValue)); break;
-                    case FAHRENHEIT: onSuccess.call(toFahrenheit(responseValue)); break;
-                    case KELVIN: onSuccess.call(toKelvin(responseValue)); break;
-                }
+                onSuccess.call(getTemperature(openSession.getRequest(), responseValue));
             } else {
                 onError.call();
             }
@@ -88,27 +85,59 @@ public class Heating extends BaseOpenMessage {
         };
     }
 
-    private static boolean isValidTemperature(String value) {
-        //*#4*2*0*0225##
-        //http://www.allmeasures.com/temperature.html
-        return true;
+    static boolean isValidTemperature(String value) {
+        return value != null && value.startsWith(format(FORMAT_PREFIX_RESPONSE_DIMENSION, WHO))
+            && value.length() > 13 && value.length() < 17 && value.endsWith(FRAME_END);
     }
 
-    private static TemperatureScale getTemperatureScale(OpenMessage request) {
+    static Double getTemperature(OpenMessage request, String response) {
         checkArgument(request instanceof Heating, "invalid request type");
-        return ((Heating) request).temperatureScale;
+        TemperatureScale currentScale = ((Heating) request).temperatureScale;
+
+        // *#4*WHERE*0##
+        String requestValue = request.getValue();
+        // *#4*WHERE*0
+        String requestValueWithoutSuffix = requestValue.substring(0, requestValue.length() - 2);
+        // *#4*WHERE*0*TEMPERATURE## --> TEMPERATURE##
+        String temperatureValueWithSuffix = response.substring(response.indexOf(requestValueWithoutSuffix));
+        /*
+         * The TEMPERATURE field is composed of 4 digits: c1c2c3c4,
+         * included between "0000" (0° temperature) and "0500" (50° temperature).
+         * c1 is always equal to 0, it indicates a positive temperature.
+         * The c2c3 couple indicates the temperature values between [00° - 50°].
+         * c4 indicates the decimal Celsius degree by 0.1° step.
+         */
+        String temperatureValue = temperatureValueWithSuffix.substring(0, temperatureValueWithSuffix.length() - 2);
+
+        checkArgument(temperatureValue.length() == 4, "invalid temperature length");
+        checkArgument(temperatureValue.startsWith("0"), "invalid negative temperature");
+
+        String temperatureStr = temperatureValue.substring(1, 3)
+            .concat(".")
+            .concat(temperatureValue.substring(-1));
+
+        double temperature = Double.parseDouble(temperatureStr);
+
+        switch (currentScale) {
+            case CELSIUS: return temperature;
+            case FAHRENHEIT: return toFahrenheit(temperature);
+            case KELVIN: return toKelvin(temperature);
+        }
+        throw new IllegalStateException("unhandled temperature scale");
     }
 
-    private static String toCelsius(String value) {
-        return null;
+    static Double toFahrenheit(Double value) {
+        return formatDouble((value * 9.0/5.0) + 32.0);
     }
 
-    private static String toFahrenheit(String value) {
-        return null;
+    static Double toKelvin(Double value) {
+        return formatDouble(value + 273.15);
     }
 
-    private static String toKelvin(String value) {
-        return null;
+    private static Double formatDouble(Double value) {
+        DecimalFormat df = new DecimalFormat("###.##");
+        //df.setRoundingMode(RoundingMode.DOWN);
+        return Double.parseDouble(df.format(value));
     }
 
 }

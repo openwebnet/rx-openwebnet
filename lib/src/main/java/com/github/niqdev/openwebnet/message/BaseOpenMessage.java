@@ -9,9 +9,10 @@ abstract class BaseOpenMessage implements OpenMessage {
     protected static final String FORMAT_PREFIX_REQUEST_WHO = "*%d*";
     protected static final String FORMAT_PREFIX_STATUS_WHO = "*#%d*";
     protected static final String FORMAT_REQUEST = "*%d*%d*%s##";
-    protected static final String FORMAT_REQUEST_DIMENSION = "*%d*%s*%d##";
+    protected static final String FORMAT_REQUEST_DIMENSION = "*#%d*%s*%d##";
     protected static final String FORMAT_STATUS = "*#%d*%s##";
     protected static final String FORMAT_PREFIX_RESPONSE = "*%d*%d*";
+    protected static final String FORMAT_PREFIX_RESPONSE_DIMENSION = "*#%d*";
 
     protected static final int WHERE_MIN_VALUE = 0;
     protected static final int WHERE_MAX_VALUE = 9999;

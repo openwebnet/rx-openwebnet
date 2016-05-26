@@ -3,25 +3,27 @@ package com.github.niqdev.openwebnet.message;
 import org.junit.Test;
 
 import static com.github.niqdev.openwebnet.ThrowableCaptor.captureThrowable;
+import static com.github.niqdev.openwebnet.message.Heating.*;
 import static com.github.niqdev.openwebnet.message.Heating.TemperatureScale.*;
-import static com.github.niqdev.openwebnet.message.Heating.requestTemperature;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class HeatingTest {
 
     @Test
     public void testRequestTemperature() {
-        assertEquals("should be a valid value", "*4*0*0##", requestTemperature("0").getValue());
-        assertEquals("should be a valid value", "*4*001*0##", requestTemperature("001").getValue());
-        assertEquals("should be a valid value", "*4*899*0##", requestTemperature("899").getValue());
+        assertEquals("should be a valid value", "*#4*0*0##", requestTemperature("0").getValue());
+        assertEquals("should be a valid value", "*#4*001*0##", requestTemperature("001").getValue());
+        assertEquals("should be a valid value", "*#4*899*0##", requestTemperature("899").getValue());
     }
 
     @Test
     public void testRequestTemperatureWithScale() {
-        assertEquals("should be a valid value", "*4*0*0##", requestTemperature("0", CELSIUS).getValue());
-        assertEquals("should be a valid value", "*4*001*0##", requestTemperature("001", FAHRENHEIT).getValue());
-        assertEquals("should be a valid value", "*4*899*0##", requestTemperature("899", KELVIN).getValue());
+        assertEquals("should be a valid value", "*#4*0*0##", requestTemperature("0", CELSIUS).getValue());
+        assertEquals("should be a valid value", "*#4*001*0##", requestTemperature("001", FAHRENHEIT).getValue());
+        assertEquals("should be a valid value", "*#4*899*0##", requestTemperature("899", KELVIN).getValue());
     }
 
     @Test
@@ -49,6 +51,55 @@ public class HeatingTest {
         assertThat(captureThrowable(() -> requestTemperature("1", null)))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("invalid null scale");
+    }
+
+    @Test
+    public void testHandleTemperature() {
+
+    }
+
+    @Test
+    public void testIsValidTemperature() {
+        assertTrue("should be valid", isValidTemperature("*#4*0*0*0225##"));
+        assertTrue("should be valid", isValidTemperature("*#4*00*0*0225##"));
+        assertTrue("should be valid", isValidTemperature("*#4*899*0*0225##"));
+        assertTrue("should be valid", isValidTemperature("*#4*XXXXXXXX##"));
+        assertTrue("should be valid", isValidTemperature("*#4*XXXXXXXXXX##"));
+
+        assertFalse("should be invalid", isValidTemperature("*#4*XXXXXXX##"));
+        assertFalse("should be invalid", isValidTemperature("*#4*XXXXXXXXXXX##"));
+        assertFalse("should be invalid", isValidTemperature("*#4*0*0##"));
+        assertFalse("should be invalid", isValidTemperature("*#4*899*0##"));
+        assertFalse("should be invalid", isValidTemperature(null));
+        assertFalse("should be invalid", isValidTemperature(""));
+    }
+
+    @Test
+    public void testGetTemperature() {
+
+    }
+
+    @Test
+    public void testToFahrenheit() {
+        assertEquals("bad conversion", new Double(32.0), toFahrenheit(0.0));
+        assertEquals("bad conversion", new Double(68.0), toFahrenheit(20.0));
+        assertEquals("bad conversion", new Double(72.5), toFahrenheit(22.5));
+        assertEquals("bad conversion", new Double(100.76), toFahrenheit(38.2));
+        assertEquals("bad conversion", new Double(122.18), toFahrenheit(50.1));
+        assertEquals("bad conversion", new Double(10.04), toFahrenheit(-12.2));
+        assertEquals("bad conversion", new Double(9.86), toFahrenheit(-12.3));
+        assertEquals("bad conversion", new Double(-62.14), toFahrenheit(-52.3));
+    }
+
+    @Test
+    public void testToKelvin() {
+        assertEquals("bad conversion", new Double(273.15), toKelvin(0.0));
+        assertEquals("bad conversion", new Double(293.15), toKelvin(20.0));
+        assertEquals("bad conversion", new Double(295.65), toKelvin(22.5));
+        assertEquals("bad conversion", new Double(311.35), toKelvin(38.2));
+        assertEquals("bad conversion", new Double(323.25), toKelvin(50.1));
+        assertEquals("bad conversion", new Double(260.95), toKelvin(-12.2));
+        assertEquals("bad conversion", new Double(0.0), toKelvin(-273.15));
     }
 
 }
