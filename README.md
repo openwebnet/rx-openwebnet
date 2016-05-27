@@ -71,6 +71,7 @@ OpenWebNet
 ./gradlew build
 ./gradlew :lib:test --debug
 ./gradlew copyJavaDoc
+./gradlew runOpenWebNetExample
 ```
 
 ### Licence
@@ -79,8 +80,6 @@ OpenWebNet
 
 <!--
 TODO
-./gradlew runOpenWebNetExample
-
 * [publish bintray + travis-ci](http://docs.travis-ci.com/user/deployment/bintray/)
 * missing tests
 * test coverage

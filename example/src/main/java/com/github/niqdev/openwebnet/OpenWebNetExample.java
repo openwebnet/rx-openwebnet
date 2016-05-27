@@ -1,6 +1,7 @@
 package com.github.niqdev.openwebnet;
 
 import com.github.niqdev.openwebnet.message.Automation;
+import com.github.niqdev.openwebnet.message.Heating;
 import com.github.niqdev.openwebnet.message.Lighting;
 import rx.schedulers.Schedulers;
 
@@ -12,7 +13,7 @@ import static com.github.niqdev.openwebnet.OpenWebNet.gateway;
 import static java.util.Arrays.asList;
 
 /**
- *
+ * ./gradlew runOpenWebNetExample
  */
 public class OpenWebNetExample {
 
@@ -26,8 +27,9 @@ public class OpenWebNetExample {
     public static void main(String[] args) {
         //example1();
         //example2();
-        exampleStatus();
+        //exampleStatus();
         //exampleTurnOn();
+        exampleHeating();
     }
 
     private static void example1() {
@@ -44,7 +46,7 @@ public class OpenWebNetExample {
             .send(asList(() -> "*#1*21##", () -> "*#1*22##"))
             .subscribeOn(Schedulers.from(executor))
             .doOnError(throwable -> System.out.println("ERROR " + throwable))
-            .finallyDo(() -> executor.shutdown())
+            .doAfterTerminate(() -> executor.shutdown())
             .subscribe(System.out::println, throwable -> {});
         System.out.println("after " + Thread.currentThread().getName());
     }
@@ -70,6 +72,14 @@ public class OpenWebNetExample {
             .newClient(defaultGateway(LOCALHOST))
             .send(Automation.requestMoveUp("WHERE"))
             .map(Automation.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleHeating() {
+        OpenWebNet
+            .newClient(gateway(HOST, PORT))
+            .send(Heating.requestTemperature("4"))
+            .map(Heating.handleTemperature(value -> System.out.println(value), () -> System.out.println("error")))
             .subscribe(System.out::println);
     }
 

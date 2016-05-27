@@ -15,6 +15,20 @@ import static java.lang.String.format;
 
 /**
  * OpenWebNet Heating.
+ *
+ * <pre>
+ * {@code
+ *
+ * import static com.github.niqdev.openwebnet.OpenWebNet.defaultGateway;
+ *
+ * // reads temperature
+ * OpenWebNet
+ *    .newClient(defaultGateway("IP_ADDRESS"))
+ *    .send(Heating.requestTemperature("WHERE"))
+ *    .map(Heating.handleTemperature(value -> System.out.println(value), () -> System.out.println("error")))
+ *    .subscribe(System.out::println);
+ * }
+ * </pre>
  */
 public class Heating extends BaseOpenMessage {
 
