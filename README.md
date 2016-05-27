@@ -11,6 +11,7 @@ client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX
 ### Currently supports
 * `WHO=1` Lighting: see also [Javadoc](http://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Lighting.html)
 * `WHO=2` Automation: see also [Javadoc](http://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Automation.html)
+* `WHO=4` Heating
 * a single generic frame/message
 * a list of generic frames/messages
 
@@ -20,7 +21,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:0.7.2'
+    compile 'com.github.openwebnet:rx-openwebnet:0.8.0'
 }
 ```
 
