@@ -53,7 +53,7 @@ OpenWebNet
     .send(Arrays.asList(() -> "*#1*21##", () -> "*#1*22##"))
     .subscribeOn(Schedulers.from(executor))
     .doOnError(throwable -> System.out.println("ERROR " + throwable))
-    .finallyDo(() -> executor.shutdown())
+    .doAfterTerminate(() -> executor.shutdown())
     .subscribe(System.out::println, throwable -> {});
 
 // turns light 21 on with a custom scheduler on Android
