@@ -62,6 +62,7 @@ class OpenWebNetObservable {
             .flatMap(expectedAck(context))
             .flatMap(write(channel.value()))
             .flatMap(read())
+            .flatMap(verifyCredential(context))
             .flatMap(expectedAck(context));
     }
 
@@ -104,6 +105,20 @@ class OpenWebNetObservable {
             Observable.error(new IllegalStateException("expected ACK")));
     }
 
+    static Func1<String, Observable<String>> verifyCredential(OpenContext context) {
+        return s -> {
+            // 'Statement.ifThen' throws exception because subscribes both to 'then' and 'else'
+            if (!context.hasCredential()) {
+                log("without credential");
+                return Observable.just(s);
+            }
+            log(String.format("with credential: %s", context.getCredential()));
+            return Observable.just(context)
+                .flatMap(write(buildPasswordMessage(context.getCredential(), s)))
+                .flatMap(read());
+        };
+    }
+
     static Func1<OpenContext, Observable<OpenContext>> write(String value) {
         return context -> {
             try {
@@ -131,6 +146,162 @@ class OpenWebNetObservable {
                     .toList();
             return Observable.just(response);
         };
+    }
+
+    static String buildPasswordMessage(String password, String nonce) {
+        return String.format("*#%s##", hashPassword(password, nonce));
+    }
+
+    /*
+     * @see http://www.umnii-dom.ru/downloads/OpenWebNet_Community_0_general_v1_1_0_EN.pdf
+     * @see https://sourceforge.net/p/grasshopperwebapp/code/HEAD/tree/trunk/exec/ownGateway.php
+     * @see https://sourceforge.net/p/grasshopperwebapp/code/HEAD/tree/trunk/exec/monitor/ownGateway.py
+     *
+     * @param password
+     * @param nonce
+     * @return hashed password
+     */
+    static String hashPassword(String password, String nonce) {
+        int msr = 0x7FFFFFFF;
+        int m_1 = 0xFFFFFFFF;
+        int m_8 = 0xFFFFFFF8;
+        int m_16 = 0xFFFFFFF0;
+        int m_128 = 0xFFFFFF80;
+        int m_16777216 = 0XFF000000;
+        boolean length = true;
+        boolean flag = true;
+        int num1 = 0;
+        int num2 = 0;
+
+        for (char c : nonce.toCharArray()) {
+            num1 = num1 & m_1;
+            num2 = num2 & m_1;
+
+            switch (c) {
+                case '1':
+                    length = !flag;
+                    if (!length) {
+                        num2 = Integer.parseInt(password);
+                    }
+                    num1 = num2 & m_128;
+                    num1 = num1 >> 1;
+                    num1 = num1 & msr;
+                    num1 = num1 >> 6;
+                    num2 = num2 << 25;
+                    num1 = num1 + num2;
+                    flag = false;
+                    break;
+                case '2':
+                    length = !flag;
+                    if (!length) {
+                        num2 = Integer.parseInt(password);
+                    }
+                    num1 = num2 & m_16;
+                    num1 = num1 >> 1;
+                    num1 = num1 & msr;
+                    num1 = num1 >> 3;
+                    num2 = num2 << 28;
+                    num1 = num1 + num2;
+                    flag = false;
+                    break;
+                case '3':
+                    length = !flag;
+                    if (!length) {
+                        num2 = Integer.parseInt(password);
+                    }
+                    num1 = num2 & m_8;
+                    num1 = num1 >> 1;
+                    num1 = num1 & msr;
+                    num1 = num1 >> 2;
+                    num2 = num2 << 29;
+                    num1 = num1 + num2;
+                    flag = false;
+                    break;
+                case '4':
+                    length = !flag;
+                    if (!length) {
+                        num2 = Integer.parseInt(password);
+                    }
+                    num1 = num2 << 1;
+                    num2 = num2 >> 1;
+                    num2 = num2 & msr;
+                    num2 = num2 >> 30;
+                    num1 = num1 + num2;
+                    flag = false;
+                    break;
+                case '5':
+                    length = !flag;
+                    if (!length) {
+                        num2 = Integer.parseInt(password);
+                    }
+                    num1 = num2 << 5;
+                    num2 = num2 >> 1;
+                    num2 = num2 & msr;
+                    num2 = num2 >> 26;
+                    num1 = num1 + num2;
+                    flag = false;
+                    break;
+                case '6':
+                    length = !flag;
+                    if (!length) {
+                        num2 = Integer.parseInt(password);
+                    }
+                    num1 = num2 << 12;
+                    num2 = num2 >> 1;
+                    num2 = num2 & msr;
+                    num2 = num2 >> 19;
+                    num1 = num1 + num2;
+                    flag = false;
+                    break;
+                case '7':
+                    length = !flag;
+                    if (!length) {
+                        num2 = Integer.parseInt(password);
+                    }
+                    num1 = num2 & 0xFF00;
+                    num1 = num1 + ((num2 & 0xFF) << 24);
+                    num1 = num1 + ((num2 & 0xFF0000) >> 16);
+                    num2 = num2 & m_16777216;
+                    num2 = num2 >> 1;
+                    num2 = num2 & msr;
+                    num2 = num2 >> 7;
+                    num1 = num1 + num2;
+                    flag = false;
+                    break;
+                case '8':
+                    length = !flag;
+                    if (!length) {
+                        num2 = Integer.parseInt(password);
+                    }
+                    num1 = num2 & 0xFFFF;
+                    num1 = num1 << 16;
+                    int numx = num2 >> 1;
+                    numx = numx & msr;
+                    numx = numx >> 23;
+                    num1 = num1 + numx;
+                    num2 = num2 & 0xFF0000;
+                    num2 = num2 >> 1;
+                    num2 = num2 & msr;
+                    num2 = num2 >> 7;
+                    num1 = num1 + num2;
+                    flag = false;
+                    break;
+                case '9':
+                    length = !flag;
+                    if (!length) {
+                        num2 = Integer.parseInt(password);
+                    }
+                    num1 = ~num2;
+                    flag = false;
+                    break;
+                default:
+                    num1 = num2;
+                    break;
+            }
+            num2 = num1;
+        }
+
+        return String.valueOf(num1 & m_1);
     }
 
 }
