@@ -56,9 +56,9 @@ OpenWebNet
     .doAfterTerminate(() -> executor.shutdown())
     .subscribe(System.out::println, throwable -> {});
 
-// turns light 21 on with a custom scheduler on Android
+// turns light 21 on with a custom scheduler on Android with password
 OpenWebNet
-    .newClient(OpenWebNet.gateway("10.0.2.2", 20000))
+    .newClient(OpenWebNet.gateway("10.0.2.2", 20000, "12345"))
     .send(Lighting.requestTurnOff("21"))
     .subscribeOn(Schedulers.io())
     .observeOn(AndroidSchedulers.mainThread())
