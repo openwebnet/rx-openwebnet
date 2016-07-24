@@ -28,14 +28,17 @@ dependencies {
 ### Examples
 ```java
 
-// connects to the gateway
-OpenWebNet client = OpenWebNet.newClient(OpenWebNet.defaultGateway("192.168.1.41"));
+// connects to the default gateway
+OpenWebNet simpleClient = OpenWebNet.newClient(OpenWebNet.defaultGateway("192.168.1.41"));
 
 // requests status light 21
-client
+simpleClient
     .send(Lighting.requestStatus("21"))
     .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
     .subscribe(System.out::println);
+
+// connects to the gateway with domain and password
+OpenWebNet client = OpenWebNet.newClient(OpenWebNet.gateway("vpn.home.it", 20000, "12345"));
 
 // turns light 21 on    
 client
@@ -56,9 +59,9 @@ OpenWebNet
     .doAfterTerminate(() -> executor.shutdown())
     .subscribe(System.out::println, throwable -> {});
 
-// turns light 21 on with a custom scheduler on Android with password
+// turns light 21 on with a custom scheduler on Android
 OpenWebNet
-    .newClient(OpenWebNet.gateway("10.0.2.2", 20000, "12345"))
+    .newClient(OpenWebNet.gateway("10.0.2.2", 20000))
     .send(Lighting.requestTurnOff("21"))
     .subscribeOn(Schedulers.io())
     .observeOn(AndroidSchedulers.mainThread())

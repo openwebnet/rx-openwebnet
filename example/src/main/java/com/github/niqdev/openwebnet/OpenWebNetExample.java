@@ -20,6 +20,7 @@ public class OpenWebNetExample {
     private static final String LOCALHOST = "localhost";
     private static final String LOCALHOST_ANDROID = "10.0.2.2";
     private static final String HOST = "192.168.1.41";
+    private static final String HOST_DOMAIN = "vpn.home.it";
     private static final int PORT = 20000;
 
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -78,7 +79,7 @@ public class OpenWebNetExample {
 
     private static void exampleHeating() {
         OpenWebNet
-            .newClient(gateway(HOST, PORT))
+            .newClient(gateway(HOST_DOMAIN, PORT))
             .send(Heating.requestTemperature("4"))
             .map(Heating.handleTemperature(value -> System.out.println(value), () -> System.out.println("error")))
             .subscribe(System.out::println);
