@@ -29,7 +29,8 @@ public class OpenWebNetExample {
         //example2();
         //exampleStatus();
         //exampleTurnOn();
-        exampleHeating();
+        //exampleHeating();
+        //exampleWithPassword();
     }
 
     private static void example1() {
@@ -80,6 +81,14 @@ public class OpenWebNetExample {
             .newClient(gateway(HOST, PORT))
             .send(Heating.requestTemperature("4"))
             .map(Heating.handleTemperature(value -> System.out.println(value), () -> System.out.println("error")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleWithPassword() {
+        OpenWebNet
+            .newClient(gateway(HOST, PORT, "12345"))
+            .send(Lighting.requestTurnOn("21"))
+            .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }
 

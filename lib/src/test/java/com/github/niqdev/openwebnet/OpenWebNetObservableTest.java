@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import static com.github.niqdev.openwebnet.OpenWebNetObservable.buildPasswordMessage;
+import static com.github.niqdev.openwebnet.OpenWebNetObservable.hashPassword;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -103,9 +105,25 @@ public class OpenWebNetObservableTest {
         Observable.just("*1*0*21##*#*1##FRAME##")
             .flatMap(OpenWebNetObservable.parseMessages())
             .subscribe(messages -> {
-                assertEquals("invalid frame", messages.get(0).getValue(), "*1*0*21##");
-                assertEquals("invalid frame", messages.get(1).getValue(), "*#*1##");
-                assertEquals("invalid frame", messages.get(2).getValue(), "FRAME##");
+                assertEquals("invalid frame", "*1*0*21##", messages.get(0).getValue());
+                assertEquals("invalid frame", "*#*1##", messages.get(1).getValue());
+                assertEquals("invalid frame", "FRAME##", messages.get(2).getValue());
             });
     }
+
+    @Test
+    public void testHashPassword() {
+        assertEquals("invalid hashed password", "25280520", hashPassword("12345", "603356072"));
+        assertEquals("invalid hashed password", "119537670", hashPassword("12345", "410501656"));
+        //assertEquals("invalid hashed password", "4269684735", hashPassword("12345", "630292165"));
+        assertEquals("invalid hashed password", "537331200", hashPassword("12345", "523781130"));
+    }
+
+    @Test
+    public void testPasswordMessage() {
+        assertEquals("invalid password message", "*#25280520##", buildPasswordMessage("12345", "603356072"));
+        assertEquals("invalid password message", "*#119537670##", buildPasswordMessage("12345", "410501656"));
+        assertEquals("invalid password message", "*#537331200##", buildPasswordMessage("12345", "523781130"));
+    }
+
 }

@@ -90,6 +90,13 @@ public class OpenWebNet {
          * @return port
          */
         int getPort();
+
+        /**
+         * Returns the gateway password.
+         *
+         * @return password
+         */
+        String getPassword();
     }
 
     /**
@@ -97,11 +104,10 @@ public class OpenWebNet {
      *
      * @param host Gateway ip address
      * @param port Gateway port
+     * @param password Gateway password
      * @return gateway
      */
-    public static OpenGateway gateway(final String host, final int port) {
-        // TODO validate ip
-        // TODO validate port
+    public static OpenGateway gateway(final String host, final int port, final String password) {
         return new OpenGateway() {
 
             @Override
@@ -113,11 +119,27 @@ public class OpenWebNet {
             public int getPort() {
                 return port;
             }
+
+            @Override
+            public String getPassword() {
+                return password;
+            }
         };
     }
 
     /**
-     * Helper method to create a new gateway on port {@link OpenGateway#DEFAULT_PORT}.
+     * Helper method to create a new gateway without password.
+     *
+     * @param host Gateway ip address
+     * @param port Gateway port
+     * @return gateway
+     */
+    public static OpenGateway gateway(final String host, final int port) {
+        return gateway(host, port, null);
+    }
+
+    /**
+     * Helper method to create a new gateway on port {@link OpenGateway#DEFAULT_PORT} without password.
      *
      * @param host Gateway ip address
      * @return gateway

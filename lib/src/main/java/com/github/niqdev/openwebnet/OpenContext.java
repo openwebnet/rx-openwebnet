@@ -55,4 +55,14 @@ class OpenContext {
         return buffer;
     }
 
+    public boolean hasCredential() {
+        String password = gateway.getPassword();
+        return password != null && !password.trim().equals("");
+    }
+
+    public String getCredential() {
+        checkArgument(hasCredential(), "missing credential");
+        return gateway.getPassword();
+    }
+
 }
