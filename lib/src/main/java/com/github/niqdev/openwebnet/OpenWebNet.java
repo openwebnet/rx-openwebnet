@@ -78,7 +78,7 @@ public class OpenWebNet {
         int DEFAULT_PORT = 20000;
 
         /**
-         * Returns the gateway ip address.
+         * Returns the gateway ip address or domain.
          *
          * @return host
          */
@@ -102,7 +102,7 @@ public class OpenWebNet {
     /**
      * Helper method to create a new gateway.
      *
-     * @param host Gateway ip address
+     * @param host Gateway ip address or domain
      * @param port Gateway port
      * @param password Gateway password
      * @return gateway
@@ -130,7 +130,7 @@ public class OpenWebNet {
     /**
      * Helper method to create a new gateway without password.
      *
-     * @param host Gateway ip address
+     * @param host Gateway ip address or domain
      * @param port Gateway port
      * @return gateway
      */
@@ -141,7 +141,7 @@ public class OpenWebNet {
     /**
      * Helper method to create a new gateway on port {@link OpenGateway#DEFAULT_PORT} without password.
      *
-     * @param host Gateway ip address
+     * @param host Gateway ip address or domain
      * @return gateway
      */
     public static OpenGateway defaultGateway(String host) {
