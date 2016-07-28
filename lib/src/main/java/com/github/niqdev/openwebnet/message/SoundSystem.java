@@ -1,5 +1,9 @@
 package com.github.niqdev.openwebnet.message;
 
+import com.github.niqdev.openwebnet.OpenSession;
+import rx.functions.Action0;
+import rx.functions.Func1;
+
 import static com.github.niqdev.openwebnet.message.Who.SOUND_SYSTEM_1;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,6 +40,13 @@ public class SoundSystem extends BaseOpenMessage {
         return new SoundSystem(format(FORMAT_REQUEST, WHO, OFF_SOURCE_STEREO_CHANNEL, where));
     }
 
+    /**
+     * TODO
+     */
+    public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
+        return handleResponse(onSuccess, onFail, WHO);
+    }
+
     /*
      * 0 amplifier general command
      * #0-#9 amplifiers environment command
@@ -52,7 +63,9 @@ public class SoundSystem extends BaseOpenMessage {
         final int SOURCE_MAX_P2P_COMMAND = 109;
 
         checkNotNull(value, "invalid null value");
+        checkArgument(value.length() <= 3, "invalid length");
         if (value.startsWith("#")) {
+            checkArgument(value.length() == 2, "invalid length");
             checkRange(AMPLIFIER_MIN_ENVIRONMENT_COMMAND, AMPLIFIER_MAX_ENVIRONMENT_COMMAND, checkIsInteger(value.substring(1)));
         } else {
             int where = checkIsInteger(value);
@@ -60,7 +73,7 @@ public class SoundSystem extends BaseOpenMessage {
                 where == AMPLIFIER_GENERAL_COMMAND
                 || isInRange(AMPLIFIER_MIN_P2P_COMMAND, AMPLIFIER_MAX_P2P_COMMAND, where)
                 || isInRange(SOURCE_MIN_P2P_COMMAND, SOURCE_MAX_P2P_COMMAND, where),
-                "invalid where format");
+                "invalid where range");
         }
     }
 

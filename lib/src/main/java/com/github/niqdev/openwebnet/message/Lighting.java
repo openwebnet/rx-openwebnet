@@ -75,21 +75,7 @@ public class Lighting extends BaseOpenMessage {
      * @return {@code Observable<OpenSession>}
      */
     public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
-        return openSession -> {
-            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, WHO);
-            List<OpenMessage> response = openSession.getResponse();
-            checkNotNull(response, "response is null");
-            checkArgument(response.size() == 1, "invalid response");
-            checkNotNull(response.get(0).getValue(), "response value is null");
-
-            if (response.get(0).getValue().equals(ACK)) {
-                onSuccess.call();
-                return openSession;
-            } else {
-                onFail.call();
-                return openSession;
-            }
-        };
+        return handleResponse(onSuccess, onFail, WHO);
     }
 
     /**
