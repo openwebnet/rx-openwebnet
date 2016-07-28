@@ -18,6 +18,7 @@ public class SoundSystem extends BaseOpenMessage {
     private static final int ON_SOURCE_STEREO_CHANNEL = 3;
     private static final int OFF_SOURCE_BASE_BAND = 10;
     private static final int OFF_SOURCE_STEREO_CHANNEL = 13;
+    private static final int STATUS = 5;
     private static final int WHO = SOUND_SYSTEM_1.value();
 
     protected SoundSystem(String value) {
@@ -45,6 +46,14 @@ public class SoundSystem extends BaseOpenMessage {
      */
     public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
         return handleResponse(onSuccess, onFail, WHO);
+    }
+
+    /**
+     * TODO
+     */
+    public static SoundSystem requestStatus(String where) {
+        checkAllowedWhere(where);
+        return new SoundSystem(format(FORMAT_DIMENSION, WHO, where, STATUS));
     }
 
     /*

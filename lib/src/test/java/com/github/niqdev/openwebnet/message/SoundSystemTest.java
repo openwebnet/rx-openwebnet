@@ -139,4 +139,59 @@ public class SoundSystemTest {
         verify(onFailMock, never()).call();
     }
 
+    @Test
+    public void testRequestStatus() {
+        assertEquals("invalid message", "*#16*0*5##", requestStatus("0").getValue());
+
+        assertEquals("invalid message", "*#16*#0*5##", requestStatus("#0").getValue());
+        assertEquals("invalid message", "*#16*#9*5##", requestStatus("#9").getValue());
+
+        assertEquals("invalid message", "*#16*01*5##", requestStatus("01").getValue());
+        assertEquals("invalid message", "*#16*1*5##", requestStatus("1").getValue());
+        assertEquals("invalid message", "*#16*09*5##", requestStatus("09").getValue());
+        assertEquals("invalid message", "*#16*99*5##", requestStatus("99").getValue());
+
+        assertEquals("invalid message", "*#16*101*5##", requestStatus("101").getValue());
+        assertEquals("invalid message", "*#16*109*5##", requestStatus("109").getValue());
+
+        // should't be valid
+        assertEquals("invalid message", "*#16*001*5##", requestStatus("001").getValue());
+        assertEquals("invalid message", "*#16*000*5##", requestStatus("000").getValue());
+    }
+
+    @Test
+    public void testRequestStatusInvalid() {
+        assertThat(captureThrowable(() -> requestStatus(null)))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("invalid null value");
+
+        assertThat(captureThrowable(() -> requestStatus("")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
+        assertThat(captureThrowable(() -> requestStatus("a")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
+        assertThat(captureThrowable(() -> requestStatus("#00")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid length");
+
+        assertThat(captureThrowable(() -> requestStatus("0000")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid length");
+
+        assertThat(captureThrowable(() -> requestStatus("-1")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid where range");
+
+        assertThat(captureThrowable(() -> requestStatus("100")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid where range");
+
+        assertThat(captureThrowable(() -> requestStatus("110")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid where range");
+    }
+
 }
