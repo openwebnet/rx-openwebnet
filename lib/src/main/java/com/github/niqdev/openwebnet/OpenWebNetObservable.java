@@ -153,25 +153,23 @@ class OpenWebNetObservable {
     }
 
     /*
-     * @see http://www.umnii-dom.ru/downloads/OpenWebNet_Community_0_general_v1_1_0_EN.pdf
-     * @see https://sourceforge.net/p/grasshopperwebapp/code/HEAD/tree/trunk/exec/ownGateway.php
-     * @see https://sourceforge.net/p/grasshopperwebapp/code/HEAD/tree/trunk/exec/monitor/ownGateway.py
+     * @see reference issue https://github.com/openwebnet/openwebnet-android/issues/51
      *
      * @param password
      * @param nonce
      * @return hashed password
      */
     static String hashPassword(String password, String nonce) {
-        int msr = 0x7FFFFFFF;
-        int m_1 = 0xFFFFFFFF;
-        int m_8 = 0xFFFFFFF8;
-        int m_16 = 0xFFFFFFF0;
-        int m_128 = 0xFFFFFF80;
-        int m_16777216 = 0XFF000000;
+        long msr = 0x7FFFFFFFL;
+        long m_1 = 0xFFFFFFFFL;
+        long m_8 = 0xFFFFFFF8L;
+        long m_16 = 0xFFFFFFF0L;
+        long m_128 = 0xFFFFFF80L;
+        long m_16777216 = 0XFF000000L;
         boolean length = true;
         boolean flag = true;
-        int num1 = 0;
-        int num2 = 0;
+        long num1 = 0L;
+        long num2 = 0L;
 
         for (char c : nonce.toCharArray()) {
             num1 = num1 & m_1;
@@ -181,7 +179,7 @@ class OpenWebNetObservable {
                 case '1':
                     length = !flag;
                     if (!length) {
-                        num2 = Integer.parseInt(password);
+                        num2 = Long.parseLong(password);
                     }
                     num1 = num2 & m_128;
                     num1 = num1 >> 1;
@@ -194,7 +192,7 @@ class OpenWebNetObservable {
                 case '2':
                     length = !flag;
                     if (!length) {
-                        num2 = Integer.parseInt(password);
+                        num2 = Long.parseLong(password);
                     }
                     num1 = num2 & m_16;
                     num1 = num1 >> 1;
@@ -207,7 +205,7 @@ class OpenWebNetObservable {
                 case '3':
                     length = !flag;
                     if (!length) {
-                        num2 = Integer.parseInt(password);
+                        num2 = Long.parseLong(password);
                     }
                     num1 = num2 & m_8;
                     num1 = num1 >> 1;
@@ -220,7 +218,7 @@ class OpenWebNetObservable {
                 case '4':
                     length = !flag;
                     if (!length) {
-                        num2 = Integer.parseInt(password);
+                        num2 = Long.parseLong(password);
                     }
                     num1 = num2 << 1;
                     num2 = num2 >> 1;
@@ -232,7 +230,7 @@ class OpenWebNetObservable {
                 case '5':
                     length = !flag;
                     if (!length) {
-                        num2 = Integer.parseInt(password);
+                        num2 = Long.parseLong(password);
                     }
                     num1 = num2 << 5;
                     num2 = num2 >> 1;
@@ -244,7 +242,7 @@ class OpenWebNetObservable {
                 case '6':
                     length = !flag;
                     if (!length) {
-                        num2 = Integer.parseInt(password);
+                        num2 = Long.parseLong(password);
                     }
                     num1 = num2 << 12;
                     num2 = num2 >> 1;
@@ -256,7 +254,7 @@ class OpenWebNetObservable {
                 case '7':
                     length = !flag;
                     if (!length) {
-                        num2 = Integer.parseInt(password);
+                        num2 = Long.parseLong(password);
                     }
                     num1 = num2 & 0xFF00;
                     num1 = num1 + ((num2 & 0xFF) << 24);
@@ -271,11 +269,11 @@ class OpenWebNetObservable {
                 case '8':
                     length = !flag;
                     if (!length) {
-                        num2 = Integer.parseInt(password);
+                        num2 = Long.parseLong(password);
                     }
                     num1 = num2 & 0xFFFF;
                     num1 = num1 << 16;
-                    int numx = num2 >> 1;
+                    long numx = num2 >> 1;
                     numx = numx & msr;
                     numx = numx >> 23;
                     num1 = num1 + numx;
@@ -289,7 +287,7 @@ class OpenWebNetObservable {
                 case '9':
                     length = !flag;
                     if (!length) {
-                        num2 = Integer.parseInt(password);
+                        num2 = Long.parseLong(password);
                     }
                     num1 = ~num2;
                     flag = false;

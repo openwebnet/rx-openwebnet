@@ -12,7 +12,7 @@ import java.nio.channels.SocketChannel;
 
 import static com.github.niqdev.openwebnet.OpenWebNetObservable.buildPasswordMessage;
 import static com.github.niqdev.openwebnet.OpenWebNetObservable.hashPassword;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
@@ -115,8 +115,10 @@ public class OpenWebNetObservableTest {
     public void testHashPassword() {
         assertEquals("invalid hashed password", "25280520", hashPassword("12345", "603356072"));
         assertEquals("invalid hashed password", "119537670", hashPassword("12345", "410501656"));
-        //assertEquals("invalid hashed password", "4269684735", hashPassword("12345", "630292165"));
         assertEquals("invalid hashed password", "537331200", hashPassword("12345", "523781130"));
+
+        // bigger than Integer.MAX_VALUE
+        assertEquals("invalid hashed password", "4269684735", hashPassword("12345", "630292165"));
     }
 
     @Test
