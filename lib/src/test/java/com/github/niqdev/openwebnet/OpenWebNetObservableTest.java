@@ -117,8 +117,11 @@ public class OpenWebNetObservableTest {
         assertEquals("invalid hashed password", "119537670", hashPassword("12345", "410501656"));
         assertEquals("invalid hashed password", "537331200", hashPassword("12345", "523781130"));
 
-        // bigger than Integer.MAX_VALUE
+        // bigger than Integer.MAX_VALUE = 2147483647
         assertEquals("invalid hashed password", "4269684735", hashPassword("12345", "630292165"));
+        assertEquals("invalid hashed password", "4294049715", hashPassword("12345", "771219008"));
+        assertEquals("invalid hashed password", "4288646655", hashPassword("12345", "461695564"));
+        assertEquals("invalid hashed password", "268665345", hashPassword("12345", "864771381"));
     }
 
     @Test
