@@ -1,8 +1,11 @@
 package com.github.niqdev.openwebnet.message;
 
 import com.github.niqdev.openwebnet.OpenSession;
+import com.google.common.collect.FluentIterable;
 import rx.functions.Action0;
 import rx.functions.Func1;
+
+import java.util.List;
 
 import static com.github.niqdev.openwebnet.message.Who.SOUND_SYSTEM_1;
 import static com.google.common.base.Preconditions.checkArgument;
@@ -56,6 +59,25 @@ public class SoundSystem extends BaseOpenMessage {
         return new SoundSystem(format(FORMAT_DIMENSION, WHO, where, STATUS));
     }
 
+    /**
+     * TODO
+     */
+    public static Func1<OpenSession, OpenSession> handleStatus(Action0 onStatus, Action0 offStatus) {
+        return openSession -> {
+            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_DIMENSION_WHO, WHO);
+            List<OpenMessage> response = openSession.getResponse();
+            checkNotNull(response, "response is null");
+            checkArgument(response.size() >= 1, "invalid response");
+
+            if (isOn(openSession.getRequest(), response)) {
+                onStatus.call();
+            } else {
+                offStatus.call();
+            }
+            return openSession;
+        };
+    }
+
     /*
      * 0 amplifier general command
      * #0-#9 amplifiers environment command
@@ -86,6 +108,24 @@ public class SoundSystem extends BaseOpenMessage {
         }
     }
 
-
+    /*
+     * Verify OpenWebNet message response if amplifier/source is on.
+     *
+     * From documentation:
+     * "if environment or general request, we get as a lot of frames as the active amplifiers are available"
+     * what = 0 (Base band ON) | 3 (Stereo channel ON) | 13 (OFF)
+     * where = [01 – 99] and [101 – 109]
+     *
+     * NOTE: this is a best effort, answer is NOT predictable!
+     */
+    static boolean isOn(OpenMessage request, List<OpenMessage> responses) {
+        // filter only response ON and exclude request "where=0" because response is always ON
+        List<OpenMessage> validResponses = FluentIterable.from(responses)
+            .filter(response ->
+                response.getValue().startsWith(format(FORMAT_PREFIX_RESPONSE, WHO, ON_SOURCE_STEREO_CHANNEL))
+                && !request.getValue().equals(requestStatus("0").getValue())
+            ).toList();
+        return validResponses.size() >= 1;
+    }
 
 }
