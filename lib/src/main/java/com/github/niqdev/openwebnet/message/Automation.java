@@ -84,7 +84,7 @@ public class Automation extends BaseOpenMessage {
             isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
-            checkArgument(response.size() == 1, "invalid response");
+            checkArgument(response.size() >= 1, "invalid response");
             final String responseValue = response.get(0).getValue();
             checkNotNull(responseValue, "response value is null");
 

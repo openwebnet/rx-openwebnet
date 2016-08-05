@@ -79,7 +79,7 @@ public class Lighting extends BaseOpenMessage {
             isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
-            checkArgument(response.size() == 1, "invalid response");
+            checkArgument(response.size() >= 1, "invalid response");
             checkNotNull(response.get(0).getValue(), "response value is null");
 
             if (response.get(0).getValue().equals(ACK)) {

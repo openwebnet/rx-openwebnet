@@ -100,7 +100,7 @@ class OpenWebNetObservable {
 
     static Func1<String, Observable<OpenContext>> expectedAck(OpenContext context) {
         return s -> Statement.ifThen(
-            () -> s.equals(ACK),
+            () -> s.startsWith(ACK),
             Observable.just(context),
             Observable.error(new IllegalStateException("expected ACK")));
     }

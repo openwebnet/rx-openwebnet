@@ -21,6 +21,8 @@ public class OpenWebNetExample {
     private static final String LOCALHOST_ANDROID = "10.0.2.2";
     private static final String HOST = "192.168.1.41";
     private static final String HOST_DOMAIN = "vpn.home.it";
+    private static final String HOST_PWD = "192.168.1.35";
+    private static final String PASSWORD = "12345";
     private static final int PORT = 20000;
 
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -28,10 +30,9 @@ public class OpenWebNetExample {
     public static void main(String[] args) {
         //example1();
         //example2();
-        //exampleStatus();
-        //exampleTurnOn();
+        //exampleLightStatus();
+        //exampleLightTurnOn();
         //exampleHeating();
-        //exampleWithPassword();
     }
 
     private static void example1() {
@@ -53,17 +54,19 @@ public class OpenWebNetExample {
         System.out.println("after " + Thread.currentThread().getName());
     }
 
-    private static void exampleStatus() {
+    private static void exampleLightStatus() {
         OpenWebNet
-            .newClient(gateway(HOST, PORT))
+            .newClient(gateway(HOST_PWD, PORT, PASSWORD))
+            //.newClient(gateway(HOST, PORT))
             .send(Lighting.requestStatus("21"))
             .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
             .subscribe(System.out::println);
     }
 
-    private static void exampleTurnOn() {
+    private static void exampleLightTurnOn() {
         OpenWebNet
-            .newClient(gateway(HOST, PORT))
+            .newClient(gateway(HOST_PWD, PORT, PASSWORD))
+            //.newClient(gateway(HOST, PORT))
             .send(Lighting.requestTurnOn("21"))
             .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
@@ -79,17 +82,10 @@ public class OpenWebNetExample {
 
     private static void exampleHeating() {
         OpenWebNet
-            .newClient(gateway(HOST_DOMAIN, PORT))
+            .newClient(gateway(HOST_PWD, PORT, PASSWORD))
+            //.newClient(gateway(HOST_DOMAIN, PORT))
             .send(Heating.requestTemperature("4"))
             .map(Heating.handleTemperature(value -> System.out.println(value), () -> System.out.println("error")))
-            .subscribe(System.out::println);
-    }
-
-    private static void exampleWithPassword() {
-        OpenWebNet
-            .newClient(gateway(HOST, PORT, "12345"))
-            .send(Lighting.requestTurnOn("21"))
-            .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }
 
