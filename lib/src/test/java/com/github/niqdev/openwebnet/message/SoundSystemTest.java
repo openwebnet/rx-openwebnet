@@ -2,6 +2,7 @@ package com.github.niqdev.openwebnet.message;
 
 import com.github.niqdev.openwebnet.OpenSession;
 import com.google.common.collect.Lists;
+import org.junit.Ignore;
 import org.junit.Test;
 import rx.Observable;
 import rx.functions.Action0;
@@ -192,6 +193,22 @@ public class SoundSystemTest {
         assertThat(captureThrowable(() -> requestStatus("110")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid where range");
+    }
+
+    @Ignore
+    @Test
+    public void testIsOn() {
+        // TODO 16 or 22
+
+//        final String WHERE = "88";
+//        OpenMessage request = requestStatus(WHERE);
+//
+//        assertFalse("should be off", isOn(request, Lists.newArrayList()));
+//        assertFalse("should be off", isOn(request, asList(() -> "")));
+//        assertFalse("should be off", isOn(request, asList(() -> ACK)));
+//
+//        assertTrue("should be on", isOn(request, asList(requestTurnOn(WHERE))));
+//        assertTrue("should be on", isOn(request, asList(requestTurnOn(WHERE), () -> "")));
     }
 
 }

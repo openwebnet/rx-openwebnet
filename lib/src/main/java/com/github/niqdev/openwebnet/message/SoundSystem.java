@@ -14,6 +14,8 @@ import static java.lang.String.format;
 
 /**
  * OpenWebNet Sound System.
+ *
+ * TODO 16 or 22 + test + javadocs
  */
 public class SoundSystem extends BaseOpenMessage {
 
