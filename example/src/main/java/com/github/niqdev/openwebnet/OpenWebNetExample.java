@@ -3,6 +3,7 @@ package com.github.niqdev.openwebnet;
 import com.github.niqdev.openwebnet.message.Automation;
 import com.github.niqdev.openwebnet.message.Heating;
 import com.github.niqdev.openwebnet.message.Lighting;
+import com.github.niqdev.openwebnet.message.SoundSystem;
 import rx.schedulers.Schedulers;
 
 import java.util.concurrent.ExecutorService;
@@ -33,6 +34,8 @@ public class OpenWebNetExample {
         //exampleLightStatus();
         //exampleLightTurnOn();
         //exampleHeating();
+        //exampleSoundSystem();
+        //exampleSoundSystemStatus();
     }
 
     private static void example1() {
@@ -86,6 +89,25 @@ public class OpenWebNetExample {
             //.newClient(gateway(HOST_DOMAIN, PORT))
             .send(Heating.requestTemperature("4"))
             .map(Heating.handleTemperature(value -> System.out.println(value), () -> System.out.println("error")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleSoundSystem() {
+        OpenWebNet
+            .newClient(gateway(HOST, PORT))
+            //.send(SoundSystem.requestTurnOff("0"))
+            .send(SoundSystem.requestTurnOff("#5"))
+            //.send(SoundSystem.requestTurnOn("0"))
+            .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleSoundSystemStatus() {
+        OpenWebNet
+            .newClient(gateway(HOST, PORT))
+            //.send(SoundSystem.requestTurnOn("#5"))
+            .send(SoundSystem.requestStatus("51"))
+            .map(SoundSystem.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
             .subscribe(System.out::println);
     }
 

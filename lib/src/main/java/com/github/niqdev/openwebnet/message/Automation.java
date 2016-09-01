@@ -80,21 +80,7 @@ public class Automation extends BaseOpenMessage {
      * @return {@code Observable<OpenSession>}
      */
     public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
-        return openSession -> {
-            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, WHO);
-            List<OpenMessage> response = openSession.getResponse();
-            checkNotNull(response, "response is null");
-            checkArgument(response.size() >= 1, "invalid response");
-            final String responseValue = response.get(0).getValue();
-            checkNotNull(responseValue, "response value is null");
-
-            if (ACK.equals(responseValue)) {
-                onSuccess.call();
-            } else {
-                onFail.call();
-            }
-            return openSession;
-        };
+        return handleResponse(onSuccess, onFail, WHO);
     }
 
     /**

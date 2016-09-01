@@ -1,5 +1,11 @@
 package com.github.niqdev.openwebnet.message;
 
+import com.github.niqdev.openwebnet.OpenSession;
+import rx.functions.Action0;
+import rx.functions.Func1;
+
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
@@ -31,8 +37,12 @@ abstract class BaseOpenMessage implements OpenMessage {
 
     protected static void checkRange(Integer from, Integer to, Integer value) {
         checkNotNull(value, "invalid null value");
-        checkArgument(value >= from && value <= to,
-            format("value must be between %d and %d", from, to));
+        checkArgument(isInRange(from, to, value), format("value must be between %d and %d", from, to));
+    }
+
+    protected static boolean isInRange(Integer from, Integer to, Integer value) {
+        checkNotNull(value, "invalid null value");
+        return value >= from && value <= to;
     }
 
     /*
@@ -51,5 +61,23 @@ abstract class BaseOpenMessage implements OpenMessage {
         checkNotNull(request.getValue(), "request value is null");
         boolean isValidWho = request.getValue().startsWith(format(format, who));
         checkArgument(isValidWho, "invalid request of type " + who);
+    }
+
+    protected static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail, int who) {
+        return openSession -> {
+            isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_REQUEST_WHO, who);
+            List<OpenMessage> response = openSession.getResponse();
+            checkNotNull(response, "response is null");
+            checkArgument(response.size() >= 1, "invalid response");
+            final String responseValue = response.get(0).getValue();
+            checkNotNull(responseValue, "response value is null");
+
+            if (ACK.equals(responseValue)) {
+                onSuccess.call();
+            } else {
+                onFail.call();
+            }
+            return openSession;
+        };
     }
 }
