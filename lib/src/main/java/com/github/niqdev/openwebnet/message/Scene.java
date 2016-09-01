@@ -25,7 +25,7 @@ public class Scene extends BaseOpenMessage {
     public enum Version {
         // 0-300
         MH200N,
-        // numeric 9999
+        // numeric 0-9999
         MH202
     }
 
