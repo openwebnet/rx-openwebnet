@@ -34,8 +34,8 @@ public class OpenWebNetExample {
         //exampleHeating();
         //exampleSoundSystem();
         //exampleSoundSystemStatus();
-        exampleScenario();
-        //exampleScenarioStatus();
+        //exampleScenario();
+        exampleScenarioStatus();
     }
 
     private static void example1() {
@@ -111,21 +111,24 @@ public class OpenWebNetExample {
             .subscribe(System.out::println);
     }
 
-    // TODO http + scenario
     private static void exampleScenario() {
         OpenWebNet
-            .newClient(gateway(HOST_HTTP, PORT))
-            .send(Scene.requestStart("31", Scene.Version.MH200N))
-            //.send(Scene.requestStop("31"))
-            .map(SoundSystem.handleResponse(() -> System.out.println("START"), () -> System.out.println("STOP")))
+            .newClient(gateway(HOST, PORT))
+            .send(Scenario.requestStart("32", Scenario.Version.MH200N))
+            //.send(Scenario.requestStop("31"))
+            .map(Scenario.handleResponse(() -> System.out.println("START"), () -> System.out.println("STOP")))
             .subscribe(System.out::println);
     }
 
     private static void exampleScenarioStatus() {
         OpenWebNet
-            .newClient(gateway(HOST_HTTP, PORT))
-            .send(Scene.requestStatus("31"))
-            .map(Scene.handleStatus(() -> System.out.println("START"), () -> System.out.println("STOP")))
+            .newClient(gateway(HOST, PORT))
+            .send(Scenario.requestStatus("32"))
+            .map(Scenario.handleStatus(
+                () -> System.out.println("STARTED"),
+                () -> System.out.println("STOPPED"),
+                () -> System.out.println("ENABLED"),
+                () -> System.out.println("DISABLED")))
             .subscribe(System.out::println);
     }
 

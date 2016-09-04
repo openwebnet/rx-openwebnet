@@ -1,6 +1,7 @@
 package com.github.niqdev.openwebnet.message;
 
 import com.github.niqdev.openwebnet.OpenSession;
+import com.google.common.collect.FluentIterable;
 import rx.functions.Action0;
 import rx.functions.Func1;
 
@@ -12,9 +13,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
 /**
- * TODO translation for Scenario - Scene??
+ *
  */
-public class Scene extends BaseOpenMessage {
+public class Scenario extends BaseOpenMessage {
 
     private static final int START = 1;
     private static final int STOP = 2;
@@ -29,40 +30,40 @@ public class Scene extends BaseOpenMessage {
         MH202
     }
 
-    private Scene(String value) {
+    private Scenario(String value) {
         super(value);
     }
 
     /**
      * TODO
      */
-    public static Scene requestStart(String where) {
+    public static Scenario requestStart(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
-        return new Scene(format(FORMAT_REQUEST, WHO, START, where));
+        return new Scenario(format(FORMAT_REQUEST, WHO, START, where));
     }
 
     /**
      * TODO
      */
-    public static Scene requestStart(String where, Version version) {
+    public static Scenario requestStart(String where, Version version) {
         checkRangeVersion(where, version);
-        return new Scene(format(FORMAT_REQUEST, WHO, START, where));
+        return new Scenario(format(FORMAT_REQUEST, WHO, START, where));
     }
 
     /**
      * TODO
      */
-    public static Scene requestStop(String where) {
+    public static Scenario requestStop(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
-        return new Scene(format(FORMAT_REQUEST, WHO, STOP, where));
+        return new Scenario(format(FORMAT_REQUEST, WHO, STOP, where));
     }
 
     /**
      * TODO
      */
-    public static Scene requestStop(String where, Version version) {
+    public static Scenario requestStop(String where, Version version) {
         checkRangeVersion(where, version);
-        return new Scene(format(FORMAT_REQUEST, WHO, STOP, where));
+        return new Scenario(format(FORMAT_REQUEST, WHO, STOP, where));
     }
 
     /**
@@ -75,39 +76,54 @@ public class Scene extends BaseOpenMessage {
     /**
      * TODO
      */
-    public static Scene requestStatus(String where) {
+    public static Scenario requestStatus(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
-        return new Scene(format(FORMAT_STATUS, WHO, where));
+        return new Scenario(format(FORMAT_STATUS, WHO, where));
     }
 
     /**
      * TODO
      */
-    public static Scene requestStatus(String where, Version version) {
+    public static Scenario requestStatus(String where, Version version) {
         checkRangeVersion(where, version);
-        return new Scene(format(FORMAT_STATUS, WHO, where));
+        return new Scenario(format(FORMAT_STATUS, WHO, where));
     }
 
     /**
      * TODO
      */
-    public static Func1<OpenSession, OpenSession> handleStatus(Action0 startStatus, Action0 stopStatus) {
+    public static Func1<OpenSession, OpenSession> handleStatus(
+            Action0 startStatus, Action0 stopStatus, Action0 enableStatus, Action0 disableStatus) {
+
         return openSession -> {
             isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_STATUS_WHO, WHO);
             List<OpenMessage> response = openSession.getResponse();
             checkNotNull(response, "response is null");
-            checkArgument(response.size() == 1 || response.size() == 2, "invalid response");
+            checkArgument(response.size() == 2 || response.size() == 3, "invalid response");
             checkNotNull(response.get(0).getValue(), "response value is null");
 
-            if (isStarted(response.get(0).getValue())) {
+            boolean isStatusHandled = false;
+            if (FluentIterable.from(response).filter(value -> isStarted(value.getValue())).size() == 1) {
                 startStatus.call();
-                return openSession;
+                isStatusHandled = true;
             }
-            if (isStopped(response.get(0).getValue())) {
+            if (FluentIterable.from(response).filter(value -> isStopped(value.getValue())).size() == 1) {
                 stopStatus.call();
-                return openSession;
+                isStatusHandled = true;
             }
-            throw new IllegalStateException("unhandled status");
+            if (FluentIterable.from(response).filter(value -> isEnabled(value.getValue())).size() == 1) {
+                enableStatus.call();
+                isStatusHandled = true;
+            }
+            if (FluentIterable.from(response).filter(value -> isDisabled(value.getValue())).size() == 1) {
+                disableStatus.call();
+                isStatusHandled = true;
+            }
+
+            if (!isStatusHandled) {
+                throw new IllegalStateException("unhandled scenario status");
+            }
+            return openSession;
         };
     }
 
@@ -123,6 +139,20 @@ public class Scene extends BaseOpenMessage {
      */
     static boolean isStopped(String value) {
         return verifyMessage(value, STOP);
+    }
+
+    /*
+     * TODO
+     */
+    static boolean isEnabled(String value) {
+        return verifyMessage(value, ENABLE);
+    }
+
+    /*
+     * TODO
+     */
+    static boolean isDisabled(String value) {
+        return verifyMessage(value, DISABLE);
     }
 
     private static boolean verifyMessage(String value, int status) {

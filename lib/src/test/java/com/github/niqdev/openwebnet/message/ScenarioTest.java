@@ -7,25 +7,25 @@ import rx.Observable;
 import rx.functions.Action0;
 
 import static com.github.niqdev.openwebnet.ThrowableCaptor.captureThrowable;
-import static com.github.niqdev.openwebnet.message.Scene.*;
+import static com.github.niqdev.openwebnet.message.Scenario.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
- * TODO translation for Scenario - Scene??
+ *
  */
-public class SceneTest {
+public class ScenarioTest {
 
     @Test
     public void testRequestStart() {
         assertEquals("invalid message", "*17*1*0##", requestStart("0").getValue());
-        assertEquals("invalid message", "*17*1*0##", requestStart("0", Scene.Version.MH200N).getValue());
-        assertEquals("invalid message", "*17*1*0##", requestStart("0", Scene.Version.MH202).getValue());
+        assertEquals("invalid message", "*17*1*0##", requestStart("0", Scenario.Version.MH200N).getValue());
+        assertEquals("invalid message", "*17*1*0##", requestStart("0", Scenario.Version.MH202).getValue());
 
         assertEquals("invalid message", "*17*1*9999##", requestStart("9999").getValue());
-        assertEquals("invalid message", "*17*1*300##", requestStart("300", Scene.Version.MH200N).getValue());
-        assertEquals("invalid message", "*17*1*9999##", requestStart("9999", Scene.Version.MH202).getValue());
+        assertEquals("invalid message", "*17*1*300##", requestStart("300", Scenario.Version.MH200N).getValue());
+        assertEquals("invalid message", "*17*1*9999##", requestStart("9999", Scenario.Version.MH202).getValue());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class SceneTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 9999");
 
-        assertThat(captureThrowable(() -> requestStart("301", Scene.Version.MH200N)))
+        assertThat(captureThrowable(() -> requestStart("301", Scenario.Version.MH200N)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 300");
     }
@@ -58,12 +58,12 @@ public class SceneTest {
     @Test
     public void testRequestStop() {
         assertEquals("invalid message", "*17*2*0##", requestStop("0").getValue());
-        assertEquals("invalid message", "*17*2*0##", requestStop("0", Scene.Version.MH200N).getValue());
-        assertEquals("invalid message", "*17*2*0##", requestStop("0", Scene.Version.MH202).getValue());
+        assertEquals("invalid message", "*17*2*0##", requestStop("0", Scenario.Version.MH200N).getValue());
+        assertEquals("invalid message", "*17*2*0##", requestStop("0", Scenario.Version.MH202).getValue());
 
         assertEquals("invalid message", "*17*2*9999##", requestStop("9999").getValue());
-        assertEquals("invalid message", "*17*2*300##", requestStop("300", Scene.Version.MH200N).getValue());
-        assertEquals("invalid message", "*17*2*9999##", requestStop("9999", Scene.Version.MH202).getValue());
+        assertEquals("invalid message", "*17*2*300##", requestStop("300", Scenario.Version.MH200N).getValue());
+        assertEquals("invalid message", "*17*2*9999##", requestStop("9999", Scenario.Version.MH202).getValue());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class SceneTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 9999");
 
-        assertThat(captureThrowable(() -> requestStop("301", Scene.Version.MH200N)))
+        assertThat(captureThrowable(() -> requestStop("301", Scenario.Version.MH200N)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 300");
     }
@@ -141,7 +141,7 @@ public class SceneTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 9999");
 
-        assertThat(captureThrowable(() -> requestStatus("301", Scene.Version.MH200N)))
+        assertThat(captureThrowable(() -> requestStatus("301", Scenario.Version.MH200N)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 0 and 300");
     }
@@ -181,33 +181,41 @@ public class SceneTest {
     }
 
     @Test
-    public void testHandleStatusStart() {
+    public void testHandleStatusStartEnable() {
         Action0 startStatusMock = mock(Action0.class);
         Action0 stopStatusMock = mock(Action0.class);
+        Action0 enableStatusMock = mock(Action0.class);
+        Action0 disableStatusMock = mock(Action0.class);
 
         OpenSession openSession = OpenSession.newSession(() -> "*#17*REQUEST");
-        openSession.addAllResponse(Lists.newArrayList(() -> "*17*1*0##", () -> "*#*1##"));
+        openSession.addAllResponse(Lists.newArrayList(() -> "*17*1*0##", () -> "*17*3*0##", () -> "*#*1##"));
         Observable.just(openSession)
-            .map(handleStatus(startStatusMock, stopStatusMock))
+            .map(handleStatus(startStatusMock, stopStatusMock, enableStatusMock, disableStatusMock))
             .subscribe();
 
         verify(startStatusMock).call();
+        verify(enableStatusMock).call();
         verify(stopStatusMock, never()).call();
+        verify(disableStatusMock, never()).call();
     }
 
     @Test
-    public void testHandleStatusStop() {
+    public void testHandleStatusStopDisable() {
         Action0 startStatusMock = mock(Action0.class);
         Action0 stopStatusMock = mock(Action0.class);
+        Action0 enableStatusMock = mock(Action0.class);
+        Action0 disableStatusMock = mock(Action0.class);
 
         OpenSession openSession = OpenSession.newSession(() -> "*#17*REQUEST");
-        openSession.addAllResponse(Lists.newArrayList(() -> "*17*2*0##", () -> "*#*1##"));
+        openSession.addAllResponse(Lists.newArrayList(() -> "*17*2*0##", () -> "*17*4*0##", () -> "*#*1##"));
         Observable.just(openSession)
-            .map(handleStatus(startStatusMock, stopStatusMock))
+                .map(handleStatus(startStatusMock, stopStatusMock, enableStatusMock, disableStatusMock))
             .subscribe();
 
         verify(stopStatusMock).call();
+        verify(disableStatusMock).call();
         verify(startStatusMock, never()).call();
+        verify(enableStatusMock, never()).call();
     }
 
 }
