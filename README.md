@@ -4,15 +4,15 @@
 [![Download](https://api.bintray.com/packages/niqdev/maven/rx-openwebnet/images/download.svg)](https://bintray.com/niqdev/maven/rx-openwebnet/_latestVersion)
 
 [OpenWebNet](http://www.myopen-legrandgroup.com/resources/own_protocol/default.aspx)
-client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava). See also the [documentation](http://openwebnet.github.io/rx-openwebnet).
+client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava). See also the [documentation](https://openwebnet.github.io/rx-openwebnet).
 
 > work in progress
 
 ### Currently supports
-* `WHO=1` Lighting: see also [Javadoc](http://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Lighting.html)
-* `WHO=2` Automation: see also [Javadoc](http://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Automation.html)
-* `WHO=4` Heating: see also [Javadoc](http://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Heating.html)
-* `WHO=17` Scenario: see also [Javadoc](http://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Scenario.html)
+* `WHO=1` Lighting: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Lighting.html)
+* `WHO=2` Automation: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Automation.html)
+* `WHO=4` Heating: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Heating.html)
+* `WHO=17` Scenario: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Scenario.html)
 * a single generic frame/message
 * a list of generic frames/messages
 
