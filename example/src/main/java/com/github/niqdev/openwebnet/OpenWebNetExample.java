@@ -1,9 +1,6 @@
 package com.github.niqdev.openwebnet;
 
-import com.github.niqdev.openwebnet.message.Automation;
-import com.github.niqdev.openwebnet.message.Heating;
-import com.github.niqdev.openwebnet.message.Lighting;
-import com.github.niqdev.openwebnet.message.SoundSystem;
+import com.github.niqdev.openwebnet.message.*;
 import rx.schedulers.Schedulers;
 
 import java.util.concurrent.ExecutorService;
@@ -23,6 +20,7 @@ public class OpenWebNetExample {
     private static final String HOST = "192.168.1.41";
     private static final String HOST_DOMAIN = "vpn.home.it";
     private static final String HOST_PWD = "192.168.1.35";
+    private static final String HOST_HTTP = "http://192.168.1.41";
     private static final String PASSWORD = "12345";
     private static final int PORT = 20000;
 
@@ -36,6 +34,8 @@ public class OpenWebNetExample {
         //exampleHeating();
         //exampleSoundSystem();
         //exampleSoundSystemStatus();
+        //exampleScenario();
+        exampleScenarioStatus();
     }
 
     private static void example1() {
@@ -108,6 +108,27 @@ public class OpenWebNetExample {
             //.send(SoundSystem.requestTurnOn("#5"))
             .send(SoundSystem.requestStatus("51"))
             .map(SoundSystem.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleScenario() {
+        OpenWebNet
+            .newClient(gateway(HOST, PORT))
+            .send(Scenario.requestStart("32", Scenario.Version.MH200N))
+            //.send(Scenario.requestStop("31"))
+            .map(Scenario.handleResponse(() -> System.out.println("START"), () -> System.out.println("STOP")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleScenarioStatus() {
+        OpenWebNet
+            .newClient(gateway(HOST, PORT))
+            .send(Scenario.requestStatus("32"))
+            .map(Scenario.handleStatus(
+                () -> System.out.println("STARTED"),
+                () -> System.out.println("STOPPED"),
+                () -> System.out.println("ENABLED"),
+                () -> System.out.println("DISABLED")))
             .subscribe(System.out::println);
     }
 
