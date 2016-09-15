@@ -35,7 +35,8 @@ public class OpenWebNetExample {
         //exampleSoundSystem();
         //exampleSoundSystemStatus();
         //exampleScenario();
-        exampleScenarioStatus();
+        //exampleScenarioStatus();
+        exampleEnergy();
     }
 
     private static void example1() {
@@ -129,6 +130,13 @@ public class OpenWebNetExample {
                 () -> System.out.println("STOPPED"),
                 () -> System.out.println("ENABLED"),
                 () -> System.out.println("DISABLED")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleEnergy() {
+        OpenWebNet
+            .newClient(gateway(HOST_PWD, PORT, PASSWORD))
+            .send(asList(() -> "*#18*51*113##", () -> "*#18*51*54##", () -> "*#18*51*53##"))
             .subscribe(System.out::println);
     }
 
