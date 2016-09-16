@@ -53,7 +53,7 @@ public class OpenWebNetExample {
             .send(asList(() -> "*#1*21##", () -> "*#1*22##"))
             .subscribeOn(Schedulers.from(executor))
             .doOnError(throwable -> System.out.println("ERROR " + throwable))
-            .doAfterTerminate(() -> executor.shutdown())
+            .doAfterTerminate(executor::shutdown)
             .subscribe(System.out::println, throwable -> {});
         System.out.println("after " + Thread.currentThread().getName());
     }
@@ -89,7 +89,7 @@ public class OpenWebNetExample {
             .newClient(gateway(HOST_PWD, PORT, PASSWORD))
             //.newClient(gateway(HOST_DOMAIN, PORT))
             .send(Heating.requestTemperature("4"))
-            .map(Heating.handleTemperature(value -> System.out.println(value), () -> System.out.println("error")))
+            .map(Heating.handleTemperature(System.out::println, () -> System.out.println("error")))
             .subscribe(System.out::println);
     }
 
@@ -134,9 +134,15 @@ public class OpenWebNetExample {
     }
 
     private static void exampleEnergy() {
+        Energy.Version ev = Energy.Version.MODEL_F523;
         OpenWebNet
             .newClient(gateway(HOST_PWD, PORT, PASSWORD))
-            .send(asList(() -> "*#18*51*113##", () -> "*#18*51*54##", () -> "*#18*51*53##"))
+            //.send(asList(() -> "*#18*51*113##", () -> "*#18*51*54##", () -> "*#18*51*53##"))
+            .send(asList(
+                Energy.requestInstantaneous("1", ev),
+                Energy.requestDaily("1", ev),
+                Energy.requestMonthly("1", ev)))
+            .map(Energy.handleEnergies(System.out::println, () -> System.out.println("error")))
             .subscribe(System.out::println);
     }
 

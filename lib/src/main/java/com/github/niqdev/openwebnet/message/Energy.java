@@ -1,6 +1,15 @@
 package com.github.niqdev.openwebnet.message;
 
+import com.github.niqdev.openwebnet.OpenSession;
+import com.google.common.collect.Lists;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
+
+import java.util.List;
+
 import static com.github.niqdev.openwebnet.message.Who.ENERGY_MANAGEMENT;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
@@ -80,6 +89,80 @@ public class Energy extends BaseOpenMessage {
                 return new Energy(format(FORMAT_DIMENSION_ENERGY_A, WHO, where, period));
         }
         throw new IllegalArgumentException("invalid version");
+    }
+
+    /**
+     * TODO
+     *
+     * @param onSuccess
+     * @param onError
+     * @return
+     */
+    public static Func1<List<OpenSession>, List<OpenSession>> handleEnergies(Action1<List<String>> onSuccess, Action0 onError) {
+        return openSessions -> {
+            List<String> results = Lists.newArrayList();
+
+            for (OpenSession openSession: openSessions) {
+                isValidPrefixType(openSession.getRequest(), FORMAT_PREFIX_DIMENSION_WHO, WHO);
+                List<OpenMessage> response = openSession.getResponse();
+                checkNotNull(response, "response is null");
+                // allow invalid response like *#*1##1*54*3897##*#*1## (3 messages) - skip later!
+                checkArgument(response.size() >= 1 || response.size() <=3, "invalid response");
+
+                final String responseValue = response.get(0).getValue();
+                checkNotNull(responseValue, "response value is null");
+
+                // strict validation
+                if (response.size() != 3 && isValidEnergy(responseValue)) {
+                    results.add(getEnergy(openSession.getRequest(), responseValue));
+                } else {
+                    results.add("");
+                }
+            }
+
+            if (results.size() > 0 && results.size() == openSessions.size()) {
+                onSuccess.call(results);
+            } else {
+                onError.call();
+            }
+
+            return openSessions;
+        };
+    }
+
+    static boolean isValidEnergy(String value) {
+        // example min *#18*51*54*V##
+        // example max *#18*7255#0*113*9999999##
+        return value != null && value.startsWith(format(FORMAT_PREFIX_DIMENSION, WHO))
+            && value.length() > 13 && value.length() < 26 && value.endsWith(FRAME_END);
+    }
+
+    // Power in Watt
+    static String getEnergy(OpenMessage request, String response) {
+        checkArgument(request instanceof Energy, "invalid request type");
+
+        // *#18*5WHERE*113##
+        // *#18*7WHERE#0*54##
+        String requestValue = request.getValue();
+        // *#18*5WHERE*113
+        // *#18*7WHERE#0*54
+        String requestValueWithoutSuffix = requestValue.substring(0, requestValue.length() - 2);
+        // *#18*5WHERE*113*POWER## --> *POWER##
+        // *#18*7WHERE#0*54*POWER## --> *POWER##
+        String powerValueWithPrefix = response.replace(requestValueWithoutSuffix, "");
+
+        String powerValue = powerValueWithPrefix.substring(1, powerValueWithPrefix.length() - 2);
+
+        try {
+            // dirty check: parse as much as possible
+            // response are often incomplete or impossible to validate strictly
+            checkArgument(powerValue.length()>0 && powerValue.length()<8, "invalid power length");
+            Integer.parseInt(powerValue);
+        } catch (Throwable t) {
+            powerValue = "";
+        }
+
+        return powerValue;
     }
 
 }
