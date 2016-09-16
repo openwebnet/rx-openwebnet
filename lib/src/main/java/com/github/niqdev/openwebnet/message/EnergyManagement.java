@@ -16,7 +16,20 @@ import static java.lang.String.format;
 /**
  * OpenWebNet Energy Management.
  *
- * TODO
+ * <pre>
+ * {@code
+ *
+ * // reads powers (best effort)
+ * OpenWebNet
+ *    .newClient(gateway("x.x.x.x", 20000, "12345"))
+ *    .send(asList(
+ *       EnergyManagement.requestInstantaneousPower("1", EnergyManagement.Version.MODEL_F523),
+ *       EnergyManagement.requestDailyPower("1", EnergyManagement.Version.MODEL_F520),
+ *       EnergyManagement.requestMonthlyPower("1", EnergyManagement.Version.MODEL_F522_A)))
+ *    .map(EnergyManagement.handlePowers(System.out::println, () -> System.out.println("error")))
+ *    .subscribe(System.out::println);
+ * }
+ * </pre>
  *
  */
 public class EnergyManagement extends BaseOpenMessage {
@@ -42,7 +55,7 @@ public class EnergyManagement extends BaseOpenMessage {
     private static final int WHERE_MAX_VALUE_ENERGY = 255;
     private static final int WHO = ENERGY_MANAGEMENT.value();
 
-    protected EnergyManagement(String value) {
+    private EnergyManagement(String value) {
         super(value);
     }
 
@@ -92,11 +105,15 @@ public class EnergyManagement extends BaseOpenMessage {
     }
 
     /**
-     * TODO
+     * Handle response from {@link EnergyManagement#requestInstantaneousPower(String, Version)},
+     * {@link EnergyManagement#requestDailyPower(String, Version)} and
+     * {@link EnergyManagement#requestMonthlyPower(String, Version)}.
      *
-     * @param onSuccess
-     * @param onError
-     * @return
+     * This is a best effort: often the responses are incomplete or impossible to parse.
+     *
+     * @param onSuccess invoked if the powers have been read correctly
+     * @param onError invoked otherwise
+     * @return {@code Observable<List<OpenSession>>}
      */
     public static Func1<List<OpenSession>, List<OpenSession>> handlePowers(Action1<List<String>> onSuccess, Action0 onError) {
         return openSessions -> {
