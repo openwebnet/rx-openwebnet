@@ -64,7 +64,7 @@ public class EnergyManagement extends BaseOpenMessage {
      *
      * @param where Value between 1 and 255
      * @param version Energy management {@link Version}
-     * @return
+     * @return message
      */
     public static EnergyManagement requestInstantaneousPower(String where, Version version) {
         return buildRequestPower(where, version, INSTANTANEOUS_POWER);
@@ -75,7 +75,7 @@ public class EnergyManagement extends BaseOpenMessage {
      *
      * @param where Value between 1 and 255
      * @param version Energy management {@link Version}
-     * @return
+     * @return message
      */
     public static EnergyManagement requestDailyPower(String where, Version version) {
         return buildRequestPower(where, version, DAILY_POWER);
@@ -86,7 +86,7 @@ public class EnergyManagement extends BaseOpenMessage {
      *
      * @param where Value between 1 and 255
      * @param version Energy management {@link Version}
-     * @return
+     * @return message
      */
     public static EnergyManagement requestMonthlyPower(String where, Version version) {
         return buildRequestPower(where, version, MONTHLY_POWER);
