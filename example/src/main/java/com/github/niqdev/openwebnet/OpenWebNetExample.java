@@ -134,15 +134,15 @@ public class OpenWebNetExample {
     }
 
     private static void exampleEnergy() {
-        Energy.Version ev = Energy.Version.MODEL_F523;
+        EnergyManagement.Version ev = EnergyManagement.Version.MODEL_F523;
         OpenWebNet
             .newClient(gateway(HOST_PWD, PORT, PASSWORD))
             //.send(asList(() -> "*#18*51*113##", () -> "*#18*51*54##", () -> "*#18*51*53##"))
             .send(asList(
-                Energy.requestInstantaneous("1", ev),
-                Energy.requestDaily("1", ev),
-                Energy.requestMonthly("1", ev)))
-            .map(Energy.handleEnergies(System.out::println, () -> System.out.println("error")))
+                EnergyManagement.requestInstantaneousPower("1", ev),
+                EnergyManagement.requestDailyPower("1", ev),
+                EnergyManagement.requestMonthlyPower("1", ev)))
+            .map(EnergyManagement.handlePowers(System.out::println, () -> System.out.println("error")))
             .subscribe(System.out::println);
     }
 

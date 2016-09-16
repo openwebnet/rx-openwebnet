@@ -19,7 +19,7 @@ import static java.lang.String.format;
  * TODO
  *
  */
-public class Energy extends BaseOpenMessage {
+public class EnergyManagement extends BaseOpenMessage {
 
     public enum Version {
         // Energy Management Central Unit, Pulse Counter, Power Meter
@@ -42,7 +42,7 @@ public class Energy extends BaseOpenMessage {
     private static final int WHERE_MAX_VALUE_ENERGY = 255;
     private static final int WHO = ENERGY_MANAGEMENT.value();
 
-    protected Energy(String value) {
+    protected EnergyManagement(String value) {
         super(value);
     }
 
@@ -53,8 +53,8 @@ public class Energy extends BaseOpenMessage {
      * @param version Energy management {@link Version}
      * @return
      */
-    public static Energy requestInstantaneous(String where, Version version) {
-        return buildRequest(where, version, INSTANTANEOUS_POWER);
+    public static EnergyManagement requestInstantaneousPower(String where, Version version) {
+        return buildRequestPower(where, version, INSTANTANEOUS_POWER);
     }
 
     /**
@@ -64,8 +64,8 @@ public class Energy extends BaseOpenMessage {
      * @param version Energy management {@link Version}
      * @return
      */
-    public static Energy requestDaily(String where, Version version) {
-        return buildRequest(where, version, DAILY_POWER);
+    public static EnergyManagement requestDailyPower(String where, Version version) {
+        return buildRequestPower(where, version, DAILY_POWER);
     }
 
     /**
@@ -75,18 +75,18 @@ public class Energy extends BaseOpenMessage {
      * @param version Energy management {@link Version}
      * @return
      */
-    public static Energy requestMonthly(String where, Version version) {
-        return buildRequest(where, version, MONTHLY_POWER);
+    public static EnergyManagement requestMonthlyPower(String where, Version version) {
+        return buildRequestPower(where, version, MONTHLY_POWER);
     }
 
-    private static Energy buildRequest(String where, Version version, int period) {
+    private static EnergyManagement buildRequestPower(String where, Version version, int period) {
         checkRange(WHERE_MIN_VALUE_ENERGY, WHERE_MAX_VALUE_ENERGY, checkIsInteger(where));
         checkNotNull(version, "invalid null version");
         switch (version) {
             case MODEL_F520: case MODEL_F523: case MODEL_3522:
-                return new Energy(format(FORMAT_DIMENSION_ENERGY, WHO, where, period));
+                return new EnergyManagement(format(FORMAT_DIMENSION_ENERGY, WHO, where, period));
             case MODEL_F522_A: case MODEL_F523_A:
-                return new Energy(format(FORMAT_DIMENSION_ENERGY_A, WHO, where, period));
+                return new EnergyManagement(format(FORMAT_DIMENSION_ENERGY_A, WHO, where, period));
         }
         throw new IllegalArgumentException("invalid version");
     }
@@ -98,7 +98,7 @@ public class Energy extends BaseOpenMessage {
      * @param onError
      * @return
      */
-    public static Func1<List<OpenSession>, List<OpenSession>> handleEnergies(Action1<List<String>> onSuccess, Action0 onError) {
+    public static Func1<List<OpenSession>, List<OpenSession>> handlePowers(Action1<List<String>> onSuccess, Action0 onError) {
         return openSessions -> {
             List<String> results = Lists.newArrayList();
 
@@ -113,8 +113,8 @@ public class Energy extends BaseOpenMessage {
                 checkNotNull(responseValue, "response value is null");
 
                 // strict validation
-                if (response.size() != 3 && isValidEnergy(responseValue)) {
-                    results.add(getEnergy(openSession.getRequest(), responseValue));
+                if (response.size() != 3 && isValidPower(responseValue)) {
+                    results.add(getPower(openSession.getRequest(), responseValue));
                 } else {
                     results.add("");
                 }
@@ -130,7 +130,7 @@ public class Energy extends BaseOpenMessage {
         };
     }
 
-    static boolean isValidEnergy(String value) {
+    static boolean isValidPower(String value) {
         // example min *#18*51*54*V##
         // example max *#18*7255#0*113*9999999##
         return value != null && value.startsWith(format(FORMAT_PREFIX_DIMENSION, WHO))
@@ -138,8 +138,8 @@ public class Energy extends BaseOpenMessage {
     }
 
     // Power in Watt
-    static String getEnergy(OpenMessage request, String response) {
-        checkArgument(request instanceof Energy, "invalid request type");
+    static String getPower(OpenMessage request, String response) {
+        checkArgument(request instanceof EnergyManagement, "invalid request type");
 
         // *#18*5WHERE*113##
         // *#18*7WHERE#0*54##
