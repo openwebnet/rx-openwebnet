@@ -35,7 +35,8 @@ public class OpenWebNetExample {
         //exampleSoundSystem();
         //exampleSoundSystemStatus();
         //exampleScenario();
-        exampleScenarioStatus();
+        //exampleScenarioStatus();
+        exampleEnergy();
     }
 
     private static void example1() {
@@ -52,7 +53,7 @@ public class OpenWebNetExample {
             .send(asList(() -> "*#1*21##", () -> "*#1*22##"))
             .subscribeOn(Schedulers.from(executor))
             .doOnError(throwable -> System.out.println("ERROR " + throwable))
-            .doAfterTerminate(() -> executor.shutdown())
+            .doAfterTerminate(executor::shutdown)
             .subscribe(System.out::println, throwable -> {});
         System.out.println("after " + Thread.currentThread().getName());
     }
@@ -88,7 +89,7 @@ public class OpenWebNetExample {
             .newClient(gateway(HOST_PWD, PORT, PASSWORD))
             //.newClient(gateway(HOST_DOMAIN, PORT))
             .send(Heating.requestTemperature("4"))
-            .map(Heating.handleTemperature(value -> System.out.println(value), () -> System.out.println("error")))
+            .map(Heating.handleTemperature(System.out::println, () -> System.out.println("error")))
             .subscribe(System.out::println);
     }
 
@@ -129,6 +130,19 @@ public class OpenWebNetExample {
                 () -> System.out.println("STOPPED"),
                 () -> System.out.println("ENABLED"),
                 () -> System.out.println("DISABLED")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleEnergy() {
+        EnergyManagement.Version ev = EnergyManagement.Version.MODEL_F523;
+        OpenWebNet
+            .newClient(gateway(HOST_PWD, PORT, PASSWORD))
+            //.send(asList(() -> "*#18*51*113##", () -> "*#18*51*54##", () -> "*#18*51*53##"))
+            .send(asList(
+                EnergyManagement.requestInstantaneousPower("1", ev),
+                EnergyManagement.requestDailyPower("1", ev),
+                EnergyManagement.requestMonthlyPower("1", ev)))
+            .map(EnergyManagement.handlePowers(System.out::println, () -> System.out.println("error")))
             .subscribe(System.out::println);
     }
 
