@@ -36,7 +36,7 @@ public class OpenWebNetExample {
         //exampleSoundSystemStatus();
         //exampleScenario();
         //exampleScenarioStatus();
-        exampleEnergy();
+        //exampleEnergy();
     }
 
     private static void example1() {
