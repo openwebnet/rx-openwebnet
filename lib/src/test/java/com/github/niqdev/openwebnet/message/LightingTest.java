@@ -3,15 +3,14 @@ package com.github.niqdev.openwebnet.message;
 import com.github.niqdev.openwebnet.OpenSession;
 import com.google.common.collect.Lists;
 import org.junit.Test;
-import static org.mockito.Mockito.*;
 import rx.Observable;
 import rx.functions.Action0;
 
 import static com.github.niqdev.openwebnet.ThrowableCaptor.captureThrowable;
 import static com.github.niqdev.openwebnet.message.Lighting.*;
-import static com.github.niqdev.openwebnet.message.Lighting.requestTurnOn;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class LightingTest {
 
@@ -194,6 +193,135 @@ public class LightingTest {
 
         verify(offStatusMock).call();
         verify(onStatusMock, never()).call();
+    }
+
+    @Test
+    public void testCheckRangeType() {
+        checkRangeType("0", Type.GENERAL);
+        checkRangeType("00", Type.AREA);
+        checkRangeType("1", Type.AREA);
+        checkRangeType("9", Type.AREA);
+        checkRangeType("100", Type.AREA);
+        checkRangeType("#1", Type.GROUP);
+        checkRangeType("#255", Type.GROUP);
+        checkRangeType("0", Type.POINT_TO_POINT);
+        checkRangeType("9999", Type.POINT_TO_POINT);
+    }
+
+    @Test
+    public void testCheckRangeType_invalidArgument() {
+        assertThat(captureThrowable(() -> checkRangeType(null, Type.POINT_TO_POINT)))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("invalid null value: [where]");
+
+        assertThat(captureThrowable(() -> checkRangeType("1", null)))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("invalid null value: [type]");
+
+        assertThat(captureThrowable(() -> checkRangeType("", Type.POINT_TO_POINT)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid length [1-4]");
+
+        assertThat(captureThrowable(() -> checkRangeType("XXXXX", Type.POINT_TO_POINT)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid length [1-4]");
+    }
+
+    @Test
+    public void testCheckRangeType_invalidGeneral() {
+        assertThat(captureThrowable(() -> checkRangeType("1", Type.GENERAL)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [0]");
+
+        assertThat(captureThrowable(() -> checkRangeType("-1", Type.GENERAL)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [0]");
+
+        assertThat(captureThrowable(() -> checkRangeType("x", Type.GENERAL)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [0]");
+
+        assertThat(captureThrowable(() -> checkRangeType("#", Type.GENERAL)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [0]");
+    }
+
+    @Test
+    public void testCheckRangeType_invalidArea() {
+        assertThat(captureThrowable(() -> checkRangeType("0", Type.AREA)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [00, 1−9, 100]");
+
+        assertThat(captureThrowable(() -> checkRangeType("01", Type.AREA)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [00, 1−9, 100]");
+
+        assertThat(captureThrowable(() -> checkRangeType("10", Type.AREA)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [00, 1−9, 100]");
+
+        assertThat(captureThrowable(() -> checkRangeType("99", Type.AREA)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [00, 1−9, 100]");
+
+        assertThat(captureThrowable(() -> checkRangeType("101", Type.AREA)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [00, 1−9, 100]");
+
+        assertThat(captureThrowable(() -> checkRangeType("-1", Type.AREA)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [00, 1−9, 100]");
+
+        assertThat(captureThrowable(() -> checkRangeType("x", Type.AREA)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
+        assertThat(captureThrowable(() -> checkRangeType("#", Type.AREA)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+    }
+
+    @Test
+    public void testCheckRangeType_invalidGroup() {
+        assertThat(captureThrowable(() -> checkRangeType("-1", Type.GROUP)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed prefix [#]");
+
+        assertThat(captureThrowable(() -> checkRangeType("x", Type.GROUP)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed prefix [#]");
+
+        assertThat(captureThrowable(() -> checkRangeType("#", Type.GROUP)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid integer format");
+
+        assertThat(captureThrowable(() -> checkRangeType("#0", Type.GROUP)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 255");
+
+        // TODO this shouldn't pass
+        //assertThat(captureThrowable(() -> checkRangeType("#001", Type.GROUP)))
+        //    .isInstanceOf(IllegalArgumentException.class)
+        //    .hasMessage("value must be between 1 and 255");
+
+        assertThat(captureThrowable(() -> checkRangeType("#-1", Type.GROUP)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 255");
+
+        assertThat(captureThrowable(() -> checkRangeType("#256", Type.GROUP)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 255");
+    }
+
+    @Test
+    public void testCheckRangeType_invalidPointToPoint() {
+        assertThat(captureThrowable(() -> checkRangeType("-1", Type.POINT_TO_POINT)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 0 and 9999");
+
+        assertThat(captureThrowable(() -> checkRangeType("10000", Type.POINT_TO_POINT)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid length [1-4]");
     }
 
 }
