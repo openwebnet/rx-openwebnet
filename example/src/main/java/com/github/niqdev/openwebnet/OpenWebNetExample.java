@@ -71,7 +71,7 @@ public class OpenWebNetExample {
         OpenWebNet
             .newClient(gateway(HOST_PWD, PORT, PASSWORD))
             //.newClient(gateway(HOST, PORT))
-            .send(Lighting.requestTurnOn("21"))
+            .send(Lighting.requestTurnOn("21", Lighting.Type.POINT_TO_POINT))
             .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }

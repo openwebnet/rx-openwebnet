@@ -23,13 +23,13 @@ import static java.lang.String.format;
  *
  * // requests status light 21
  * client
- *    .send(Lighting.requestStatus("21"))
+ *    .send(Lighting.requestStatus("21", Lighting.Type.POINT_TO_POINT))
  *    .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
  *    .subscribe(System.out::println);
  *
  * // turns light 21 on
  * client
- *    .send(Lighting.requestTurnOn("21"))
+ *    .send(Lighting.requestTurnOn("21", Lighting.Type.POINT_TO_POINT))
  *    .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
  *    .subscribe(System.out::println);
  * }
@@ -37,15 +37,38 @@ import static java.lang.String.format;
  */
 public class Lighting extends BaseOpenMessage {
 
+    public enum Type {
+        // 0
+        GENERAL,
+        // [00, 1−9, 100]
+        AREA,
+        // #[1−255]
+        GROUP,
+        // AREA + PL
+        // A [00] + PL [01-15]
+        // A [1−9] + PL [1-9]
+        // A [10] + PL [01-15]
+        // A [01-09] + PL [10-15]
+        POINT_TO_POINT
+    }
+
+    private static final int WHO = LIGHTING.value();
     private static final int ON = 1;
     private static final int OFF = 0;
-    private static final int WHO = LIGHTING.value();
+    private static final int WHERE_MIN_VALUE_AREA = 1;
+    private static final int WHERE_MAX_VALUE_AREA = 9;
+    private static final int WHERE_MIN_VALUE_GROUP = 1;
+    private static final int WHERE_MAX_VALUE_GROUP = 255;
+    private static final String GENERAL_VALUE = "0";
+    private static final String WHERE_GROUP_PREFIX = "#";
 
     private Lighting(String value) {
         super(value);
     }
 
     /**
+     * @deprecated use {@link Lighting#requestTurnOn(String, Type)}
+     *
      * OpenWebNet message request to turn light <i>ON</i> with value <b>*1*1*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
@@ -57,6 +80,20 @@ public class Lighting extends BaseOpenMessage {
     }
 
     /**
+     * OpenWebNet message request to turn light <i>ON</i> with value <b>*1*1*WHERE##</b>.
+     *
+     * @param where Value
+     * @param type Type {@link Type}
+     * @return message
+     */
+    public static Lighting requestTurnOn(String where, Type type) {
+        checkRangeType(where, type);
+        return new Lighting(format(FORMAT_REQUEST, WHO, ON, where));
+    }
+
+    /**
+     * @deprecated use {@link Lighting#requestTurnOff(String, Type)}
+     *
      * OpenWebNet message request to turn light <i>OFF</i> with value <b>*1*0*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
@@ -64,6 +101,18 @@ public class Lighting extends BaseOpenMessage {
      */
     public static Lighting requestTurnOff(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
+        return new Lighting(format(FORMAT_REQUEST, WHO, OFF, where));
+    }
+
+    /**
+     * OpenWebNet message request to turn light <i>OFF</i> with value <b>*1*0*WHERE##</b>.
+     *
+     * @param where Value
+     * @param type Type {@link Type}
+     * @return message
+     */
+    public static Lighting requestTurnOff(String where, Type type) {
+        checkRangeType(where, type);
         return new Lighting(format(FORMAT_REQUEST, WHO, OFF, where));
     }
 
@@ -139,6 +188,50 @@ public class Lighting extends BaseOpenMessage {
     private static boolean verifyMessage(String value, int status) {
         return value != null && value.startsWith(format(FORMAT_PREFIX_RESPONSE, WHO, status))
             && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
+    }
+
+    /*
+     * GENERAL
+     * 0
+     *
+     * AREA
+     * [00, 1−9, 100]
+     *
+     * GROUP
+     * #[1−255]
+     *
+     * POINT_TO_POINT (AREA + PL)
+     * A [00] + PL [01-15]
+     * A [1−9] + PL [1-9]
+     * A [10] + PL [01-15]
+     * A [01-09] + PL [10-15]
+     */
+    protected static void checkRangeType(String where, Type type) {
+        checkNotNull(where, "invalid null value: [where]");
+        checkNotNull(type, "invalid null value: [type]");
+        checkArgument(where.length() >= 1 && where.length() <=4, "invalid length [1-4]");
+        switch (type) {
+            case GENERAL:
+                checkArgument(GENERAL_VALUE.equals(where), "allowed value [0]");
+                break;
+            case AREA:
+                checkArgument(
+                    "00".equals(where) ||
+                    (isInRange(WHERE_MIN_VALUE_AREA, WHERE_MAX_VALUE_AREA, checkIsInteger(where)) && where.length() == 1) ||
+                    "100".equals(where),
+                "allowed value [00, 1−9, 100]");
+                break;
+            case GROUP:
+                checkArgument(where.startsWith(WHERE_GROUP_PREFIX), "allowed prefix [#]");
+                checkRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where.substring(1)));
+                break;
+            case POINT_TO_POINT:
+                // coarse/shallow validation
+                checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
+                break;
+            default:
+                throw new IllegalArgumentException("invalid type");
+        }
     }
 
 }
