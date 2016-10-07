@@ -60,7 +60,7 @@ public class Lighting extends BaseOpenMessage {
     private static final int WHERE_MIN_VALUE_GROUP = 1;
     private static final int WHERE_MAX_VALUE_GROUP = 255;
     private static final String WHERE_GROUP_PREFIX = "#";
-    private static final String WHERE_GENERAL_VALUE = "0";
+    public static final String WHERE_GENERAL_VALUE = "0";
 
     private Lighting(String value) {
         super(value);
