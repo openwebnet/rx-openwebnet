@@ -23,7 +23,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:1.3.1'
+    compile 'com.github.openwebnet:rx-openwebnet:1.3.2'
 }
 ```
 
