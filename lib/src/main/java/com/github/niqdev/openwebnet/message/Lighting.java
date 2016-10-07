@@ -59,20 +59,20 @@ public class Lighting extends BaseOpenMessage {
     private static final int WHERE_MAX_VALUE_AREA = 9;
     private static final int WHERE_MIN_VALUE_GROUP = 1;
     private static final int WHERE_MAX_VALUE_GROUP = 255;
-    private static final String GENERAL_VALUE = "0";
     private static final String WHERE_GROUP_PREFIX = "#";
+    private static final String WHERE_GENERAL_VALUE = "0";
 
     private Lighting(String value) {
         super(value);
     }
 
     /**
-     * @deprecated use {@link Lighting#requestTurnOn(String, Type)}
-     *
      * OpenWebNet message request to turn light <i>ON</i> with value <b>*1*1*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
+     *
+     * @deprecated use {@link Lighting#requestTurnOn(String, Type)}
      */
     public static Lighting requestTurnOn(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -92,12 +92,12 @@ public class Lighting extends BaseOpenMessage {
     }
 
     /**
-     * @deprecated use {@link Lighting#requestTurnOff(String, Type)}
-     *
      * OpenWebNet message request to turn light <i>OFF</i> with value <b>*1*0*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
+     *
+     * @deprecated use {@link Lighting#requestTurnOff(String, Type)}
      */
     public static Lighting requestTurnOff(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -212,7 +212,7 @@ public class Lighting extends BaseOpenMessage {
         checkArgument(where.length() >= 1 && where.length() <=4, "invalid length [1-4]");
         switch (type) {
             case GENERAL:
-                checkArgument(GENERAL_VALUE.equals(where), "allowed value [0]");
+                checkArgument(WHERE_GENERAL_VALUE.equals(where), "allowed value [0]");
                 break;
             case AREA:
                 checkArgument(
