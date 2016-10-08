@@ -1,5 +1,5 @@
 dependencies {
-    compile 'io.reactivex:rxjava:1.2.0'
+    compile 'io.reactivex:rxjava:1.2.1'
     compile 'io.reactivex:rxjava-computation-expressions:0.21.0'
     compile 'com.google.guava:guava:19.0'
 
