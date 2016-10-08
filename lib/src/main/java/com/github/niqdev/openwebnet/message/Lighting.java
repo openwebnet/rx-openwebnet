@@ -247,6 +247,26 @@ public class Lighting extends BaseOpenMessage {
         }
     }
 
+    public static boolean isValidRangeType(String where, Type type) {
+        if (where == null || type == null || where.length() < 1 && where.length() > 4) {
+            return false;
+        }
+        switch (type) {
+            case GENERAL:
+                return WHERE_GENERAL_VALUE.equals(where);
+            case AREA:
+                return "00".equals(where) ||
+                        (isInRange(WHERE_MIN_VALUE_AREA, WHERE_MAX_VALUE_AREA, checkIsInteger(where)) && where.length() == 1) ||
+                        "100".equals(where);
+            case GROUP:
+                return isInRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where));
+            case POINT_TO_POINT:
+                // coarse/shallow validation
+                return isInRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
+        }
+        throw new IllegalArgumentException("invalid type");
+    }
+
     private static String buildWhereValue(String where, Type type) {
         switch (type) {
             case GENERAL: case AREA: case POINT_TO_POINT:
