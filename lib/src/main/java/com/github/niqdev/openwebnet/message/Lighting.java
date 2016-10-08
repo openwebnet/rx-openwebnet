@@ -88,7 +88,7 @@ public class Lighting extends BaseOpenMessage {
      */
     public static Lighting requestTurnOn(String where, Type type) {
         checkRangeType(where, type);
-        return new Lighting(format(FORMAT_REQUEST, WHO, ON, where));
+        return new Lighting(format(FORMAT_REQUEST, WHO, ON, buildWhereValue(where, type)));
     }
 
     /**
@@ -113,7 +113,7 @@ public class Lighting extends BaseOpenMessage {
      */
     public static Lighting requestTurnOff(String where, Type type) {
         checkRangeType(where, type);
-        return new Lighting(format(FORMAT_REQUEST, WHO, OFF, where));
+        return new Lighting(format(FORMAT_REQUEST, WHO, OFF, buildWhereValue(where, type)));
     }
 
     /**
@@ -132,10 +132,24 @@ public class Lighting extends BaseOpenMessage {
      *
      * @param where Value between 0 and 9999
      * @return message
+     *
+     * @deprecated use {@link Lighting#requestStatus(String, Type)}
      */
     public static Lighting requestStatus(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
         return new Lighting(format(FORMAT_STATUS, WHO, where));
+    }
+
+    /**
+     * OpenWebNet message request light status with value <b>*#1*WHERE##</b>.
+     *
+     * @param where Value
+     * @param type Type {@link Type}
+     * @return message
+     */
+    public static Lighting requestStatus(String where, Type type) {
+        checkRangeType(where, type);
+        return new Lighting(format(FORMAT_STATUS, WHO, buildWhereValue(where, type)));
     }
 
     /**
@@ -222,8 +236,7 @@ public class Lighting extends BaseOpenMessage {
                 "allowed value [00, 1−9, 100]");
                 break;
             case GROUP:
-                checkArgument(where.startsWith(WHERE_GROUP_PREFIX), "allowed prefix [#]");
-                checkRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where.substring(1)));
+                checkRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where));
                 break;
             case POINT_TO_POINT:
                 // coarse/shallow validation
@@ -232,6 +245,16 @@ public class Lighting extends BaseOpenMessage {
             default:
                 throw new IllegalArgumentException("invalid type");
         }
+    }
+
+    private static String buildWhereValue(String where, Type type) {
+        switch (type) {
+            case GENERAL: case AREA: case POINT_TO_POINT:
+                return where;
+            case GROUP:
+                return WHERE_GROUP_PREFIX.concat(where);
+        }
+        throw new IllegalArgumentException("invalid type");
     }
 
 }

@@ -26,6 +26,14 @@ public class LightingTest {
     }
 
     @Test
+    public void testRequestTurnOnWithType() {
+        assertEquals("should be a valid value", "*1*1*0##", requestTurnOn("0", Type.GENERAL).getValue());
+        assertEquals("should be a valid value", "*1*1*9##", requestTurnOn("9", Type.AREA).getValue());
+        assertEquals("should be a valid value", "*1*1*#21##", requestTurnOn("21", Type.GROUP).getValue());
+        assertEquals("should be a valid value", "*1*1*21##", requestTurnOn("21", Type.POINT_TO_POINT).getValue());
+    }
+
+    @Test
     public void testRequestTurnOnInvalid() {
         assertThat(captureThrowable(() -> requestTurnOn(null)))
             .isInstanceOf(IllegalArgumentException.class)
@@ -57,6 +65,14 @@ public class LightingTest {
         assertEquals("should be a valid value", "*1*0*1##", requestTurnOff("1").getValue());
         assertEquals("should be a valid value", "*1*0*09##", requestTurnOff("09").getValue());
         assertEquals("should be a valid value", "*1*0*9##", requestTurnOff("9").getValue());
+    }
+
+    @Test
+    public void testRequestTurnOffWithType() {
+        assertEquals("should be a valid value", "*1*0*0##", requestTurnOff("0", Type.GENERAL).getValue());
+        assertEquals("should be a valid value", "*1*0*9##", requestTurnOff("9", Type.AREA).getValue());
+        assertEquals("should be a valid value", "*1*0*#21##", requestTurnOff("21", Type.GROUP).getValue());
+        assertEquals("should be a valid value", "*1*0*21##", requestTurnOff("21", Type.POINT_TO_POINT).getValue());
     }
 
     @Test
@@ -202,8 +218,8 @@ public class LightingTest {
         checkRangeType("1", Type.AREA);
         checkRangeType("9", Type.AREA);
         checkRangeType("100", Type.AREA);
-        checkRangeType("#1", Type.GROUP);
-        checkRangeType("#255", Type.GROUP);
+        checkRangeType("1", Type.GROUP);
+        checkRangeType("255", Type.GROUP);
         checkRangeType("0", Type.POINT_TO_POINT);
         checkRangeType("9999", Type.POINT_TO_POINT);
     }
@@ -285,30 +301,26 @@ public class LightingTest {
     public void testCheckRangeType_invalidGroup() {
         assertThat(captureThrowable(() -> checkRangeType("-1", Type.GROUP)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("allowed prefix [#]");
+            .hasMessage("value must be between 1 and 255");
 
         assertThat(captureThrowable(() -> checkRangeType("x", Type.GROUP)))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("allowed prefix [#]");
+            .hasMessage("invalid integer format");
 
         assertThat(captureThrowable(() -> checkRangeType("#", Type.GROUP)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid integer format");
 
-        assertThat(captureThrowable(() -> checkRangeType("#0", Type.GROUP)))
+        assertThat(captureThrowable(() -> checkRangeType("0", Type.GROUP)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 1 and 255");
 
         // TODO this shouldn't pass
-        //assertThat(captureThrowable(() -> checkRangeType("#001", Type.GROUP)))
+        //assertThat(captureThrowable(() -> checkRangeType("001", Type.GROUP)))
         //    .isInstanceOf(IllegalArgumentException.class)
         //    .hasMessage("value must be between 1 and 255");
 
-        assertThat(captureThrowable(() -> checkRangeType("#-1", Type.GROUP)))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("value must be between 1 and 255");
-
-        assertThat(captureThrowable(() -> checkRangeType("#256", Type.GROUP)))
+        assertThat(captureThrowable(() -> checkRangeType("256", Type.GROUP)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 1 and 255");
     }
