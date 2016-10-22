@@ -15,6 +15,27 @@ import static java.lang.String.format;
 
 /**
  * OpenWebNet Sound System.
+ *
+ * <pre>
+ * {@code
+ *
+ * import static com.github.niqdev.openwebnet.OpenWebNet.defaultGateway;
+ *
+ * OpenWebNet client = OpenWebNet.newClient(defaultGateway("IP_ADDRESS"));
+ *
+ * // requests status amplifier 51
+ * client
+ *    .send(SoundSystem.requestStatus("51", SoundSystem.Type.AMPLIFIER_P2P))
+ *    .map(SoundSystem.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
+ *    .subscribe(System.out::println);
+ *
+ * // turns group 5 on
+ * client
+ *    .send(SoundSystem.requestTurnOn("5", SoundSystem.Type.AMPLIFIER_GROUP, SoundSystem.Source.STEREO_CHANNEL))
+ *    .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+ *    .subscribe(System.out::println);
+ * }
+ * </pre>
  */
 public class SoundSystem extends BaseOpenMessage {
 
@@ -99,14 +120,26 @@ public class SoundSystem extends BaseOpenMessage {
     }
 
     /**
-     * TODO
+     * OpenWebNet message request to turn Amplifier/Source <i>ON</i>
+     * with value <b>*16*0*WHERE##</b> or <b>*16*3*WHERE##</b>.
+     *
+     * @param where  Value
+     * @param type   Type {@link Type}
+     * @param source Source {@link Source}
+     * @return message
      */
     public static SoundSystem requestTurnOn(String where, Type type, Source source) {
         return buildRequest(where, type, source, ON_SOURCE_BASE_BAND, ON_SOURCE_STEREO_CHANNEL);
     }
 
     /**
-     * TODO
+     * OpenWebNet message request to turn Amplifier/Source <i>OFF</i>
+     * with value <b>*16*10*WHERE##</b> or <b>*16*13*WHERE##</b>.
+     *
+     * @param where  Value
+     * @param type   Type {@link Type}
+     * @param source Source {@link Source}
+     * @return message
      */
     public static SoundSystem requestTurnOff(String where, Type type, Source source) {
         return buildRequest(where, type, source, OFF_SOURCE_BASE_BAND, OFF_SOURCE_STEREO_CHANNEL);
@@ -124,14 +157,23 @@ public class SoundSystem extends BaseOpenMessage {
     }
 
     /**
-     * TODO
+     * Handle response from {@link SoundSystem#requestTurnOn(String, Type, Source)}
+     * and {@link SoundSystem#requestTurnOff(String, Type, Source)}.
+     *
+     * @param onSuccess invoked if the request has been successfully received
+     * @param onFail    invoked otherwise
+     * @return {@code Observable<OpenSession>}
      */
     public static Func1<OpenSession, OpenSession> handleResponse(Action0 onSuccess, Action0 onFail) {
         return handleResponse(onSuccess, onFail, WHO_16);
     }
 
     /**
-     * TODO
+     * OpenWebNet message request Amplifier/Source status with value <b>*#16*WHERE*5##</b>.
+     *
+     * @param where Value
+     * @param type  Type {@link Type}
+     * @return message
      */
     public static SoundSystem requestStatus(String where, Type type) {
         checkArgument(Type.isValid(type, where), "invalid where|type");
@@ -139,7 +181,13 @@ public class SoundSystem extends BaseOpenMessage {
     }
 
     /**
-     * TODO
+     * Handle response from {@link SoundSystem#requestStatus(String, Type)}.
+     * <p>
+     * NOTE: this is a best effort
+     *
+     * @param onStatus  invoked if Amplifier/Source is on
+     * @param offStatus invoked if Amplifier/Source is off
+     * @return {@code Observable<OpenSession>}
      */
     public static Func1<OpenSession, OpenSession> handleStatus(Action0 onStatus, Action0 offStatus) {
         return openSession -> {
