@@ -96,9 +96,9 @@ public class OpenWebNetExample {
     private static void exampleSoundSystem() {
         OpenWebNet
             .newClient(gateway(HOST, PORT))
-            //.send(SoundSystem.requestTurnOff("0"))
-            .send(SoundSystem.requestTurnOff("#5"))
-            //.send(SoundSystem.requestTurnOn("0"))
+            //.send(SoundSystem.requestTurnOff("0", SoundSystem.Type.AMPLIFIER_GENERAL, SoundSystem.Source.STEREO_CHANNEL))
+            .send(SoundSystem.requestTurnOn("5", SoundSystem.Type.AMPLIFIER_GROUP, SoundSystem.Source.STEREO_CHANNEL))
+            //.send(SoundSystem.requestTurnOn("0", SoundSystem.Type.AMPLIFIER_GENERAL, SoundSystem.Source.STEREO_CHANNEL))
             .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }
@@ -106,8 +106,7 @@ public class OpenWebNetExample {
     private static void exampleSoundSystemStatus() {
         OpenWebNet
             .newClient(gateway(HOST, PORT))
-            //.send(SoundSystem.requestTurnOn("#5"))
-            .send(SoundSystem.requestStatus("51"))
+            .send(SoundSystem.requestStatus("51", SoundSystem.Type.AMPLIFIER_P2P))
             .map(SoundSystem.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
             .subscribe(System.out::println);
     }
