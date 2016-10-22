@@ -74,7 +74,7 @@ public class SoundSystem extends BaseOpenMessage {
          *     <li>#0-#9 amplifiers group command</li>
          *     <li>01-99 amplifiers point to point command</li>
          *     <li>100 source general command</li>
-         *     <li><101-109 sources point to point command/li>
+         *     <li>101-109 sources point to point command</li>
          * </ul>
          *
          * @param type Sound System type
