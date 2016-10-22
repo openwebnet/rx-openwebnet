@@ -18,38 +18,48 @@ import static java.lang.String.format;
  */
 public class SoundSystem extends BaseOpenMessage {
 
+    /**
+     * Sound System source.
+     */
     public enum Source {
         BASE_BAND,
         STEREO_CHANNEL
     }
 
+    /**
+     * Sound System type: amplifier or source.
+     */
     public enum Type {
-        // 0 amplifier general command
         AMPLIFIER_GENERAL,
-        // #0-#9 amplifiers environment command
         AMPLIFIER_GROUP,
-        // 01-99 amplifiers point to point command
         AMPLIFIER_P2P,
-        // 100 source general command
         SOURCE_GENERAL,
-        // 101-109 sources point to point command
         SOURCE_P2P;
 
-        private static final String AMPLIFIER_GENERAL_COMMAND = "0";
+        public static final String AMPLIFIER_GENERAL_COMMAND = "0";
         private static final int AMPLIFIER_GROUP_MIN_COMMAND = 0;
         private static final int AMPLIFIER_GROUP_MAX_COMMAND = 9;
         private static final int AMPLIFIER_P2P_MIN_COMMAND = 1;
         private static final int AMPLIFIER_P2P_MAX_COMMAND = 99;
-        private static final String SOURCE_GENERAL_COMMAND = "100";
+        public static final String SOURCE_GENERAL_COMMAND = "100";
         private static final int SOURCE_P2P_MIN_COMMAND = 101;
         private static final int SOURCE_P2P_MAX_COMMAND = 109;
 
-        /*
-         * 0 amplifier general command
-         * #0-#9 amplifiers environment command
-         * 01-99 amplifiers point to point command
-         * 100 source general command
-         * 101-109 sources point to point command
+        /**
+         * Validate if type and value are allowed.
+         *
+         * <ul>
+         *     <li>0 amplifier general command</li>
+         *     <li>#0-#9 amplifiers group command</li>
+         *     <li>01-99 amplifiers point to point command</li>
+         *     <li>100 source general command</li>
+         *     <li><101-109 sources point to point command/li>
+         * </ul>
+         *
+         * @param type Sound System type
+         * @param value Where value
+         *
+         * @return true if is valid
          */
         public static boolean isValid(Type type, String value) {
             if (type == null || value == null || value.length() < 1 && value.length() > 3) {
@@ -170,7 +180,7 @@ public class SoundSystem extends BaseOpenMessage {
         return validResponses.size() >= 1;
     }
 
-    private static String buildWhereValue(String where, Type type) {
+    protected static String buildWhereValue(String where, Type type) {
         switch (type) {
             case AMPLIFIER_GENERAL:
             case AMPLIFIER_P2P:
