@@ -96,9 +96,16 @@ public class OpenWebNetExample {
     private static void exampleSoundSystem() {
         OpenWebNet
             .newClient(gateway(HOST, PORT))
-            //.send(SoundSystem.requestTurnOff("0"))
-            .send(SoundSystem.requestTurnOff("#5"))
-            //.send(SoundSystem.requestTurnOn("0"))
+            // OK no status
+            //.send(SoundSystem.requestTurnOff("0", SoundSystem.Type.AMPLIFIER_GENERAL, SoundSystem.Source.STEREO_CHANNEL))
+            // OK
+            //.send(SoundSystem.requestTurnOff("5", SoundSystem.Type.AMPLIFIER_GROUP, SoundSystem.Source.STEREO_CHANNEL))
+            // 51, 52, 53
+            //.send(SoundSystem.requestTurnOff("53", SoundSystem.Type.AMPLIFIER_P2P, SoundSystem.Source.STEREO_CHANNEL))
+            // 101, 103
+            .send(SoundSystem.requestTurnOn("103", SoundSystem.Type.SOURCE_P2P, SoundSystem.Source.STEREO_CHANNEL))
+            // KO
+            //.send(SoundSystem.requestTurnOn("100", SoundSystem.Type.SOURCE_GENERAL, SoundSystem.Source.STEREO_CHANNEL))
             .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }
@@ -106,8 +113,14 @@ public class OpenWebNetExample {
     private static void exampleSoundSystemStatus() {
         OpenWebNet
             .newClient(gateway(HOST, PORT))
-            //.send(SoundSystem.requestTurnOn("#5"))
-            .send(SoundSystem.requestStatus("51"))
+            // always off general
+            //.send(SoundSystem.requestStatus("0", SoundSystem.Type.AMPLIFIER_GENERAL))
+            // OK
+            //.send(SoundSystem.requestStatus("5", SoundSystem.Type.AMPLIFIER_GROUP))
+            // OK
+            //.send(SoundSystem.requestStatus("53", SoundSystem.Type.AMPLIFIER_P2P))
+            // OK
+            .send(SoundSystem.requestStatus("103", SoundSystem.Type.SOURCE_P2P))
             .map(SoundSystem.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
             .subscribe(System.out::println);
     }
