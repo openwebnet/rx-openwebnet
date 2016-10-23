@@ -12,6 +12,7 @@ client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX
 * `WHO=1` Lighting: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Lighting.html)
 * `WHO=2` Automation: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Automation.html)
 * `WHO=4` Heating: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Heating.html)
+* `WHO=16` SoundSystem: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/SoundSystem.html)
 * `WHO=17` Scenario: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Scenario.html)
 * `WHO=18` EnergyManagement: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/EnergyManagement.html)
 * a single generic frame/message
@@ -23,7 +24,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:1.3.4'
+    compile 'com.github.openwebnet:rx-openwebnet:1.4.0'
 }
 ```
 
