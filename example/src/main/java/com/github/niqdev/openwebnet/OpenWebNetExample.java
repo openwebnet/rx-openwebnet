@@ -37,6 +37,8 @@ public class OpenWebNetExample {
         //exampleScenario();
         //exampleScenarioStatus();
         //exampleEnergy();
+        //exampleSoundSystemVolume();
+        //exampleSoundSystemStation();
     }
 
     private static void example1() {
@@ -156,6 +158,22 @@ public class OpenWebNetExample {
                 EnergyManagement.requestDailyPower("1", ev),
                 EnergyManagement.requestMonthlyPower("1", ev)))
             .map(EnergyManagement.handlePowers(System.out::println, () -> System.out.println("error")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleSoundSystemVolume() {
+        OpenWebNet
+            .newClient(gateway(HOST, PORT))
+            .send(SoundSystem.requestVolumeUp("51", SoundSystem.Type.AMPLIFIER_P2P))
+            .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+            .subscribe(System.out::println);
+    }
+
+    private static void exampleSoundSystemStation() {
+        OpenWebNet
+            .newClient(gateway(HOST, PORT))
+            .send(SoundSystem.requestStationUp("103", SoundSystem.Type.SOURCE_P2P))
+            .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }
 
