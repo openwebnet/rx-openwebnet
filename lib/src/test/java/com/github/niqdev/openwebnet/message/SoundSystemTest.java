@@ -292,22 +292,80 @@ public class SoundSystemTest {
 
     @Test
     public void testRequestVolumeUp() {
-        throw new UnsupportedOperationException("not implemented");
+        assertEquals("invalid message", "*16*1002*0##", requestVolumeUp("0", Type.AMPLIFIER_GENERAL).getValue());
+        assertEquals("invalid message", "*16*1002*#8##", requestVolumeUp("8", Type.AMPLIFIER_GROUP).getValue());
+        assertEquals("invalid message", "*16*1002*51##", requestVolumeUp("51", Type.AMPLIFIER_P2P).getValue());
+    }
+
+    @Test
+    public void testRequestVolumeUpInvalid() {
+        assertThat(captureThrowable(() -> requestVolumeUp("100", Type.SOURCE_GENERAL)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid volume type");
+
+        assertThat(captureThrowable(() -> requestVolumeUp("103", Type.SOURCE_P2P)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid volume type");
     }
 
     @Test
     public void testRequestVolumeDown() {
-        throw new UnsupportedOperationException("not implemented");
+        assertEquals("invalid message", "*16*1102*0##", requestVolumeDown("0", Type.AMPLIFIER_GENERAL).getValue());
+        assertEquals("invalid message", "*16*1102*#8##", requestVolumeDown("8", Type.AMPLIFIER_GROUP).getValue());
+        assertEquals("invalid message", "*16*1102*51##", requestVolumeDown("51", Type.AMPLIFIER_P2P).getValue());
+    }
+
+    @Test
+    public void testRequestVolumeDownInvalid() {
+        assertThat(captureThrowable(() -> requestVolumeUp("100", Type.SOURCE_GENERAL)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid volume type");
+
+        assertThat(captureThrowable(() -> requestVolumeUp("103", Type.SOURCE_P2P)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid volume type");
     }
 
     @Test
     public void testRequestStationUp() {
-        throw new UnsupportedOperationException("not implemented");
+        assertEquals("invalid message", "*16*6001*100##", requestStationUp("100", Type.SOURCE_GENERAL).getValue());
+        assertEquals("invalid message", "*16*6001*103##", requestStationUp("103", Type.SOURCE_P2P).getValue());
+    }
+
+    @Test
+    public void testRequestStationUpInvalid() {
+        assertThat(captureThrowable(() -> requestStationUp("0", Type.AMPLIFIER_GENERAL)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid station type");
+
+        assertThat(captureThrowable(() -> requestStationUp("8", Type.AMPLIFIER_GROUP)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid station type");
+
+        assertThat(captureThrowable(() -> requestStationUp("51", Type.AMPLIFIER_P2P)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid station type");
     }
 
     @Test
     public void testRequestStationDown() {
-        throw new UnsupportedOperationException("not implemented");
+        assertEquals("invalid message", "*16*6101*100##", requestStationDown("100", Type.SOURCE_GENERAL).getValue());
+        assertEquals("invalid message", "*16*6101*103##", requestStationDown("103", Type.SOURCE_P2P).getValue());
+    }
+
+    @Test
+    public void testRequestStationDownInvalid() {
+        assertThat(captureThrowable(() -> requestStationDown("0", Type.AMPLIFIER_GENERAL)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid station type");
+
+        assertThat(captureThrowable(() -> requestStationDown("8", Type.AMPLIFIER_GROUP)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid station type");
+
+        assertThat(captureThrowable(() -> requestStationDown("51", Type.AMPLIFIER_P2P)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid station type");
     }
 
 }

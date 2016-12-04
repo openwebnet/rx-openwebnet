@@ -106,6 +106,36 @@ public class SoundSystem extends BaseOpenMessage {
         }
     }
 
+    private enum Volume {
+        UP(1002),
+        DOWN(1102);
+
+        private final int step;
+
+        Volume(int step) {
+            this.step = step;
+        }
+
+        public int getStep() {
+            return step;
+        }
+    }
+
+    private enum Station {
+        UP(6001),
+        DOWN(6101);
+
+        private final int step;
+
+        Station(int step) {
+            this.step = step;
+        }
+
+        public int getStep() {
+            return step;
+        }
+    }
+
     private static final int ON_SOURCE_BASE_BAND = 0;
     private static final int ON_SOURCE_STEREO_CHANNEL = 3;
     private static final int OFF_SOURCE_BASE_BAND = 10;
@@ -242,19 +272,40 @@ public class SoundSystem extends BaseOpenMessage {
     }
 
     public static SoundSystem requestVolumeUp(String where, Type type) {
-        throw new UnsupportedOperationException("not implemented");
+        return requestVolume(where, type, Volume.UP);
     }
 
     public static SoundSystem requestVolumeDown(String where, Type type) {
-        throw new UnsupportedOperationException("not implemented");
+        return requestVolume(where, type, Volume.DOWN);
+    }
+
+    private static SoundSystem requestVolume(String where, Type type, Volume volume) {
+        checkArgument(Type.isValid(type, where), "invalid where|type");
+        switch (type) {
+            case AMPLIFIER_GENERAL:
+            case AMPLIFIER_P2P:
+            case AMPLIFIER_GROUP:
+                return new SoundSystem(format(FORMAT_REQUEST, WHO_16, volume.getStep(), buildWhereValue(where, type)));
+        }
+        throw new IllegalArgumentException("invalid volume type");
     }
 
     public static SoundSystem requestStationUp(String where, Type type) {
-        throw new UnsupportedOperationException("not implemented");
+        return requestStation(where, type, Station.UP);
     }
 
     public static SoundSystem requestStationDown(String where, Type type) {
-        throw new UnsupportedOperationException("not implemented");
+        return requestStation(where, type, Station.DOWN);
+    }
+
+    private static SoundSystem requestStation(String where, Type type, Station station) {
+        checkArgument(Type.isValid(type, where), "invalid where|type");
+        switch (type) {
+            case SOURCE_GENERAL:
+            case SOURCE_P2P:
+                return new SoundSystem(format(FORMAT_REQUEST, WHO_16, station.getStep(), buildWhereValue(where, type)));
+        }
+        throw new IllegalArgumentException("invalid station type");
     }
 
 }
