@@ -241,4 +241,20 @@ public class SoundSystem extends BaseOpenMessage {
         throw new IllegalArgumentException("invalid type");
     }
 
+    public static SoundSystem requestVolumeUp(String where, Type type) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    public static SoundSystem requestVolumeDown(String where, Type type) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    public static SoundSystem requestStationUp(String where, Type type) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    public static SoundSystem requestStationDown(String where, Type type) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
 }

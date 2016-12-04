@@ -290,4 +290,24 @@ public class SoundSystemTest {
         assertTrue("should be on", isOn(request, asList(requestTurnOn(WHERE, Type.AMPLIFIER_P2P, Source.BASE_BAND), () -> "")));
     }
 
+    @Test
+    public void testRequestVolumeUp() {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    @Test
+    public void testRequestVolumeDown() {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    @Test
+    public void testRequestStationUp() {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    @Test
+    public void testRequestStationDown() {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
 }
