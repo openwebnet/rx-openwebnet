@@ -34,6 +34,19 @@ import static java.lang.String.format;
  *    .send(SoundSystem.requestTurnOn("5", SoundSystem.Type.AMPLIFIER_GROUP, SoundSystem.Source.STEREO_CHANNEL))
  *    .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
  *    .subscribe(System.out::println);
+ *
+ * // turn volume up of amplifier 51
+ * client
+ *    .send(SoundSystem.requestVolumeUp("51", SoundSystem.Type.AMPLIFIER_P2P))
+ *    .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+ *    .subscribe(System.out::println);
+ *
+ * // change station of source 103
+ * client
+ *    .send(SoundSystem.requestStationUp("103", SoundSystem.Type.SOURCE_P2P))
+ *    .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+ *    .subscribe(System.out::println);
+ *
  * }
  * </pre>
  */
@@ -313,7 +326,7 @@ public class SoundSystem extends BaseOpenMessage {
 
     /**
      * OpenWebNet message request to change Source Station <i>UP</i>
-     * by step with value <b>*16*6001*WHERE##</b>.
+     * with value <b>*16*6001*WHERE##</b>.
      *
      * @param where Value
      * @param type  Type {@link Type}
@@ -325,7 +338,7 @@ public class SoundSystem extends BaseOpenMessage {
 
     /**
      * OpenWebNet message request to change Source Station <i>DOWN</i>
-     * by step with value <b>*16*6101*WHERE##</b>.
+     * with value <b>*16*6101*WHERE##</b>.
      *
      * @param where Value
      * @param type  Type {@link Type}

@@ -37,7 +37,8 @@ public class OpenWebNetExample {
         //exampleScenario();
         //exampleScenarioStatus();
         //exampleEnergy();
-        exampleSoundSystemVolume();
+        //exampleSoundSystemVolume();
+        //exampleSoundSystemStation();
     }
 
     private static void example1() {
@@ -163,23 +164,16 @@ public class OpenWebNetExample {
     private static void exampleSoundSystemVolume() {
         OpenWebNet
             .newClient(gateway(HOST, PORT))
-            //.send(() -> "*16*3*51##")
-            // UP
-            .send(() -> "*16*1002*51##")
-            // DOWN
-            //.send(() -> "*16*1102*51##")
-            //.map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+            .send(SoundSystem.requestVolumeUp("51", SoundSystem.Type.AMPLIFIER_P2P))
+            .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }
 
     private static void exampleSoundSystemStation() {
         OpenWebNet
             .newClient(gateway(HOST, PORT))
-            // UP
-            .send(() -> "*16*6001*103##")
-            // DOWN
-            //.send(() -> "*16*6101*103##")
-            //.map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
+            .send(SoundSystem.requestStationUp("103", SoundSystem.Type.SOURCE_P2P))
+            .map(SoundSystem.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
             .subscribe(System.out::println);
     }
 
