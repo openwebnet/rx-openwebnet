@@ -6,8 +6,6 @@
 [OpenWebNet](http://www.myopen-legrandgroup.com/resources/own_protocol/default.aspx)
 client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava). See also the [documentation](https://openwebnet.github.io/rx-openwebnet).
 
-> work in progress
-
 ### Currently supports
 * `WHO=1` Lighting: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Lighting.html)
 * `WHO=2` Automation: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Automation.html)
