@@ -187,8 +187,13 @@ public class SoundSystem extends BaseOpenMessage {
     }
 
     /**
-     * Handle response from {@link SoundSystem#requestTurnOn(String, Type, Source)}
-     * and {@link SoundSystem#requestTurnOff(String, Type, Source)}.
+     * Handle response from:
+     * - {@link SoundSystem#requestTurnOn(String, Type, Source)}
+     * - {@link SoundSystem#requestTurnOff(String, Type, Source)}
+     * - {@link SoundSystem#requestVolumeUp(String, Type)}
+     * - {@link SoundSystem#requestVolumeDown(String, Type)}
+     * - {@link SoundSystem#requestStationUp(String, Type)}
+     * - {@link SoundSystem#requestStationDown(String, Type)}
      *
      * @param onSuccess invoked if the request has been successfully received
      * @param onFail    invoked otherwise
@@ -271,10 +276,26 @@ public class SoundSystem extends BaseOpenMessage {
         throw new IllegalArgumentException("invalid type");
     }
 
+    /**
+     * OpenWebNet message request to turn Amplifier Volume <i>UP</i>
+     * by step with value <b>*16*1002*WHERE##</b>.
+     *
+     * @param where Value
+     * @param type  Type {@link Type}
+     * @return message
+     */
     public static SoundSystem requestVolumeUp(String where, Type type) {
         return requestVolume(where, type, Volume.UP);
     }
 
+    /**
+     * OpenWebNet message request to turn Amplifier Volume <i>DOWN</i>
+     * by step with value <b>*16*1102*WHERE##</b>.
+     *
+     * @param where Value
+     * @param type  Type {@link Type}
+     * @return message
+     */
     public static SoundSystem requestVolumeDown(String where, Type type) {
         return requestVolume(where, type, Volume.DOWN);
     }
@@ -290,10 +311,26 @@ public class SoundSystem extends BaseOpenMessage {
         throw new IllegalArgumentException("invalid volume type");
     }
 
+    /**
+     * OpenWebNet message request to change Source Station <i>UP</i>
+     * by step with value <b>*16*6001*WHERE##</b>.
+     *
+     * @param where Value
+     * @param type  Type {@link Type}
+     * @return message
+     */
     public static SoundSystem requestStationUp(String where, Type type) {
         return requestStation(where, type, Station.UP);
     }
 
+    /**
+     * OpenWebNet message request to change Source Station <i>DOWN</i>
+     * by step with value <b>*16*6101*WHERE##</b>.
+     *
+     * @param where Value
+     * @param type  Type {@link Type}
+     * @return message
+     */
     public static SoundSystem requestStationDown(String where, Type type) {
         return requestStation(where, type, Station.DOWN);
     }
