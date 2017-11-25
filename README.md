@@ -73,7 +73,9 @@ OpenWebNet
 
 ### Development tasks
 ```
-./gradlew build
+export JAVA_HOME='/usr/lib/jvm/java-8-oracle'
+
+./gradlew clean build
 ./gradlew :lib:test --debug
 ./gradlew copyJavaDoc
 ./gradlew runOpenWebNetExample
