@@ -9,4 +9,4 @@ before_install:
   - export JAVA_HOME=$JAVA8_HOME
 
 script:
-  - ./gradlew build
+  - ./gradlew clean build
