@@ -107,7 +107,7 @@ unzip lib/build/libs/lib-1.6.0.jar -d /tmp/openwebnet-jar
 ```
 
 Command Line Interface
-```
+```java
 # build uber jar
 ./gradlew shadowJar
 
@@ -121,10 +121,10 @@ java -jar lib/build/libs/openwebnet-1.6.0.jar \
 
 # example complete
 java -jar lib/build/libs/openwebnet-1.6.0.jar \
-  --host 192.168.1.41 \
+  --host "192.168.1.41" \
   --port 8080 \
-  --password 12345 \
-  --frame *#1*21##  
+  --password "12345" \
+  --frame "*#1*21##"
 ```
 
 <!--
