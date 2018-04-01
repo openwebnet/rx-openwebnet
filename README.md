@@ -71,7 +71,7 @@ OpenWebNet
     
 ```
 
-### Development tasks
+### Development
 
 ```
 export JAVA_HOME='/usr/lib/jvm/java-8-oracle'
@@ -96,21 +96,24 @@ export JAVA_HOME='/usr/lib/jvm/java-8-oracle'
 # upgrade gradle version
 ./gradlew wrapper --gradle-version=4.6
 
-# build uber jar
-./gradlew shadowJar
-
 # verify jar content
 unzip lib/build/libs/lib-1.6.0.jar -d /tmp/openwebnet-jar
+```
+
+Command Line Interface
+```
+# build uber jar
+./gradlew shadowJar
 
 # show usage
 java -jar lib/build/libs/openwebnet-1.6.0.jar
 
-# example usage simple
+# example simple
 java -jar lib/build/libs/openwebnet-1.6.0.jar \
   -h 192.168.1.41 \
   -f *#1*21##
 
-# example usage complete
+# example complete
 java -jar lib/build/libs/openwebnet-1.6.0.jar \
   --host 192.168.1.41 \
   --port 8080 \
