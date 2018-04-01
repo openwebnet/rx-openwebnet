@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/openwebnet/rx-openwebnet.svg?branch=master)](https://travis-ci.org/openwebnet/rx-openwebnet)
 [![Download](https://api.bintray.com/packages/niqdev/maven/rx-openwebnet/images/download.svg)](https://bintray.com/niqdev/maven/rx-openwebnet/_latestVersion)
 
-[OpenWebNet](http://www.myopen-legrandgroup.com/resources/own_protocol/default.aspx)
+[OpenWebNet](https://www.myopen-legrandgroup.com)
 client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava). See also the [documentation](https://openwebnet.github.io/rx-openwebnet).
 
 ### Currently supports
@@ -86,6 +86,9 @@ export JAVA_HOME='/usr/lib/jvm/java-8-oracle'
 
 # update javadocs
 ./gradlew copyJavaDoc
+
+# publish javadoc
+git subtree push --prefix javadoc origin gh-pages
 
 # publish on bintray
 ./gradlew bintrayUpload
