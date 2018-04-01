@@ -26,3 +26,19 @@ task hello(dependsOn: build) {
     println ':see github.com/openwebnet/rx-openwebnet.git\n'
     println '*--~> [' + project.group + ':' + rootProject.name + ':' + project.version + '] <~--*\n'
 }
+
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'com.github.niqdev.openwebnet.OpenWebNetApp'
+        )
+    }
+}
+
+//mainClassName = 'com.github.niqdev.openwebnet.OpenWebNetApp'
+//projects.mainjar {
+//    manifest {
+//        attributes 'Main-Class': mainClassName = 'com.github.niqdev.openwebnet.OpenWebNetApp'
+//    }
+//}

@@ -72,14 +72,38 @@ OpenWebNet
 ```
 
 ### Development tasks
+
 ```
 export JAVA_HOME='/usr/lib/jvm/java-8-oracle'
 
 ./gradlew clean build
+
+# verbose tests
 ./gradlew :lib:test --debug
-./gradlew copyJavaDoc
+
+# run example
 ./gradlew runOpenWebNetExample
+
+# update javadocs
+./gradlew copyJavaDoc
+
+# publish on bintray
 ./gradlew bintrayUpload
+
+# list tasks
+./gradlew tasks
+
+# upgrade gradle version
+./gradlew wrapper --gradle-version=4.6
+
+# build uber jar
+./gradlew shadowJar
+
+# verify jar content
+unzip lib/build/libs/lib-1.5.2.jar -d /tmp/openwebnet-jar
+
+# run main
+java -jar lib/build/libs/openwebnet-1.5.2.jar
 ```
 
 <!--

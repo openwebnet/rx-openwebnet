@@ -5,6 +5,7 @@ buildscript {
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.3'
     }
 }
 
@@ -27,6 +28,7 @@ subprojects {
     apply plugin: 'me.tatarka.retrolambda'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'com.github.johnrengelman.shadow'
 
     repositories {
         jcenter()
@@ -92,6 +94,11 @@ subprojects {
                 released = new Date()
             }
         }
+    }
+
+    shadowJar {
+        baseName = 'openwebnet'
+        classifier = null
     }
 }
 
