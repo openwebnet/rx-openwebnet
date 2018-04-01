@@ -104,6 +104,18 @@ unzip lib/build/libs/lib-1.5.2.jar -d /tmp/openwebnet-jar
 
 # run main
 java -jar lib/build/libs/openwebnet-1.5.2.jar
+
+# example usage simple
+java -jar lib/build/libs/openwebnet-1.5.2.jar \
+  -h 192.168.1.41 \
+  -f *#1*21##
+
+# example usage complete
+java -jar lib/build/libs/openwebnet-1.5.2.jar \
+  --host 192.168.1.41 \
+  --port 8080 \
+  --password 12345 \
+  --frame *#1*21##  
 ```
 
 <!--
