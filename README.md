@@ -107,7 +107,7 @@ unzip lib/build/libs/lib-1.6.0.jar -d /tmp/openwebnet-jar
 ```
 
 Command Line Interface
-```java
+```
 # build uber jar
 ./gradlew shadowJar
 

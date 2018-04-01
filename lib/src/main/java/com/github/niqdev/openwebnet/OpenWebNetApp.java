@@ -15,7 +15,7 @@ public class OpenWebNetApp {
     @Parameter(names={"--host", "-h"}, required = true, description = "IP address or hostname of the Gateway")
     String host;
 
-    @Parameter(names={"--port", "-p"}, description = "Port of the Gateway, default is 20000")
+    @Parameter(names={"--port", "-p"}, description = "Port of the Gateway")
     int port = 20000;
 
     @Parameter(names={"--password"}, description = "Optional password of the Gateway")
