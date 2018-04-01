@@ -102,7 +102,7 @@ export JAVA_HOME='/usr/lib/jvm/java-8-oracle'
 # verify jar content
 unzip lib/build/libs/lib-1.5.2.jar -d /tmp/openwebnet-jar
 
-# run main
+# show usage
 java -jar lib/build/libs/openwebnet-1.5.2.jar
 
 # example usage simple
