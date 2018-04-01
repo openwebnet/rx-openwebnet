@@ -4,9 +4,10 @@
 [![Download](https://api.bintray.com/packages/niqdev/maven/rx-openwebnet/images/download.svg)](https://bintray.com/niqdev/maven/rx-openwebnet/_latestVersion)
 
 [OpenWebNet](https://www.myopen-legrandgroup.com)
-client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava). See also the [documentation](https://openwebnet.github.io/rx-openwebnet).
+client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava), see also the [documentation](https://openwebnet.github.io/rx-openwebnet)
 
-### Currently supports
+Supported frames
+
 * `WHO=1` Lighting: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Lighting.html)
 * `WHO=2` Automation: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Automation.html)
 * `WHO=4` Heating: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Heating.html)
@@ -16,7 +17,9 @@ client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX
 * a single generic frame/message
 * a list of generic frames/messages
 
-### Gradle dependency
+### Setup
+
+Add the dependency to `build.gradle`
 ```
 repositories {
     jcenter()
