@@ -22,7 +22,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:1.5.2'
+    compile 'com.github.openwebnet:rx-openwebnet:1.6.0'
 }
 ```
 
@@ -100,18 +100,18 @@ export JAVA_HOME='/usr/lib/jvm/java-8-oracle'
 ./gradlew shadowJar
 
 # verify jar content
-unzip lib/build/libs/lib-1.5.2.jar -d /tmp/openwebnet-jar
+unzip lib/build/libs/lib-1.6.0.jar -d /tmp/openwebnet-jar
 
 # show usage
-java -jar lib/build/libs/openwebnet-1.5.2.jar
+java -jar lib/build/libs/openwebnet-1.6.0.jar
 
 # example usage simple
-java -jar lib/build/libs/openwebnet-1.5.2.jar \
+java -jar lib/build/libs/openwebnet-1.6.0.jar \
   -h 192.168.1.41 \
   -f *#1*21##
 
 # example usage complete
-java -jar lib/build/libs/openwebnet-1.5.2.jar \
+java -jar lib/build/libs/openwebnet-1.6.0.jar \
   --host 192.168.1.41 \
   --port 8080 \
   --password 12345 \

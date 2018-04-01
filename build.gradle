@@ -13,7 +13,7 @@ allprojects {
     apply plugin: 'idea'
 
     group = 'com.github.openwebnet'
-    version = '1.5.2'
+    version = '1.6.0'
 
     idea {
         module {
