@@ -9,7 +9,7 @@ client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX
 Supported frames
 
 * `WHO=1` Lighting [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Lighting.html)
-* `WHO=2` Automation: see also [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Automation.html)
+* `WHO=2` Automation [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Automation.html)
 * `WHO=4` Heating [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Heating.html)
 * `WHO=16` SoundSystem [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/SoundSystem.html)
 * `WHO=17` Scenario [Javadoc](https://openwebnet.github.io/rx-openwebnet/com/github/niqdev/openwebnet/message/Scenario.html)
