@@ -1,5 +1,5 @@
 /**
- * OpenWebNet client written in Java 8 (retrolambda) and RxJava. See also the documentation.
+ * OpenWebNet Java client with RxJava.
  *
  * @author niqdev
  */

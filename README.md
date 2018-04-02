@@ -3,8 +3,7 @@
 [![Build Status](https://travis-ci.org/openwebnet/rx-openwebnet.svg?branch=master)](https://travis-ci.org/openwebnet/rx-openwebnet)
 [![Download](https://api.bintray.com/packages/niqdev/maven/rx-openwebnet/images/download.svg)](https://bintray.com/niqdev/maven/rx-openwebnet/_latestVersion)
 
-[OpenWebNet](https://www.myopen-legrandgroup.com)
-client written in Java 8 (retrolambda) and [RxJava](https://github.com/ReactiveX/RxJava), see also the [documentation](https://openwebnet.github.io/rx-openwebnet)
+[OpenWebNet](https://www.myopen-legrandgroup.com) Java client with [RxJava](https://github.com/ReactiveX/RxJava), see also the [documentation](https://openwebnet.github.io/rx-openwebnet)
 
 Supported frames
 
