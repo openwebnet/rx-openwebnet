@@ -88,9 +88,17 @@ class OpenWebNetObservable {
         return context -> {
             try {
                 ByteBuffer buffer = context.getEmptyBuffer();
-                Integer count = context.getClient().read(buffer);
-                String message = new String(buffer.array()).trim();
-                log(String.format("read: %d|%s", count, message));
+                SocketChannel channel = context.getClient();
+                Integer count = 1;
+                String message = "";
+                
+                while(count >0 && !message.contains(ACK)) {
+                	int length = message.length();
+                	count = channel.read(buffer);
+                	message = new String(buffer.array()).trim();
+                    log(String.format("read: %d|%s", count, message.substring(length)));
+                }
+            	
                 return Observable.just(message);
             } catch (IOException e) {
                 return Observable.error(e);
