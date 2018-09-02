@@ -89,7 +89,7 @@ class OpenWebNetObservable {
             try {
                 ByteBuffer buffer = context.getEmptyBuffer();
                 SocketChannel channel = context.getClient();
-                Integer count = 1;
+                int count = 1;
                 String message = "";
                 
                 while(count >0 && !message.contains(ACK)) {
