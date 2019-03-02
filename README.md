@@ -24,7 +24,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'com.github.openwebnet:rx-openwebnet:1.7.0'
+    compile 'com.github.openwebnet:rx-openwebnet:2.0.0'
 }
 ```
 
@@ -102,7 +102,7 @@ git subtree push --prefix javadoc origin gh-pages
 ./gradlew wrapper --gradle-version=4.6
 
 # verify jar content
-unzip lib/build/libs/lib-1.7.0.jar -d /tmp/openwebnet-jar
+unzip lib/build/libs/lib-2.0.0.jar -d /tmp/openwebnet-jar
 ```
 
 Command Line Interface
@@ -111,15 +111,15 @@ Command Line Interface
 ./gradlew shadowJar
 
 # show usage
-java -jar lib/build/libs/openwebnet-1.7.0.jar
+java -jar lib/build/libs/openwebnet-2.0.0.jar
 
 # example simple
-java -jar lib/build/libs/openwebnet-1.7.0.jar \
+java -jar lib/build/libs/openwebnet-2.0.0.jar \
   -h 192.168.1.41 \
   -f *#1*21##
 
 # example complete
-java -jar lib/build/libs/openwebnet-1.7.0.jar \
+java -jar lib/build/libs/openwebnet-2.0.0.jar \
   --host "192.168.1.41" \
   --port 8080 \
   --password "12345" \
