@@ -59,8 +59,6 @@ public class Lighting extends BaseOpenMessage {
     private static final int WHERE_MAX_VALUE_AREA = 9;
     private static final int WHERE_MIN_VALUE_GROUP = 1;
     private static final int WHERE_MAX_VALUE_GROUP = 255;
-    private static final String WHERE_GROUP_PREFIX = "#";
-    public static final String WHERE_GENERAL_VALUE = "0";
 
     private Lighting(String value) {
         super(value);
@@ -248,7 +246,7 @@ public class Lighting extends BaseOpenMessage {
     }
 
     public static boolean isValidRangeType(String where, Type type) {
-        if (where == null || type == null || where.length() < 1 && where.length() > 4) {
+        if (where == null || type == null || where.length() < 1 || where.length() > 4) {
             return false;
         }
         switch (type) {
