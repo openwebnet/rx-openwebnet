@@ -23,13 +23,13 @@ import static java.lang.String.format;
  *
  * // requests status light 21
  * client
- *    .send(Lighting.requestStatus("21", Lighting.Type.POINT_TO_POINT))
+ *    .send(Lighting.requestStatus("21", Lighting.Type.POINT_TO_POINT, Lighting.NO_BUS))
  *    .map(Lighting.handleStatus(() -> System.out.println("ON"), () -> System.out.println("OFF")))
  *    .subscribe(System.out::println);
  *
  * // turns light 21 on
  * client
- *    .send(Lighting.requestTurnOn("21", Lighting.Type.POINT_TO_POINT))
+ *    .send(Lighting.requestTurnOn("21", Lighting.Type.POINT_TO_POINT, Lighting.NO_BUS))
  *    .map(Lighting.handleResponse(() -> System.out.println("success"), () -> System.out.println("fail")))
  *    .subscribe(System.out::println);
  * }
@@ -40,16 +40,20 @@ public class Lighting extends BaseOpenMessage {
     public enum Type {
         // 0
         GENERAL,
+        GENERAL_BUS,
         // [00, 1−9, 100]
         AREA,
+        AREA_BUS,
         // #[1−255]
         GROUP,
+        GROUP_BUS,
         // AREA + PL
         // A [00] + PL [01-15]
         // A [1−9] + PL [1-9]
         // A [10] + PL [01-15]
         // A [01-09] + PL [10-15]
-        POINT_TO_POINT
+        POINT_TO_POINT,
+        POINT_TO_POINT_BUS
     }
 
     private static final int WHO = LIGHTING.value();
@@ -69,8 +73,7 @@ public class Lighting extends BaseOpenMessage {
      *
      * @param where Value between 0 and 9999
      * @return message
-     *
-     * @deprecated use {@link Lighting#requestTurnOn(String, Type)}
+     * @deprecated use {@link Lighting#requestTurnOn(String, Type, String)}
      */
     public static Lighting requestTurnOn(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -81,12 +84,13 @@ public class Lighting extends BaseOpenMessage {
      * OpenWebNet message request to turn light <i>ON</i> with value <b>*1*1*WHERE##</b>.
      *
      * @param where Value
-     * @param type Type {@link Type}
+     * @param type  Type {@link Type}
+     * @param bus   Value
      * @return message
      */
-    public static Lighting requestTurnOn(String where, Type type) {
-        checkRangeType(where, type);
-        return new Lighting(format(FORMAT_REQUEST, WHO, ON, buildWhereValue(where, type)));
+    public static Lighting requestTurnOn(String where, Type type, String bus) {
+        checkRangeType(where, type, bus);
+        return new Lighting(format(FORMAT_REQUEST, WHO, ON, buildWhereValue(where, type, bus)));
     }
 
     /**
@@ -94,8 +98,7 @@ public class Lighting extends BaseOpenMessage {
      *
      * @param where Value between 0 and 9999
      * @return message
-     *
-     * @deprecated use {@link Lighting#requestTurnOff(String, Type)}
+     * @deprecated use {@link Lighting#requestTurnOff(String, Type, String)}
      */
     public static Lighting requestTurnOff(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -106,12 +109,13 @@ public class Lighting extends BaseOpenMessage {
      * OpenWebNet message request to turn light <i>OFF</i> with value <b>*1*0*WHERE##</b>.
      *
      * @param where Value
-     * @param type Type {@link Type}
+     * @param type  Type {@link Type}
+     * @param bus   Value
      * @return message
      */
-    public static Lighting requestTurnOff(String where, Type type) {
-        checkRangeType(where, type);
-        return new Lighting(format(FORMAT_REQUEST, WHO, OFF, buildWhereValue(where, type)));
+    public static Lighting requestTurnOff(String where, Type type, String bus) {
+        checkRangeType(where, type, bus);
+        return new Lighting(format(FORMAT_REQUEST, WHO, OFF, buildWhereValue(where, type, bus)));
     }
 
     /**
@@ -130,8 +134,7 @@ public class Lighting extends BaseOpenMessage {
      *
      * @param where Value between 0 and 9999
      * @return message
-     *
-     * @deprecated use {@link Lighting#requestStatus(String, Type)}
+     * @deprecated use {@link Lighting#requestStatus(String, Type, String)}
      */
     public static Lighting requestStatus(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -142,12 +145,13 @@ public class Lighting extends BaseOpenMessage {
      * OpenWebNet message request light status with value <b>*#1*WHERE##</b>.
      *
      * @param where Value
-     * @param type Type {@link Type}
+     * @param type  Type {@link Type}
+     * @param bus   Value
      * @return message
      */
-    public static Lighting requestStatus(String where, Type type) {
-        checkRangeType(where, type);
-        return new Lighting(format(FORMAT_STATUS, WHO, buildWhereValue(where, type)));
+    public static Lighting requestStatus(String where, Type type, String bus) {
+        checkRangeType(where, type, bus);
+        return new Lighting(format(FORMAT_STATUS, WHO, buildWhereValue(where, type, bus)));
     }
 
     /**
@@ -218,61 +222,104 @@ public class Lighting extends BaseOpenMessage {
      * A [10] + PL [01-15]
      * A [01-09] + PL [10-15]
      */
-    protected static void checkRangeType(String where, Type type) {
+    protected static void checkRangeType(String where, Type type, String bus) {
         checkNotNull(where, "invalid null value: [where]");
         checkNotNull(type, "invalid null value: [type]");
-        checkArgument(where.length() >= 1 && where.length() <=4, "invalid length [1-4]");
+        checkNotNull(bus, "invalid null value: [bus]");
+        checkArgument(where.length() >= 1 && where.length() <= 4, "invalid length [1-4]");
+
         switch (type) {
             case GENERAL:
                 checkArgument(WHERE_GENERAL_VALUE.equals(where), "allowed value [0]");
+                checkArgument(bus.isEmpty(), "invalid bus size");
+                break;
+            case GENERAL_BUS:
+                checkArgument(WHERE_GENERAL_VALUE.equals(where), "allowed value [0]");
+                checkBus(bus);
                 break;
             case AREA:
                 checkArgument(
                     "00".equals(where) ||
                     (isInRange(WHERE_MIN_VALUE_AREA, WHERE_MAX_VALUE_AREA, checkIsInteger(where)) && where.length() == 1) ||
                     "100".equals(where),
-                "allowed value [00, 1−9, 100]");
+                    "allowed value [00, 1−9, 100]");
+                checkArgument(bus.isEmpty(), "invalid bus size");
+                break;
+            case AREA_BUS:
+                checkArgument(
+                    "00".equals(where) ||
+                    (isInRange(WHERE_MIN_VALUE_AREA, WHERE_MAX_VALUE_AREA, checkIsInteger(where)) && where.length() == 1) ||
+                    "100".equals(where),
+                    "allowed value [00, 1−9, 100]");
+                checkBus(bus);
                 break;
             case GROUP:
                 checkRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where));
+                checkArgument(bus.isEmpty(), "invalid bus size");
+                break;
+            case GROUP_BUS:
+                checkRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where));
+                checkBus(bus);
                 break;
             case POINT_TO_POINT:
                 // coarse/shallow validation
                 checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
+                checkArgument(bus.isEmpty(), "invalid bus size");
+                break;
+            case POINT_TO_POINT_BUS:
+                checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
+                checkBus(bus);
                 break;
             default:
                 throw new IllegalArgumentException("invalid type");
         }
     }
 
-    public static boolean isValidRangeType(String where, Type type) {
-        if (where == null || type == null || where.length() < 1 || where.length() > 4) {
+    public static boolean isValidRangeType(String where, Type type, String bus) {
+        if (where == null || type == null || bus == null || where.length() < 1 || where.length() > 4) {
             return false;
         }
         switch (type) {
             case GENERAL:
-                return WHERE_GENERAL_VALUE.equals(where);
+                return WHERE_GENERAL_VALUE.equals(where) && bus.isEmpty();
+            case GENERAL_BUS:
+                return WHERE_GENERAL_VALUE.equals(where) && isValidBus(bus);
             case AREA:
-                return "00".equals(where) ||
+                return ("00".equals(where) ||
                         (isInRange(WHERE_MIN_VALUE_AREA, WHERE_MAX_VALUE_AREA, checkIsInteger(where)) && where.length() == 1) ||
-                        "100".equals(where);
+                        "100".equals(where)) &&
+                        bus.isEmpty();
+            case AREA_BUS:
+                return ("00".equals(where) ||
+                        (isInRange(WHERE_MIN_VALUE_AREA, WHERE_MAX_VALUE_AREA, checkIsInteger(where)) && where.length() == 1) ||
+                        "100".equals(where)) &&
+                        isValidBus(bus);
             case GROUP:
-                return isInRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where));
+                return isInRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where)) && bus.isEmpty();
+            case GROUP_BUS:
+                return isInRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where)) && isValidBus(bus);
             case POINT_TO_POINT:
                 // coarse/shallow validation
-                return isInRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
+                return isInRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where)) && bus.isEmpty();
+            case POINT_TO_POINT_BUS:
+                return isInRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where)) && isValidBus(bus);
         }
         throw new IllegalArgumentException("invalid type");
     }
 
-    private static String buildWhereValue(String where, Type type) {
+    private static String buildWhereValue(String where, Type type, String bus) {
         switch (type) {
             case GENERAL: case AREA: case POINT_TO_POINT:
                 return where;
+            case GENERAL_BUS: case AREA_BUS: case POINT_TO_POINT_BUS:
+                return where.concat(format(FORMAT_BUS, bus));
             case GROUP:
                 return WHERE_GROUP_PREFIX.concat(where);
+            case GROUP_BUS:
+                return WHERE_GROUP_PREFIX.concat(where).concat(format(FORMAT_BUS, bus));
+            default:
+                throw new IllegalArgumentException("invalid type");
         }
-        throw new IllegalArgumentException("invalid type");
     }
 
 }

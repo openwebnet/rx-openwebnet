@@ -260,7 +260,7 @@ public class Automation extends BaseOpenMessage {
         checkNotNull(where, "invalid null value: [where]");
         checkNotNull(type, "invalid null value: [type]");
         checkNotNull(bus, "invalid null value: [bus]");
-        checkArgument(where.length() >= 1 && where.length() <=2, "invalid length [1-2]");
+        checkArgument(where.length() >= 1 && where.length() <= 2, "invalid length [1-2]");
 
         switch (type) {
             case GENERAL:
