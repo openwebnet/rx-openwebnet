@@ -30,10 +30,21 @@ import static java.lang.String.format;
  */
 public class Automation extends BaseOpenMessage {
 
+    public enum Type {
+        // 0
+        GENERAL,
+        // [1−9]
+        AREA,
+        // #[1−9]
+        GROUP,
+        // [11-99]
+        POINT
+    }
+
+    private static final int WHO = AUTOMATION.value();
     private static final int STOP = 0;
     private static final int UP = 1;
     private static final int DOWN = 2;
-    private static final int WHO = AUTOMATION.value();
 
     private Automation(String value) {
         super(value);
@@ -44,6 +55,8 @@ public class Automation extends BaseOpenMessage {
      *
      * @param where Value between 0 and 9999
      * @return message
+     *
+     * @deprecated use {@link Automation#requestStop(String, Type, String)}
      */
     public static Automation requestStop(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -51,10 +64,25 @@ public class Automation extends BaseOpenMessage {
     }
 
     /**
+     * OpenWebNet message request to send the <i>STOP</i> automation command with value <b>*2*0*WHERE##</b>.
+     *
+     * @param where Value between 0 and 9999
+     * @param type  Type {@link Type}
+     * @param bus   Value
+     * @return message
+     */
+    public static Automation requestStop(String where, Type type, String bus) {
+        checkRangeType(where, type, bus);
+        return new Automation(format(FORMAT_REQUEST, WHO, STOP, buildWhereValue(where, type, bus)));
+    }
+
+    /**
      * OpenWebNet message request to send the <i>UP</i> automation command with value <b>*2*1*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
+     *
+     * @deprecated use {@link Automation#requestMoveUp(String, Type, String)}
      */
     public static Automation requestMoveUp(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
@@ -62,14 +90,42 @@ public class Automation extends BaseOpenMessage {
     }
 
     /**
+     * OpenWebNet message request to send the <i>UP</i> automation command with value <b>*2*1*WHERE##</b>.
+     *
+     * @param where Value between 0 and 9999
+     * @param type  Type {@link Type}
+     * @param bus   Value
+     * @return message
+     */
+    public static Automation requestMoveUp(String where, Type type, String bus) {
+        checkRangeType(where, type, bus);
+        return new Automation(format(FORMAT_REQUEST, WHO, UP, buildWhereValue(where, type, bus)));
+    }
+
+    /**
      * OpenWebNet message request to send the <i>DOWN</i> automation command with value <b>*2*2*WHERE##</b>.
      *
      * @param where Value between 0 and 9999
      * @return message
+     *
+     * @deprecated use {@link Automation#requestMoveDown(String, Type, String)}
      */
     public static Automation requestMoveDown(String where) {
         checkRange(WHERE_MIN_VALUE, WHERE_MAX_VALUE, checkIsInteger(where));
         return new Automation(format(FORMAT_REQUEST, WHO, DOWN, where));
+    }
+
+    /**
+     * OpenWebNet message request to send the <i>DOWN</i> automation command with value <b>*2*2*WHERE##</b>.
+     *
+     * @param where Value between 0 and 9999
+     * @param type  Type {@link Type}
+     * @param bus   Value
+     * @return message
+     */
+    public static Automation requestMoveDown(String where, Type type, String bus) {
+        checkRangeType(where, type, bus);
+        return new Automation(format(FORMAT_REQUEST, WHO, DOWN, buildWhereValue(where, type, bus)));
     }
 
     /**
@@ -157,9 +213,40 @@ public class Automation extends BaseOpenMessage {
         return verifyMessage(value, DOWN);
     }
 
-
     private static boolean verifyMessage(String value, int status) {
         return value != null && value.startsWith(format(FORMAT_PREFIX_RESPONSE, WHO, status))
             && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
     }
+
+    /*
+     * GENERAL
+     * 0
+     *
+     * AREA
+     * [1−9]
+     *
+     * GROUP
+     * #[1−9]
+     *
+     * POINT
+     * [11-99]
+     */
+    private static void checkRangeType(String where, Type type, String bus) {
+        checkNotNull(where, "invalid null value: [where]");
+        checkNotNull(type, "invalid null value: [type]");
+        checkNotNull(bus, "invalid null value: [bus]");
+        checkArgument(where.length() >= 1 && where.length() <=2, "invalid length [1-2]");
+        if (bus.length() != 0) {
+            checkBus(bus);
+        }
+    }
+
+    public static boolean isValidRangeType(String where, Type type, String bus) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    private static String buildWhereValue(String where, Type type, String bus) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
 }

@@ -20,9 +20,12 @@ abstract class BaseOpenMessage implements OpenMessage {
     protected static final String FORMAT_STATUS = "*#%d*%s##";
     protected static final String FORMAT_PREFIX_RESPONSE = "*%d*%d*";
     protected static final String FORMAT_PREFIX_DIMENSION = "*#%d*";
+    protected static final String FORMAT_BUS = "#4#%d";
 
     protected static final int WHERE_MIN_VALUE = 0;
     protected static final int WHERE_MAX_VALUE = 9999;
+    protected static final String WHERE_GROUP_PREFIX = "#";
+    public static final String WHERE_GENERAL_VALUE = "0";
 
     private final String value;
 
@@ -79,5 +82,31 @@ abstract class BaseOpenMessage implements OpenMessage {
             }
             return openSession;
         };
+    }
+
+    /*
+     * Int=I3I4
+     * I3=0; I4=[1-9]
+     *
+     * Int=I3I4
+     * I3=1; I4=[1-5]
+     */
+    protected static String checkBus(String bus) {
+        checkIsInteger(bus);
+        checkArgument(bus.length() == 2, "invalid length [2]");
+        // name from docs
+        int i3 = Integer.parseInt(bus.substring(0, 1));
+        int i4 = Integer.parseInt(bus.substring(1));
+
+        checkArgument(i3 == 0 || i3 == 1, "invalid i3 [0-1]");
+
+        if (i3 == 0) {
+            checkArgument(i4 >= 1 && i4 <= 9, "invalid i4 [1-9]");
+        }
+        if (i3 == 1) {
+            checkArgument(i4 >= 1 && i4 <= 5, "invalid i4 [1-5]");
+        }
+
+        return bus;
     }
 }
