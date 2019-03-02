@@ -20,12 +20,13 @@ abstract class BaseOpenMessage implements OpenMessage {
     protected static final String FORMAT_STATUS = "*#%d*%s##";
     protected static final String FORMAT_PREFIX_RESPONSE = "*%d*%d*";
     protected static final String FORMAT_PREFIX_DIMENSION = "*#%d*";
-    protected static final String FORMAT_BUS = "#4#%d";
+    protected static final String FORMAT_BUS = "#4#%s";
 
     protected static final int WHERE_MIN_VALUE = 0;
     protected static final int WHERE_MAX_VALUE = 9999;
     protected static final String WHERE_GROUP_PREFIX = "#";
     public static final String WHERE_GENERAL_VALUE = "0";
+    public static final String NO_BUS = "";
 
     private final String value;
 
@@ -109,4 +110,15 @@ abstract class BaseOpenMessage implements OpenMessage {
 
         return bus;
     }
+
+    // ... yep, referential transparency ... ;-(
+    protected static Boolean isValidBus(String bus) {
+        try {
+            checkBus(bus);
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
+    }
+
 }

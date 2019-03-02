@@ -4,8 +4,9 @@ import org.junit.Test;
 
 import static com.github.niqdev.openwebnet.ThrowableCaptor.captureThrowable;
 import static com.github.niqdev.openwebnet.message.BaseOpenMessage.checkBus;
+import static com.github.niqdev.openwebnet.message.BaseOpenMessage.isValidBus;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class BaseOpenMessageTest {
 
@@ -50,6 +51,23 @@ public class BaseOpenMessageTest {
         assertThat(captureThrowable(() -> checkBus("16")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid i4 [1-5]");
+    }
+
+    @Test
+    public void testIsValidBus() {
+        assertTrue("should be a valid value", isValidBus("01"));
+        assertTrue("should be a valid value", isValidBus("09"));
+        assertTrue("should be a valid value", isValidBus("11"));
+        assertTrue("should be a valid value", isValidBus("15"));
+
+        assertFalse("should be an invalid value", isValidBus(null));
+        assertFalse("should be an invalid value", isValidBus("#"));
+        assertFalse("should be an invalid value", isValidBus("0"));
+        assertFalse("should be an invalid value", isValidBus("010"));
+        assertFalse("should be an invalid value", isValidBus("20"));
+        assertFalse("should be an invalid value", isValidBus("00"));
+        assertFalse("should be an invalid value", isValidBus("10"));
+        assertFalse("should be an invalid value", isValidBus("16"));
     }
 
 }

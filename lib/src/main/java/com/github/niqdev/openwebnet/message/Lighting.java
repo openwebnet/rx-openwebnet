@@ -246,7 +246,7 @@ public class Lighting extends BaseOpenMessage {
     }
 
     public static boolean isValidRangeType(String where, Type type) {
-        if (where == null || type == null || where.length() < 1 && where.length() > 4) {
+        if (where == null || type == null || where.length() < 1 || where.length() > 4) {
             return false;
         }
         switch (type) {

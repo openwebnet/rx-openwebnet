@@ -26,6 +26,18 @@ public class AutomationTest {
     }
 
     @Test
+    public void testRequestStopWithType() {
+        assertEquals("should be a valid value", "*2*0*0##", requestStop("0", Type.GENERAL, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*0*0#4#01##", requestStop("0", Type.GENERAL_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*0*1##", requestStop("1", Type.AREA, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*0*1#4#01##", requestStop("1", Type.AREA_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*0*#1##", requestStop("1", Type.GROUP, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*0*#1#4#01##", requestStop("1", Type.GROUP_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*0*11##", requestStop("11", Type.POINT, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*0*11#4#01##", requestStop("11", Type.POINT_BUS, "01").getValue());
+    }
+
+    @Test
     public void testRequestStopInvalid() {
         assertThat(captureThrowable(() -> requestStop(null)))
             .isInstanceOf(IllegalArgumentException.class)
@@ -60,6 +72,18 @@ public class AutomationTest {
     }
 
     @Test
+    public void testRequestMoveUpWithType() {
+        assertEquals("should be a valid value", "*2*1*0##", requestMoveUp("0", Type.GENERAL, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*1*0#4#01##", requestMoveUp("0", Type.GENERAL_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*1*1##", requestMoveUp("1", Type.AREA, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*1*1#4#01##", requestMoveUp("1", Type.AREA_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*1*#1##", requestMoveUp("1", Type.GROUP, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*1*#1#4#01##", requestMoveUp("1", Type.GROUP_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*1*11##", requestMoveUp("11", Type.POINT, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*1*11#4#01##", requestMoveUp("11", Type.POINT_BUS, "01").getValue());
+    }
+
+    @Test
     public void testRequestMoveUpInvalid() {
         assertThat(captureThrowable(() -> requestMoveUp(null)))
             .isInstanceOf(IllegalArgumentException.class)
@@ -91,6 +115,18 @@ public class AutomationTest {
         assertEquals("should be a valid value", "*2*2*1##", requestMoveDown("1").getValue());
         assertEquals("should be a valid value", "*2*2*09##", requestMoveDown("09").getValue());
         assertEquals("should be a valid value", "*2*2*9##", requestMoveDown("9").getValue());
+    }
+
+    @Test
+    public void testRequestMoveDownWithType() {
+        assertEquals("should be a valid value", "*2*2*0##", requestMoveDown("0", Type.GENERAL, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*2*0#4#01##", requestMoveDown("0", Type.GENERAL_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*2*1##", requestMoveDown("1", Type.AREA, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*2*1#4#01##", requestMoveDown("1", Type.AREA_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*2*#1##", requestMoveDown("1", Type.GROUP, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*2*#1#4#01##", requestMoveDown("1", Type.GROUP_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*2*11##", requestMoveDown("11", Type.POINT, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*2*11#4#01##", requestMoveDown("11", Type.POINT_BUS, "01").getValue());
     }
 
     @Test
@@ -140,6 +176,18 @@ public class AutomationTest {
         assertEquals("should be a valid value", "*#2*1##", requestStatus("1").getValue());
         assertEquals("should be a valid value", "*#2*09##", requestStatus("09").getValue());
         assertEquals("should be a valid value", "*#2*9##", requestStatus("9").getValue());
+    }
+
+    @Test
+    public void testRequestStatusWithType() {
+        assertEquals("should be a valid value", "*#2*0##", requestStatus("0", Type.GENERAL, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*#2*0#4#01##", requestStatus("0", Type.GENERAL_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*#2*1##", requestStatus("1", Type.AREA, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*#2*1#4#01##", requestStatus("1", Type.AREA_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*#2*#1##", requestStatus("1", Type.GROUP, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*#2*#1#4#01##", requestStatus("1", Type.GROUP_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*#2*11##", requestStatus("11", Type.POINT, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*#2*11#4#01##", requestStatus("11", Type.POINT_BUS, "01").getValue());
     }
 
     @Test
@@ -266,6 +314,137 @@ public class AutomationTest {
         verify(downAction).call();
         verify(stopAction, never()).call();
         verify(upAction, never()).call();
+    }
+
+    @Test
+    public void testCheckRangeType() {
+        checkRangeType("0", Type.GENERAL, NO_BUS);
+        checkRangeType("0", Type.GENERAL_BUS, "02");
+        checkRangeType("1", Type.AREA, NO_BUS);
+        checkRangeType("9", Type.AREA_BUS, "02");
+        checkRangeType("1", Type.GROUP, NO_BUS);
+        checkRangeType("9", Type.GROUP_BUS, "15");
+        checkRangeType("11", Type.POINT, NO_BUS);
+        checkRangeType("99", Type.POINT_BUS, "09");
+    }
+
+    @Test
+    public void testCheckRangeType_invalidArgument() {
+        assertThat(captureThrowable(() -> checkRangeType(null, Type.GENERAL, NO_BUS)))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("invalid null value: [where]");
+
+        assertThat(captureThrowable(() -> checkRangeType("0", null, NO_BUS)))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("invalid null value: [type]");
+
+        assertThat(captureThrowable(() -> checkRangeType("0", Type.GENERAL, null)))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("invalid null value: [bus]");
+
+        assertThat(captureThrowable(() -> checkRangeType("", Type.GENERAL, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid length [1-2]");
+
+        assertThat(captureThrowable(() -> checkRangeType("XXX", Type.GENERAL, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid length [1-2]");
+    }
+
+    @Test
+    public void testCheckRangeType_invalidGeneral() {
+        assertThat(captureThrowable(() -> checkRangeType("x", Type.GENERAL, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [0]");
+
+        assertThat(captureThrowable(() -> checkRangeType("0", Type.GENERAL, "x")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid bus size");
+
+        assertThat(captureThrowable(() -> checkRangeType("x", Type.GENERAL_BUS, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("allowed value [0]");
+    }
+
+    @Test
+    public void testCheckRangeType_invalidArea() {
+        assertThat(captureThrowable(() -> checkRangeType("0", Type.AREA, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 9");
+
+        assertThat(captureThrowable(() -> checkRangeType("10", Type.AREA, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 9");
+
+        assertThat(captureThrowable(() -> checkRangeType("1", Type.AREA, "x")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid bus size");
+
+        assertThat(captureThrowable(() -> checkRangeType("9", Type.AREA, "x")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid bus size");
+
+        assertThat(captureThrowable(() -> checkRangeType("0", Type.AREA_BUS, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 9");
+
+        assertThat(captureThrowable(() -> checkRangeType("10", Type.AREA_BUS, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 9");
+    }
+
+    @Test
+    public void testCheckRangeType_invalidGroup() {
+        assertThat(captureThrowable(() -> checkRangeType("0", Type.GROUP, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 9");
+
+        assertThat(captureThrowable(() -> checkRangeType("10", Type.GROUP, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 9");
+
+        assertThat(captureThrowable(() -> checkRangeType("1", Type.GROUP, "x")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid bus size");
+
+        assertThat(captureThrowable(() -> checkRangeType("9", Type.GROUP, "x")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid bus size");
+
+        assertThat(captureThrowable(() -> checkRangeType("0", Type.GROUP_BUS, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 9");
+
+        assertThat(captureThrowable(() -> checkRangeType("10", Type.GROUP_BUS, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 1 and 9");
+    }
+
+    @Test
+    public void testCheckRangeType_invalidPoint() {
+        assertThat(captureThrowable(() -> checkRangeType("10", Type.POINT, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 11 and 99");
+
+        assertThat(captureThrowable(() -> checkRangeType("100", Type.POINT, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid length [1-2]");
+
+        assertThat(captureThrowable(() -> checkRangeType("11", Type.POINT, "x")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid bus size");
+
+        assertThat(captureThrowable(() -> checkRangeType("99", Type.POINT, "x")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid bus size");
+
+        assertThat(captureThrowable(() -> checkRangeType("10", Type.POINT_BUS, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("value must be between 11 and 99");
+
+        assertThat(captureThrowable(() -> checkRangeType("100", Type.POINT_BUS, NO_BUS)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("invalid length [1-2]");
     }
 
 }
