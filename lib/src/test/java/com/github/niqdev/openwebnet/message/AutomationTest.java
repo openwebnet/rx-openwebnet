@@ -33,8 +33,8 @@ public class AutomationTest {
         assertEquals("should be a valid value", "*2*0*1#4#01##", requestStop("1", Type.AREA_BUS, "01").getValue());
         assertEquals("should be a valid value", "*2*0*#1##", requestStop("1", Type.GROUP, NO_BUS).getValue());
         assertEquals("should be a valid value", "*2*0*#1#4#01##", requestStop("1", Type.GROUP_BUS, "01").getValue());
-        assertEquals("should be a valid value", "*2*0*11##", requestStop("11", Type.POINT, NO_BUS).getValue());
-        assertEquals("should be a valid value", "*2*0*11#4#01##", requestStop("11", Type.POINT_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*0*11##", requestStop("11", Type.POINT_TO_POINT, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*0*11#4#01##", requestStop("11", Type.POINT_TO_POINT_BUS, "01").getValue());
     }
 
     @Test
@@ -79,8 +79,8 @@ public class AutomationTest {
         assertEquals("should be a valid value", "*2*1*1#4#01##", requestMoveUp("1", Type.AREA_BUS, "01").getValue());
         assertEquals("should be a valid value", "*2*1*#1##", requestMoveUp("1", Type.GROUP, NO_BUS).getValue());
         assertEquals("should be a valid value", "*2*1*#1#4#01##", requestMoveUp("1", Type.GROUP_BUS, "01").getValue());
-        assertEquals("should be a valid value", "*2*1*11##", requestMoveUp("11", Type.POINT, NO_BUS).getValue());
-        assertEquals("should be a valid value", "*2*1*11#4#01##", requestMoveUp("11", Type.POINT_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*1*11##", requestMoveUp("11", Type.POINT_TO_POINT, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*1*11#4#01##", requestMoveUp("11", Type.POINT_TO_POINT_BUS, "01").getValue());
     }
 
     @Test
@@ -125,8 +125,8 @@ public class AutomationTest {
         assertEquals("should be a valid value", "*2*2*1#4#01##", requestMoveDown("1", Type.AREA_BUS, "01").getValue());
         assertEquals("should be a valid value", "*2*2*#1##", requestMoveDown("1", Type.GROUP, NO_BUS).getValue());
         assertEquals("should be a valid value", "*2*2*#1#4#01##", requestMoveDown("1", Type.GROUP_BUS, "01").getValue());
-        assertEquals("should be a valid value", "*2*2*11##", requestMoveDown("11", Type.POINT, NO_BUS).getValue());
-        assertEquals("should be a valid value", "*2*2*11#4#01##", requestMoveDown("11", Type.POINT_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*2*2*11##", requestMoveDown("11", Type.POINT_TO_POINT, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*2*2*11#4#01##", requestMoveDown("11", Type.POINT_TO_POINT_BUS, "01").getValue());
     }
 
     @Test
@@ -186,8 +186,8 @@ public class AutomationTest {
         assertEquals("should be a valid value", "*#2*1#4#01##", requestStatus("1", Type.AREA_BUS, "01").getValue());
         assertEquals("should be a valid value", "*#2*#1##", requestStatus("1", Type.GROUP, NO_BUS).getValue());
         assertEquals("should be a valid value", "*#2*#1#4#01##", requestStatus("1", Type.GROUP_BUS, "01").getValue());
-        assertEquals("should be a valid value", "*#2*11##", requestStatus("11", Type.POINT, NO_BUS).getValue());
-        assertEquals("should be a valid value", "*#2*11#4#01##", requestStatus("11", Type.POINT_BUS, "01").getValue());
+        assertEquals("should be a valid value", "*#2*11##", requestStatus("11", Type.POINT_TO_POINT, NO_BUS).getValue());
+        assertEquals("should be a valid value", "*#2*11#4#01##", requestStatus("11", Type.POINT_TO_POINT_BUS, "01").getValue());
     }
 
     @Test
@@ -324,8 +324,8 @@ public class AutomationTest {
         checkRangeType("9", Type.AREA_BUS, "02");
         checkRangeType("1", Type.GROUP, NO_BUS);
         checkRangeType("9", Type.GROUP_BUS, "15");
-        checkRangeType("11", Type.POINT, NO_BUS);
-        checkRangeType("99", Type.POINT_BUS, "09");
+        checkRangeType("11", Type.POINT_TO_POINT, NO_BUS);
+        checkRangeType("99", Type.POINT_TO_POINT_BUS, "09");
     }
 
     @Test
@@ -422,27 +422,27 @@ public class AutomationTest {
 
     @Test
     public void testCheckRangeType_invalidPoint() {
-        assertThat(captureThrowable(() -> checkRangeType("10", Type.POINT, NO_BUS)))
+        assertThat(captureThrowable(() -> checkRangeType("10", Type.POINT_TO_POINT, NO_BUS)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 11 and 99");
 
-        assertThat(captureThrowable(() -> checkRangeType("100", Type.POINT, NO_BUS)))
+        assertThat(captureThrowable(() -> checkRangeType("100", Type.POINT_TO_POINT, NO_BUS)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid length [1-2]");
 
-        assertThat(captureThrowable(() -> checkRangeType("11", Type.POINT, "x")))
+        assertThat(captureThrowable(() -> checkRangeType("11", Type.POINT_TO_POINT, "x")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid bus size");
 
-        assertThat(captureThrowable(() -> checkRangeType("99", Type.POINT, "x")))
+        assertThat(captureThrowable(() -> checkRangeType("99", Type.POINT_TO_POINT, "x")))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid bus size");
 
-        assertThat(captureThrowable(() -> checkRangeType("10", Type.POINT_BUS, NO_BUS)))
+        assertThat(captureThrowable(() -> checkRangeType("10", Type.POINT_TO_POINT_BUS, NO_BUS)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("value must be between 11 and 99");
 
-        assertThat(captureThrowable(() -> checkRangeType("100", Type.POINT_BUS, NO_BUS)))
+        assertThat(captureThrowable(() -> checkRangeType("100", Type.POINT_TO_POINT_BUS, NO_BUS)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("invalid length [1-2]");
     }

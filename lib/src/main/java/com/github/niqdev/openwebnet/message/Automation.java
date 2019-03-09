@@ -41,8 +41,8 @@ public class Automation extends BaseOpenMessage {
         GROUP,
         GROUP_BUS,
         // [11-99]
-        POINT,
-        POINT_BUS,
+        POINT_TO_POINT,
+        POINT_TO_POINT_BUS,
     }
 
     private static final int WHO = AUTOMATION.value();
@@ -53,8 +53,8 @@ public class Automation extends BaseOpenMessage {
     private static final int WHERE_MAX_VALUE_AREA = 9;
     private static final int WHERE_MIN_VALUE_GROUP = 1;
     private static final int WHERE_MAX_VALUE_GROUP = 9;
-    private static final int WHERE_MIN_VALUE_POINT = 11;
-    private static final int WHERE_MAX_VALUE_POINT = 99;
+    private static final int WHERE_MIN_VALUE_POINT_TO_POINT = 11;
+    private static final int WHERE_MAX_VALUE_POINT_TO_POINT = 99;
 
     private Automation(String value) {
         super(value);
@@ -253,7 +253,7 @@ public class Automation extends BaseOpenMessage {
      * GROUP
      * #[1−9]
      *
-     * POINT
+     * POINT_TO_POINT
      * [11-99]
      */
     protected static void checkRangeType(String where, Type type, String bus) {
@@ -287,12 +287,12 @@ public class Automation extends BaseOpenMessage {
                 checkRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where));
                 checkBus(bus);
                 break;
-            case POINT:
-                checkRange(WHERE_MIN_VALUE_POINT, WHERE_MAX_VALUE_POINT, checkIsInteger(where));
+            case POINT_TO_POINT:
+                checkRange(WHERE_MIN_VALUE_POINT_TO_POINT, WHERE_MAX_VALUE_POINT_TO_POINT, checkIsInteger(where));
                 checkArgument(bus.isEmpty(), "invalid bus size");
                 break;
-            case POINT_BUS:
-                checkRange(WHERE_MIN_VALUE_POINT, WHERE_MAX_VALUE_POINT, checkIsInteger(where));
+            case POINT_TO_POINT_BUS:
+                checkRange(WHERE_MIN_VALUE_POINT_TO_POINT, WHERE_MAX_VALUE_POINT_TO_POINT, checkIsInteger(where));
                 checkBus(bus);
                 break;
             default:
@@ -317,10 +317,10 @@ public class Automation extends BaseOpenMessage {
                 return isInRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where)) && bus.isEmpty();
             case GROUP_BUS:
                 return isInRange(WHERE_MIN_VALUE_GROUP, WHERE_MAX_VALUE_GROUP, checkIsInteger(where)) && isValidBus(bus);
-            case POINT:
-                return isInRange(WHERE_MIN_VALUE_POINT, WHERE_MAX_VALUE_POINT, checkIsInteger(where)) && bus.isEmpty();
-            case POINT_BUS:
-                return isInRange(WHERE_MIN_VALUE_POINT, WHERE_MAX_VALUE_POINT, checkIsInteger(where)) && isValidBus(bus);
+            case POINT_TO_POINT:
+                return isInRange(WHERE_MIN_VALUE_POINT_TO_POINT, WHERE_MAX_VALUE_POINT_TO_POINT, checkIsInteger(where)) && bus.isEmpty();
+            case POINT_TO_POINT_BUS:
+                return isInRange(WHERE_MIN_VALUE_POINT_TO_POINT, WHERE_MAX_VALUE_POINT_TO_POINT, checkIsInteger(where)) && isValidBus(bus);
             default:
                 throw new IllegalArgumentException("invalid type");
         }
@@ -328,9 +328,9 @@ public class Automation extends BaseOpenMessage {
 
     private static String buildWhereValue(String where, Type type, String bus) {
         switch (type) {
-            case GENERAL: case AREA: case POINT:
+            case GENERAL: case AREA: case POINT_TO_POINT:
                 return where;
-            case GENERAL_BUS: case AREA_BUS: case POINT_BUS:
+            case GENERAL_BUS: case AREA_BUS: case POINT_TO_POINT_BUS:
                 return where.concat(format(FORMAT_BUS, bus));
             case GROUP:
                 return WHERE_GROUP_PREFIX.concat(where);
