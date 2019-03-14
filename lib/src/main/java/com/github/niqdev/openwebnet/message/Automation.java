@@ -238,9 +238,10 @@ public class Automation extends BaseOpenMessage {
         return verifyMessage(value, DOWN);
     }
 
+    // *2*0*AB#4#XY## *#*1##
     private static boolean verifyMessage(String value, int status) {
         return value != null && value.startsWith(format(FORMAT_PREFIX_RESPONSE, WHO, status))
-            && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
+            && value.length() > 7 && value.length() < 15 && value.endsWith(FRAME_END);
     }
 
     /*

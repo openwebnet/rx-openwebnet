@@ -201,9 +201,10 @@ public class Lighting extends BaseOpenMessage {
         return verifyMessage(value, OFF);
     }
 
+    // *1*0*ABCD4#4#XY## *#*1##
     private static boolean verifyMessage(String value, int status) {
         return value != null && value.startsWith(format(FORMAT_PREFIX_RESPONSE, WHO, status))
-            && value.length() > 7 && value.length() < 12 && value.endsWith(FRAME_END);
+            && value.length() > 7 && value.length() < 17 && value.endsWith(FRAME_END);
     }
 
     /*

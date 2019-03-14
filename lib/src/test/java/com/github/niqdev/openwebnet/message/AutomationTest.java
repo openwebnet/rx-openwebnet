@@ -218,6 +218,7 @@ public class AutomationTest {
         assertTrue(isStop("*2*0*21##"));
         assertTrue(isStop("*2*0*X##"));
         assertTrue(isStop("*2*0*XXXX##"));
+        assertTrue(isStop("*2*0*XX#4#YY##"));
     }
 
     @Test
@@ -227,7 +228,6 @@ public class AutomationTest {
         assertFalse(isStop(""));
         assertFalse(isStop("*2*0*21"));
         assertFalse(isStop("*2*0*##"));
-        assertFalse(isStop("*2*0*XXXXX##"));
     }
 
     @Test
@@ -235,6 +235,7 @@ public class AutomationTest {
         assertTrue(isUp("*2*1*21##"));
         assertTrue(isUp("*2*1*X##"));
         assertTrue(isUp("*2*1*XXXX##"));
+        assertTrue(isUp("*2*1*XX#4#YY##"));
     }
 
     @Test
@@ -243,8 +244,6 @@ public class AutomationTest {
         assertFalse(isUp(null));
         assertFalse(isUp(""));
         assertFalse(isUp("*2*1*21"));
-        assertFalse(isUp("*2*1*##"));
-        assertFalse(isUp("*2*1*XXXXX##"));
     }
 
     @Test
@@ -252,6 +251,7 @@ public class AutomationTest {
         assertTrue(isDown("*2*2*21##"));
         assertTrue(isDown("*2*2*X##"));
         assertTrue(isDown("*2*2*XXXX##"));
+        assertTrue(isDown("*2*2*XX#4#YY##"));
     }
 
     @Test
@@ -261,7 +261,6 @@ public class AutomationTest {
         assertFalse(isDown(""));
         assertFalse(isDown("*2*2*21"));
         assertFalse(isDown("*2*2*##"));
-        assertFalse(isDown("*2*2*XXXXX##"));
     }
 
     @Test

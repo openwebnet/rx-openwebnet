@@ -172,6 +172,7 @@ public class LightingTest {
         assertTrue(isOn("*1*1*21##"));
         assertTrue(isOn("*1*1*X##"));
         assertTrue(isOn("*1*1*XXXX##"));
+        assertTrue(isOn("*1*1*XXXX#4#YY##"));
     }
 
     @Test
@@ -181,7 +182,6 @@ public class LightingTest {
         assertFalse(isOn(""));
         assertFalse(isOn("*1*1*21"));
         assertFalse(isOn("*1*1*##"));
-        assertFalse(isOn("*1*1*XXXXX##"));
     }
 
     @Test
@@ -189,6 +189,7 @@ public class LightingTest {
         assertTrue(isOff("*1*0*21##"));
         assertTrue(isOff("*1*0*X##"));
         assertTrue(isOff("*1*0*XXXX##"));
+        assertTrue(isOff("*1*0*XXXX#4#YY##"));
     }
 
     @Test
@@ -198,7 +199,6 @@ public class LightingTest {
         assertFalse(isOff(""));
         assertFalse(isOff("*1*0*21"));
         assertFalse(isOff("*1*0*##"));
-        assertFalse(isOff("*1*0*XXXXX##"));
     }
 
     @Test
